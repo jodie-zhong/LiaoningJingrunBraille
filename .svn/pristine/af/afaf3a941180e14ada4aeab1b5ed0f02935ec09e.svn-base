@@ -1,0 +1,72 @@
+<!--劳务录入社外-->
+<div class="modal-dialog dialog-container" style="width: 600px;">
+  <div class="modal-content">
+    <div class="panel">
+      <div class="panel-header border-bottom">
+        <h3><i class="fa fa-user-o"></i>录入人员</h3>
+        <div class="control-btn">
+          <a class="panel-close btn-close"><i class="fa fa-close"></i></a>
+        </div>
+      </div>
+      <div class="panel-content" style="padding-bottom: 50px">
+        <div class="form-horizontal" id="formJob">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="form-group">
+                <label class="col-xs-2 control-label">姓名<span class="must">*</span></label>
+                <div class="col-xs-5">
+                  <input type="text" name="jobOutsideName" class="form-control"
+                         placeholder="姓名(最多64个字)" data-fv-notempty="true" data-fv-notempty-message="请填写姓名"
+                         maxlength="64"/>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-12">
+              <div class="form-group">
+                <label class="col-xs-2 control-label">身份证号<span class="must">*</span></label>
+                <div class="col-xs-5">
+                  <input type="text" name="jobOutsideIdCard"
+                         class="form-control" placeholder="身份证号"
+                         data-fv-notempty="true" data-fv-notempty-message="请填写身份证号" maxlength="64"/>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-12">
+              <div class="form-group">
+                <label class="col-xs-2 control-label">金额<span class="must">*</span></label>
+                <div class="col-xs-5">
+                  <input type="text" name="jobOutsideMoney"
+                         class="form-control" placeholder="金额(最多64个字)"
+                         data-fv-notempty="true" data-fv-notempty-message="请填写金额"/>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-12">
+              <div class="form-group">
+                <label class="col-xs-2 control-label">税额<span class="must">*</span></label>
+                <div class="col-xs-5">
+                  <input type="text" name="jobOutsideTax" class="form-control"
+                         placeholder="税额" data-fv-notempty="true" data-fv-notempty-message="请填写税额"
+                         maxlength="64"/>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-12">
+              <div class="form-group">
+                <label class="col-xs-2 control-label">实付金额<span class="must">*</span></label>
+                <div class="col-xs-5">
+                  <input type="text" name="jobOutsideRealMoney"
+                         class="form-control" placeholder="实付金额"
+                         data-fv-notempty="true" data-fv-notempty-message="请填写实付金额" maxlength="64"/>
+                </div>
+              </div>
+            </div>
+          <div class="dialog-options">
+            <button class="btn btn-primary" id="btnSave">保存</button>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

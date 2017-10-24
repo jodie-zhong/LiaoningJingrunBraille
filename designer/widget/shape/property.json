@@ -1,0 +1,56 @@
+[
+  {
+    "name": "shape",
+    "type": "select",
+    "label": "形状",
+    "options": [
+      {
+        "label": "圆形",
+        "value": "circle"
+      },
+      {
+        "label": "矩形",
+        "value": "rectangle"
+      },
+      {
+        "label": "直角三角形",
+        "value": "triangleRight"
+      },
+      {
+        "label": "等腰三角形",
+        "value": "triangleIsosceles"
+      },
+      {
+        "label": "五边形",
+        "value": "pentagon"
+      },
+      {
+        "label": "六边形",
+        "value": "hexagon"
+      },
+      {
+        "label": "五角星",
+        "value": "star"
+      },
+      {
+        "label": "半圆形",
+        "value": "halfCircle"
+      },
+      {
+        "label": "心形",
+        "value": "heart"
+      }
+    ],
+    "size": "4"
+  },
+  {
+    "name": "fill",
+    "type": "boolean",
+    "label": "填充"
+  },
+  {
+    "name": "fillColor",
+    "type": "color",
+    "label": "填充颜色"
+  }
+]

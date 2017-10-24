@@ -1,0 +1,42 @@
+{
+  "code": 0,
+  "message": "查询该角色权限成功",
+  "data": {
+    "roleId": "1",
+    "roleName": "系统管理员",
+    "roleDesc": "系统管理员",
+    "authEntities": [
+      {
+        "roleId": "1",
+        "authorityId": "01",
+        "lookAuthority": "111"
+      },
+      {
+        "roleId": "1",
+        "authorityId": "011",
+        "lookAuthority": "112"
+      },
+      {
+        "roleId": "1",
+        "authorityId": "0111",
+        "lookAuthority": "113"
+      },
+      {
+        "roleId": "1",
+        "authorityId": "0112",
+        "lookAuthority": "114"
+      },
+      {
+        "roleId": "1",
+        "authorityId": "0113",
+        "lookAuthority": "115"
+      },
+      {
+        "roleId": "1",
+        "authorityId": "0114",
+        "lookAuthority": "116"
+      }
+    ],
+    "isUse": "1"
+  }
+}

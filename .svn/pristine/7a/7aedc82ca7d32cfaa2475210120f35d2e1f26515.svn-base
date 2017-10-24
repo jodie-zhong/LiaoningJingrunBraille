@@ -1,0 +1,119 @@
+define(function(require, exports, module) {
+	"use strict";
+
+	module.exports = {
+		bookName: {
+			title: '书名',
+			type: 'input',
+			maxlength: 64,
+		},
+		topicOwnType: {
+			title: '本社选题种类',
+			type: 'input',
+			maxlength: 20,
+		},
+		thirdAuditOpinion: {
+			title: '三审意见',
+			type: 'textarea',
+			maxlength: 1024,
+		},
+		firstAuthor: {
+			title: '第一作者',
+			type: 'input',
+			maxlength: 32,
+		},
+		firstWorkWay: {
+			title: '第一著作方式',
+			type: 'input',
+			maxlength: 32,
+		},
+		otherAuthor: {
+			title: '其他作者',
+			type: 'input',
+			maxlength: 32,
+		},
+		otherWorkWay: {
+			title: '其他著作方式',
+			type: 'input',
+			maxlength: 64,
+		},
+		textLanguage: {
+			title: '正文文种',
+			type: 'input',
+			maxlength: 32,
+		},
+		textWords: {
+			title: '正文文字',
+			type: 'input',
+			maxlength: 32,
+		},
+		wordsNum: {
+			title: '字数（千字）',
+			type: 'input',
+			maxlength: 8,
+			pattern: '^(([1-9][0-9]{0,3})|([0-9]\.[0-9]{1,3})|([1-9][0-9]{0,3}\.[0-9]{1,3}))$',
+		},
+		introduce: {
+			title: '内容提要',
+			type: 'textarea',
+			maxlength: 1024,
+		},
+		authorMsg: {
+			title: '作者简介',
+			type: 'textarea',
+			maxlength: 1024,
+		},
+		bookType: {
+			title: '图书类型',
+			type: 'input',
+			maxlength: 20,
+		},
+		bookClassify: {
+			title: '图书分类',
+			type: 'input',
+			maxlength: 32,
+		},
+		distribution: {
+			title: '发行范围',
+			type: 'input',
+			maxlength: 32,
+		},
+		edition: {
+			title: '版次',
+			type: 'input',
+			maxlength: 32,
+		},
+		impression: {
+			title: '印次',
+			type: 'input',
+			maxlength: 32,
+		},
+		pricing: {
+			title: '定价（本册）',
+			type: 'input',
+			maxlength: 10,
+			pattern: '^(([0-9]*\.[0-9]{1,2})|([0-9]*[1-9][0-9]*\.[0-9]{1,2})|([0-9]*[1-9][0-9]*))$',
+		},
+		serialPricing: {
+			title: '定价（本套）',
+			type: 'input',
+			maxlength: 10,
+			pattern: '^(([0-9]*\.[0-9]{1,2})|([0-9]*[1-9][0-9]*\.[0-9]{1,2})|([0-9]*[1-9][0-9]*))$',
+		},
+		publishingStyle: {
+			title: '出版方式',
+			type: 'input',
+			maxlength: 32,
+		},
+		fascicleNo: {
+			title: '分（辑）册号',
+			type: 'input',
+			maxlength: 32,
+		},
+		publishingName: {
+			title: '出版社名称',
+			type: 'input',
+			maxlength: 32,
+		}
+	};
+});

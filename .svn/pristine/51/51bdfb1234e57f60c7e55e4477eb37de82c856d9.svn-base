@@ -1,0 +1,84 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    var DialogBase = require('../../../common/base-dialog');
+    var DETAIL_ACTION = '';
+
+    module.exports = DialogBase.extend({
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+            // 关闭按钮
+            this.$container.on('click', '.btn-close', function () {
+                $("#personInfos").show();
+            });
+            // 打印按钮
+            this.$container.on('click', '#btnPrint', function () {
+                // TODO
+            });
+        },
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+            var that = this;
+            util.showLoading('正在查询信息……');
+            util.sendRequest({
+                type: 'POST',
+                data: {},
+                action: DETAIL_ACTION,
+                success: function (resp) {
+                    util.hideLoading();
+                    console.log(resp);
+                    if (resp.code === 0) {
+                        that.setData(resp.data);
+                    } else {
+                        util.showAlert(resp.message || '信息出错，请稍后重试！');
+                    }
+                },
+                error: function (xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('信息出错，请稍后重试！');
+                }
+            });
+        },
+
+        /**
+         * 初始化时被调用
+         */
+        onInit: function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            this.initTemplate(tpl, {dialogTitle: data.dialogTitle});
+            // 初始化页面数据
+            this.initPageData();
+            // 初始化页面事件
+            this.initPageEvent();
+        },
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        onBack: function (data) {
+            this._super(data);
+        },
+
+        /**
+         * 窗口缩放事件
+         */
+        onResize: function () {
+            this._super();
+        },
+
+        /**
+         * 页面销毁
+         */
+        onDestroy: function () {
+            this._super();
+        }
+    });
+});

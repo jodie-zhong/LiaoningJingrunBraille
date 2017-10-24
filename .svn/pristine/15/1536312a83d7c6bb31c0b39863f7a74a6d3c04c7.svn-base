@@ -1,0 +1,17 @@
+<% if(list.length > 0) { %>
+<% for(var i = 0; i < list.length; i++) { %>
+<tr data-id="<%- list[i].reportTopicId %>" data-name="<%- list[i].reportTopicName %>">
+  <td><%- (i + 1) %></td>
+  <td data-check="true"><i class="fa fa-square-o" data-action="check"></i></td>
+  <td><%- list[i].reportTopicName %></td>
+  <td><%- list[i].reportTopicDepartmentName %></td>
+  <td><%- list[i].reportTopicNum %></td>
+  <td><%- list[i].reportTopicDatetime %></td>
+  <td ><button type="button" class="btn btn-primary btn-xs reportSearch">查看</button></td>
+</tr>
+<% } %>
+<% } else { %>
+<tr>
+  <td colspan="7"><p class="empty-tips">暂无数据</p></td>
+</tr>
+<% } %>

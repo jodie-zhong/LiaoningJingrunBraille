@@ -1,0 +1,137 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    var DialogBase = require('../../../common/base-dialog');
+    var SUBMIT_ACTION = "cost/saveCostSetList.action";
+    var listTpl = require('./budget-settings-dialog-list.tpl');
+
+    module.exports = DialogBase.extend(new function () {
+        var that;
+
+        /**
+         * 保存数据
+         */
+        function saveData() {
+            // 没有错误开始处理
+            if (that.validate(that.$('#formDiv'))) {
+                var params = {costSetList: []};
+                that.$("#dataTBody").children().each(function () {
+                    var row = $(this);
+                    params.costSetList.push({
+                        costSetId: row.attr("data-id"),
+                        costSetName: row.find("input[name='costSetName']").val(),
+                        numberGroup: row.find("input[name='numberGroup']").val(),
+                        numberMarket: row.find("input[name='numberMarket']").val(),
+                        numberLargePrint: row.find("input[name='numberLargePrint']").val(),
+                        firstAuditOne: row.find("input[name='firstAuditOne']").val(),
+                        firstAuditTwo: row.find("input[name='firstAuditTwo']").val(),
+                        firstAuditThree: row.find("input[name='firstAuditThree']").val(),
+                        secondAuditOne: row.find("input[name='secondAuditOne']").val(),
+                        secondAuditTwo: row.find("input[name='secondAuditTwo']").val(),
+                        secondAuditThree: row.find("input[name='secondAuditThree']").val(),
+                        thirdAudit: row.find("input[name='thirdAudit']").val(),
+                        costSetCheck: row.find("input[name='costSetCheck']").val(),
+                        coverDesign: row.find("input[name='coverDesign']").val(),
+                        authorPayment: row.find("input[name='authorPayment']").val(),
+                        editingAffairsCost: row.find("input[name='editingAffairsCost']").val()
+                    });
+                });
+                console.log(params);
+                util.showLoading('正在提交数据...');
+                util.sendRequest({
+                    action: SUBMIT_ACTION,
+                    data: params,
+                    success: function (resp) {
+                        util.hideLoading();
+                        if (resp.code === 0) {
+                            // 业务执行成功
+                            util.showAlert('操作成功!', function () {
+                                that.close({refresh: true});
+                            });
+                        } else {
+                            console.log(resp);
+                            util.showAlert(resp.message || '操作失败，请稍后重试！');
+                        }
+                    },
+                    error: function (xhr) {
+                        util.hideLoading();
+                        console.log(xhr);
+                        util.showAlert('操作失败，请稍后重试！');
+                    }
+                });
+            }
+        }
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+            // 保存
+            that.$container.on('click', '#btnSave', saveData);
+            // 保存两位小数
+            that.$container.on('change', '.digitalInput', function () {
+                var el = $(this);
+                var price = el.val();
+                var bPrice = parseFloat(price).toFixed(2);
+                if (isNaN(bPrice)) {
+                    bPrice = '0.00';
+                }
+                el.val(bPrice);
+            });
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData(data) {
+            var form = that.$('#formDiv');
+            that.initValidate(form);
+            var tb = that.$('#dataTBody');
+            if (data && data.length > 0) {
+                tb.html(util.template(listTpl, {list: data}));
+            } else {
+                // 添加行
+                tb.append(util.template(listTpl, {list: [{costSetName: "编辑A档"}, {costSetName: "编辑B档"}]}));
+            }
+            tb.find("input").each(function () {
+                that.addValidateField(form, $(this));
+            });
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            that.initTemplate(tpl, {});
+            // 初始化页面数据
+            initPageData(data);
+            // 初始化页面事件
+            initPageEvent();
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function () {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+    }());
+});

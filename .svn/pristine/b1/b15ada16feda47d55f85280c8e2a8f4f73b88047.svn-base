@@ -1,0 +1,224 @@
+<!--译校通读-任务分配-->
+<% if(isEdit) { %>
+<div class="form-horizontal">
+    <div class="row col-xs-6 form-group">
+        <label class="col-xs-4 control-label"><%- info.flowName %>结果</label>
+        <div class="col-xs-8">
+            <label class="radio-inline">
+                <% if(!info.bookTopicRecommendType || info.bookTopicRecommendType === '2') { %>
+                <input type="radio" name="bookTopicRecommendType" value="2" data-fv-notempty="true"
+                       data-fv-notempty-message="请选择<%- info.flowName %>结果" checked/>通过
+                <% } else { %>
+                <input type="radio" name="bookTopicRecommendType" value="2" data-fv-notempty="true"
+                       data-fv-notempty-message="请选择<%- info.flowName %>结果"/>通过
+                <% } %>
+            </label>
+            <label class="radio-inline">
+                <% if(info.bookTopicRecommendType && info.bookTopicRecommendType === '1') { %>
+                <input type="radio" name="bookTopicRecommendType" value="1" data-fv-notempty="true"
+                       data-fv-notempty-message="请选择<%- info.flowName %>结果" checked/>不通过
+                <% } else { %>
+                <input type="radio" name="bookTopicRecommendType" value="1" data-fv-notempty="true"
+                       data-fv-notempty-message="请选择<%- info.flowName %>结果"/>不通过
+                <% } %>
+            </label>
+        </div>
+    </div>
+    <div class="row"></div>
+    <div class="row">
+        <label><%- info.flowName %>正误表</label>
+    </div>
+    <div class="row">
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>册数</th>
+                <th>页码</th>
+                <th>行</th>
+                <th>内容</th>
+                <th>
+                    <button class="addTableRow btn btn-xs btn-default">
+                        <i class="fa fa-plus box"></i>
+                    </button>
+                </th>
+            </tr>
+            </thead>
+            <tbody id="tfTBody">
+            <tr>
+                <td>1</td>
+                <td>ceshu</td>
+                <td>yema</td>
+                <td>hang</td>
+                <td>neirong</td>
+                <td>
+                    <button class="removeTableRow btn btn-xs btn-default">
+                        <i class="fa fa-minus box"></i>
+                    </button>
+                </td>
+            </tr>
+            <% for(var i = 0; i < info.userTaskEntities.length; i++) { %>
+            <tr>
+                <td><%- i + 1 %></td>
+                <td><%- info.userTaskEntities[i].ceshu %></td>
+                <td><%- info.userTaskEntities[i].yema %></td>
+                <td><%- info.userTaskEntities[i].hang %></td>
+                <td><%- info.userTaskEntities[i].neirong %></td>
+                <th>
+                    <button class="removeTableRow btn btn-xs btn-default">
+                        <i class="fa fa-minus box"></i>
+                    </button>
+                </th>
+            </tr>
+            <% } %>
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <label>差错计算</label>
+    </div>
+    <div class="row">
+        <table class="table table-striped table-hover" id="bookListTable1">
+            <thead id="taskListTableHeader1">
+            <tr>
+                <th>序号</th>
+                <th>册数</th>
+                <th>差错数</th>
+                <th>差错率</th>
+            </tr>
+            </thead>
+            <tbody id="bookListTBody1">
+            <% for(var i = 0; i < info.userTaskEntities.length; i++) { %>
+            <tr>
+                <td><%- i + 1 %></td>
+                <td><%- info.userTaskEntities[i].ceshu %></td>
+                <td><%- info.userTaskEntities[i].yema %></td>
+                <td><%- info.userTaskEntities[i].hang %></td>
+            </tr>
+            <% } %>
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 form-group">
+            <label class="col-xs-2 control-label"><%- info.flowName %>意见</label>
+            <div class="col-xs-10">
+                <textarea class="form-control" name="bookDetailAuthorResult" placeholder="<%- info.flowName %>意见"
+                          maxlength="256" data-fv-field="bookDetailAuthorResult"></textarea>
+                <small class="help-block" data-fv-validator="stringLength" data-fv-for="bookDetailAuthorResult"
+                       data-fv-result="NOT_VALIDATED" style="display: none;">请输入符合长度限制的值
+                </small>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6 form-group">
+            <label class="col-xs-4 control-label">下一流程</label>
+            <div class="col-xs-8">
+                <p class="form-control-static">下一流程，待修改</p>
+            </div>
+        </div>
+        <div class="col-xs-6 form-group">
+            <label class="col-xs-5 control-label">下一流程任务人</label>
+            <div class="col-xs-7">
+                <select name="taskStep" class="form-control" id="taskStep" data-fv-notempty="true"
+                        data-fv-field="taskStep">
+                    <option value="1">张三，待删除</option>
+                    <option value="2">李四，待删除</option>
+                    <option value="3">王二麻子，待删除</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<% } else { %>
+<div class="form-horizontal">
+    <div class="row col-xs-10 form-group">
+        <label class="col-xs-4 control-label"><%- info.flowName %>结果<span class="c-red">*</span></label>
+        <div class="col-xs-8">
+            <p class="form-control-static">结果，待修改</p>
+        </div>
+    </div>
+    <div class="row">
+        <label><%- info.flowName %>正误表</label>
+    </div>
+    <div class="row">
+        <table class="table table-striped table-hover" id="bookListTable2">
+            <thead id="taskListTableHeader2">
+            <tr>
+                <th>序号</th>
+                <th>册数</th>
+                <th>页码</th>
+                <th>行</th>
+                <th>内容</th>
+            </tr>
+            </thead>
+            <tbody id="bookListTBody2">
+            <tr>
+                <td>1</td>
+                <td>ceshu</td>
+                <td>yema</td>
+                <td>hang</td>
+                <td>neirong</td>
+            </tr>
+            <% for(var i = 0; i < info.userTaskEntities.length; i++) { %>
+            <tr>
+                <td><%- i + 1 %></td>
+                <td><%- info.userTaskEntities[i].ceshu %></td>
+                <td><%- info.userTaskEntities[i].yema %></td>
+                <td><%- info.userTaskEntities[i].hang %></td>
+                <td><%- info.userTaskEntities[i].neirong %></td>
+            </tr>
+            <% } %>
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <label>差错计算</label>
+    </div>
+    <div class="row">
+        <table class="table table-striped table-hover" id="bookListTable3">
+            <thead id="taskListTableHeader3">
+            <tr>
+                <th>序号</th>
+                <th>册数</th>
+                <th>差错数</th>
+                <th>差错率</th>
+            </tr>
+            </thead>
+            <tbody id="bookListTBody3">
+            <% for(var i = 0; i < info.userTaskEntities.length; i++) { %>
+            <tr>
+                <td><%- i + 1 %></td>
+                <td><%- info.userTaskEntities[i].ceshu %></td>
+                <td><%- info.userTaskEntities[i].yema %></td>
+                <td><%- info.userTaskEntities[i].hang %></td>
+            </tr>
+            <% } %>
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 form-group">
+            <label class="col-xs-2 control-label"><%- info.flowName %>意见</label>
+            <div class="col-xs-10">
+                <p class="form-control-static">意见内容，待修改</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6 form-group">
+            <label class="col-xs-4 control-label">下一流程</label>
+            <div class="col-xs-8">
+                <p class="form-control-static">下一流程，待修改</p>
+            </div>
+        </div>
+        <div class="col-xs-6 form-group">
+            <label class="col-xs-5 control-label">下一流程任务人</label>
+            <div class="col-xs-7">
+                <p class="form-control-static">下一流程任务人，待修改</p>
+            </div>
+        </div>
+    </div>
+</div>
+<% } %>

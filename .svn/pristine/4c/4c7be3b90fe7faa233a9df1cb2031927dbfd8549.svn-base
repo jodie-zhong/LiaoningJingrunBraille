@@ -1,0 +1,82 @@
+<!--译校通读-任务分配-->
+<!---------------------------------------------------------------------------------------------编辑状态--------------------------------------------------------------------------------------------->
+<div class="form-horizontal">
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">图书名称</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookName %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">任务阶段</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.nextTaskFlowInfoEntity.tprFlowName %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--选择非印前质检时显示任务分配的界面-->
+  <% if(info.nextTaskFlowInfoEntity.flowId !== 'qualityTestCollect') { %>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">任务类型</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.tprTaskType === '2' ? '众包' : '指定' %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <!--众包时显示任务数量-->
+      <% if(info.tprTaskType === '2') { %>
+      <div class="form-group" data-area="inputCount">
+        <label class="col-xs-4 control-label">任务数量</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.tprTaskUseCount %></p>
+        </div>
+      </div>
+      <!--指定时显示任务人-->
+      <% } else { %>
+      <div class="form-group" data-area="selectUsers">
+        <label class="col-xs-4 control-label">任务人</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.nextTaskFlowInfoEntity.nextFlowTaskUserNames %></p>
+        </div>
+      </div>
+      <% } %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">任务简介</label>
+        <div class="col-xs-10">
+          <p class="form-control-static"><%- info.tprTaskContent %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% } %>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">提交人</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitUserName %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">提交时间</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitDatetime %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

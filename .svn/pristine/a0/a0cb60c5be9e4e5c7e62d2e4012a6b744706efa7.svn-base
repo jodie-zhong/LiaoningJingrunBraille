@@ -1,0 +1,616 @@
+<div class="modal-dialog dialog-container">
+  <div class="modal-content" style="overflow-x: auto">
+    <div class="panel">
+      <div class="panel-content">
+        <div class="table-10">
+          <table class="table table-striped table-nowrap table-hover" data-multi="true">
+            <thead>
+            <tr>
+              <th style="width: 150px">选题类型</th>
+              <th style="width: 150px">选题备案文号</th>
+              <th style="width: 150px">本社选题编号</th>
+              <th style="width: 150px">本社选题种类</th>
+              <th style="width: 150px">重大选题备案号</th>
+              <th style="width: 150px">初审人员</th>
+              <th style="width: 150px">复审人员</th>
+              <th style="width: 150px">终审人员</th>
+              <th style="width: 150px">三审意见</th>
+              <th style="width: 150px">ISBN号</th>
+              <th style="width: 150px">书名（正书名）</th>
+              <th style="width: 150px">副书名及说明文字</th>
+              <th style="width: 150px">并列书名</th>
+              <th style="width: 150px">第一作者</th>
+              <th style="width: 150px">第一著作方式</th>
+              <th style="width: 150px">其他作者</th>
+              <th style="width: 150px">其他著作方式</th>
+              <th style="width: 150px">正文文种</th>
+              <th style="width: 150px">正文文字</th>
+              <th style="width: 150px">装订形式</th>
+              <th style="width: 150px">全书页数</th>
+              <th style="width: 150px">字数(千字)</th>
+              <th style="width: 150px">图幅数</th>
+              <th style="width: 150px">附件类型</th>
+              <th style="width: 150px">责任编辑</th>
+              <th style="width: 150px">电话</th>
+              <th style="width: 150px">内容提要</th>
+              <th style="width: 150px">作者简介</th>
+              <th style="width: 150px">建议主题词</th>
+              <th style="width: 150px">图书类型</th>
+              <th style="width: 150px">图书分类</th>
+              <th style="width: 150px">指导分类</th>
+              <th style="width: 150px">发行范围</th>
+              <th style="width: 150px">读者对象</th>
+              <th style="width: 150px">版次</th>
+              <th style="width: 150px">印次</th>
+              <th style="width: 150px">成品尺寸</th>
+              <th style="width: 150px">印张数</th>
+              <th style="width: 150px">本次印量</th>
+              <th style="width: 150px">本次起始印数</th>
+              <th style="width: 150px">定价(本册)</th>
+              <th style="width: 150px">价格变更次数</th>
+              <th style="width: 150px">出版方式</th>
+              <th style="width: 150px">合作出版者</th>
+              <th style="width: 150px">出版地（申领者所在地）</th>
+              <th style="width: 150px">印刷单位</th>
+              <th style="width: 150px">计划出版时间</th>
+              <th style="width: 150px">实际出版时间</th>
+              <th style="width: 150px">丛书名</th>
+              <th style="width: 150px">附属丛书名</th>
+              <th style="width: 150px">并列丛书名</th>
+              <th style="width: 150px">丛书著作责任者 </th>
+              <th style="width: 150px">分(辑)册号</th>
+              <th style="width: 150px">定价(本套) </th>
+              <th style="width: 150px">合作出版者</th>
+              <th style="width: 150px">出版地（申领者所在地）</th>
+              <th style="width: 150px">印刷单位</th>
+              <th style="width: 150px">计划出版时间</th>
+              <th style="width: 150px">实际出版时间</th>
+              <th style="width: 150px">丛书名</th>
+              <th style="width: 150px">附属丛书名</th>
+              <th style="width: 150px">并列丛书名</th>
+              <th style="width: 150px">丛书著作责任者 </th>
+              <th style="width: 150px">分(辑)册号</th>
+              <th style="width: 150px">定价(本套) </th> <th style="width: 150px">合作出版者</th>
+              <th style="width: 150px">数量</th>
+              <th style="width: 150px">套书名</th>
+              <th style="width: 150px">套书著作责任者</th>
+              <th style="width: 150px">引进版图书原书名</th>
+              <th style="width: 150px">版权合同登记号</th>
+              <th style="width: 150px">原出版地</th>
+              <th style="width: 150px">引进版图书原书出版者</th>
+              <th style="width: 150px">教材目录文件号</th>
+              <th style="width: 150px">目录（章节）信息</th>
+              <th style="width: 150px">备注</th>
+              <th style="width: 150px">封面设计者</th>
+              <th style="width: 150px">出版社名称</th>
+            </tr>
+            </thead>
+            <tbody id="reportListTable">
+            <% for(var i = 0; i < list.length; i++) { %>
+            <tr class="form-horizontal">
+              <td>
+                <p class="form-control-static"><%- list[i].bookTopicType %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookTopicFileNo %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookTopicNo %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookTopicClasses %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].importantTopicCode %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].firstInstanceOfficer %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].secondInstanceOfficer %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].lastInstanceOfficer %></p>
+              </td>
+              <td>
+                <pre class="form-control-static"><%- list[i].threeOpinions%></pre>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookIsbn %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookName %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookSubtitle %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookTieName %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookDetailAuthor %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookDetailWorkWay %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookDetailOtherAuthor %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookDetailOtherWorkWay %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookTextLanguage %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookTextWords %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bindingWay %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookPageNum %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><% info.bookDetailWordsNum %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><% info.bookDetailSheetNum %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><% info.bookFileType %></p>
+              </td>
+              <td>
+
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">附件类型：</label>
+                    <div class="col-xs-8">
+
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">附件数量：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><% info.bookFileNum %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">责任编辑：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><% info.dutyEditor %></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">电话：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><% info.phone %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-12">
+                  <div class="form-group">
+                    <label class="col-xs-2 control-label">内容提要：</label>
+                    <div class="col-xs-10">
+                      <pre class="form-control-static"><%- info.bookDetailSketched %></pre>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-12">
+                  <div class="form-group">
+                    <label class="col-xs-2 control-label">作者简介：</label>
+                    <div class="col-xs-10">
+                      <pre class="form-control-static"><%- info.bookDetailAuthorMsg %></pre>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">建议主题词：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.bookSubjectHeadings %></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">图书类型：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.bookType %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">图书分类：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.bookDetailKind %></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">指导分类：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.bookDetailGuideKind %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">发行范围：</label>
+                    <div class="col-xs-8">
+                      <div class="input-group">
+                        <p class="form-control-static"><%- info.bookDetailPublishScope %></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">读者对象：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.bookDetailReader %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">版次：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.bookDetailEdition %></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">印次：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.bookDetailLayoutOrder %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">成品尺寸：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.finishedSize %></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">印张数：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.printPaperNum %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">本次印量：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.printRuns %></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">本次起印量：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.currentlyPrintsRuns %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">累计印量：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.bookTotalVolume %></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">定价（本册）：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.bookPrice %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">价格变更次数：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.priceChangeNum %></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">出版方式：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.bookPublishMode %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">合作出版者：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.cooperativePublisher %></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">出版地（申领者所在地）：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.placePublication %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">印刷单位：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.printingUnit %></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">计划出版时间：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.planPublishDatetime %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">实际出版时间：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.actualPublishDatetime %></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">丛书名：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.seriesBookName %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">附属丛书名：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.accessorySeriesBookName %></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">并列丛书名：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.paratacticSeriesBookName %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">丛书著作责任者：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.seriesBookAuthor %></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">分（辑）册号：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.bookFascicleNum %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">定价（本套）：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.bookPrice %></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">数量：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.counts %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">套书名：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.packageBooksName %></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">套书著作责任者：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.packageBooksAuthor %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">引进版图书原书名：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.bookOriginalName %></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">版权合同登记号：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.copyrightContractNum %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">原出版地：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.pristinePlacePublication %></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">引进版图书原出版者：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.author %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">教材目录文件号：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.directoryFileNumber %></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">目录（章节）信息：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.catalogInformation %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-12">
+                  <div class="form-group">
+                    <label class="col-xs-2 control-label">备注：</label>
+                    <div class="col-xs-10">
+                      <pre class="form-control-static"><%- info.remarks %></pre>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">封面设计者：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.coverLayoutUser %></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">出版社名称：</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.bookPressName %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">提交人</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.submitUserName %></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">提交时间</label>
+                    <div class="col-xs-8">
+                      <p class="form-control-static"><%- info.submitDatetime %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </tr>
+            <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

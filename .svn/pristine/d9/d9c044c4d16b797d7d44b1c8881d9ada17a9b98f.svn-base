@@ -1,0 +1,47 @@
+<% if(list.length > 0) { %>
+<% for(var i = 0; i < list.length; i++) { %>
+<tr data-area = "publish" data-type = "<%- list[i].zPublishPlanReportId %>" data-publish = "<%- list[i].zPublishPlanReportDetailId %>" data-users = "<%- list[i].taskUsers %>">
+  <td><%- (i + 1) %></td>
+  <td data-check="true"><i class="fa fa-square-o" data-action="check"></i></td>
+  <td title="<%- list[i].publishYear %>"><%- list[i].publishYear %></td>
+  <td title="<%- list[i].bookAndTopicName %>"><%- list[i].bookAndTopicName %></td>
+  <td title="<%- list[i].viceBookName %>"><%- list[i].viceBookName %></td>
+  <td title="<%- list[i].bookDetailSeriesName %>"><%- list[i].bookDetailSeriesName %></td>
+  <td title="<%- list[i].pointTopicType %>"><%- list[i].pointTopicType %></td>
+  <td title="<%- list[i].bookDetailOneKind %>"><%- list[i].bookDetailOneKind %></td>
+  <td title="<%- list[i].bookDetailTwoKind %>"><%- list[i].bookDetailTwoKind %></td>
+  <td title="<%- list[i].mainRecordOneKind %>"><%- list[i].mainRecordOneKind %></td>
+  <td title="<%- list[i].mainRecordTwoKind %>"><%- list[i].mainRecordTwoKind %></td>
+  <td title="<%- list[i].publishWayType %>"><%- list[i].publishWayType %></td>
+  <td title="<%- list[i].cooperationPublisher %>"><%- list[i].cooperationPublisher %></td>
+  <td title="<%- list[i].bookDetailCompiler %>"><%- list[i].bookDetailCompiler %></td>
+  <td title="<%- list[i].topicImportantFileAuthor %>"><%- list[i].topicImportantFileAuthor %></td>
+  <td title="<%- list[i].bookDetailContentValidity %>"><%- list[i].bookDetailContentValidity %></td>
+  <td title="<%- list[i].topicType %>"><%- list[i].topicType %></td>
+  <td title="<%- list[i].publishPlanYear %>"><%- list[i].publishPlanYear %></td>
+  <td title="<%- list[i].publishPlanMonth %>"><%- list[i].publishPlanMonth %></td>
+  <td title="<%- list[i].ThousandWords %>"><%- list[i].ThousandWords %></td>
+  <td title="<%- list[i].imageNum %>"><%- list[i].imageNum %></td>
+  <td title="<%- list[i].isPublishEJournal %>"><%- list[i].isPublishEJournal %></td>
+  <td title="<%- list[i].bookDetailEditionTime %>"><%- list[i].bookDetailEditionTime %></td>
+  <td title="<%- list[i].binding %>"><%- list[i].binding %></td>
+  <td title="<%- list[i].countentSynopsis %>"><%- list[i].countentSynopsis %></td>
+  <td title="<%- list[i].topicPlanType %>"><%- list[i].topicPlanType %></td>
+  <td title="<%- list[i].topicImportantType %>"><%- list[i].topicImportantType %></td>
+  <td title="<%- list[i].ntroduceCopyrightType %>"><%- list[i].ntroduceCopyrightType %></td>
+  <td title="<%- list[i].bookDetailDutyEditor %>"><%- list[i].bookDetailDutyEditor %></td>
+  <td title="<%- list[i].bookDetailPricing %>"><%- list[i].bookDetailPricing %></td>
+  <td title="<%- list[i].themePlan %>"><%- list[i].themePlan %></td>
+  <td title="<%- list[i].remarks %>"><%- list[i].remarks %></td>
+  <td title="<%- list[i].reportDeptName %>"><%- list[i].reportDeptName %></td>
+  <td title="<%- list[i].topicNum %>"><%- list[i].topicNum %></td>
+  <td title="<%- list[i].topicState %>"><%- list[i].topicState %></td>
+  <td title="<%- list[i].taskUserNames %>"><%- list[i].taskUserNames %></td>
+  <td title="<%- list[i].taskStateName %>"><%- list[i].taskStateName %></td>
+</tr>
+<% } %>
+<% } else { %>
+<tr data-noselect="true">
+  <td colspan="37"><p class="empty-tips">没有符合指定条件的数据</p></td>
+</tr>
+<% } %>

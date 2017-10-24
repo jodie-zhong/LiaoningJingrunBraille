@@ -1,0 +1,16 @@
+<% for(var i = 0; i < list.length; i++) { %>
+<tr data-id="<%- list[i].userId %>" data-name = "<%- list[i].userName %>" data-use="<%- list[i].isUse %>">
+	<td><%- (i + 1) %></td>
+	<td data-check="true"><i class="fa fa-square-o" data-action="check"></i></td>
+	<td><%- list[i].userName %></td>
+	<td><%- list[i].userLoginName %></td>
+	<td><%- list[i].userPhone %></td>
+	<td><%- list[i].departmentName %></td>
+	<td><%- list[i].roleName %></td>
+	<% if(list[i].isUse === 1) { %>
+	<td>在职</td>
+	<% } else { %>
+	<td>离职</td>
+	<% } %>
+</tr>
+<% } %>

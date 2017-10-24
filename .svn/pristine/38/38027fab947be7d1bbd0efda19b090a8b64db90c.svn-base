@@ -1,0 +1,356 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../common/util');
+    var PageBase = require('../../common/base-page');
+
+    require('../../assets/plugins/countup/countUp.min.js');
+    require('../../assets/plugins/mcustom-scrollbar/jquery.mCustomScrollbar.concat.min.js');
+    require('../../assets/plugins/echart/echarts.common.min.js');
+
+    var config = require('../../common/global-config');
+
+    var Module = PageBase.extend(new function () {
+        var that;
+        var monthChart = null;
+        var data = null;
+        var year = null;
+        
+        /**
+         * 任务模块可处理数量
+         */
+        function project() {
+        	util.showLoading();
+            util.sendRequest({
+                action: 'common/unreadCountWorkSpace.action',
+                success:function(resp){
+                    util.hideLoading();
+                    if(resp.code === 0){
+                        for(var i =0;i<resp.data.length;i++){
+                            if(resp.data[i].unreadCount && resp.data[i].unreadCount !== '0'){
+                                that.$('span[data-authId="'+ resp.data[i].authorityId +'"]').text(resp.data[i].unreadCount).show();
+                            }
+                        }
+                    } else {
+                        console.log(resp);
+                        util.showAlert(resp.message || '查询首页任务数出错，请稍后重试！');
+                    }
+                },
+                error:function(xhr){
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('查询首页任务数出错，请稍后重试！');
+                }
+            });
+        }
+        
+        /**
+         * 选择显示折线图
+         */
+        function onEchartShow() {
+        	var echarts = that.$('input[name="choose"]:checked').val();
+//      	that.$('div[data-name = "echarts"]').hide();
+        	if (echarts === '1') {
+        		lineMonthChart(data);
+        	} else{
+        		lineYearChart(year);
+        	}
+        }
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+            // that.$container.on('click', 'button.btn-rounded', function(){
+            //     that.openPage('editor/braille-editor', {});
+            //     // that.openPage('public/print/print-preview', {content: that.tpl, title: '打印首页'});
+            // });
+
+            that.$container.on('click', 'button[data-action="openPage"]', function(){
+                that.openPage($(this).attr('data-href'));
+            });
+            
+            $(window).resize(function () {
+                if (monthChart) {
+                    monthChart.resize();
+                }
+            });
+            
+            that.$container.on('change','input[name="choose"]', function() {
+            	onEchartShow();
+            });
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+            project();            
+            // 任务图表
+            buildCharts();
+
+            setTimeout(function () {
+                // 数据初始化完毕后动画
+                animateNumber();
+                // 滚动条
+//              customScroll();
+                
+            }, 100);
+        }
+
+        /**
+         * 计数动画
+         */
+        function animateNumber() {
+            var from, to, duration, delay, decimals;
+            that.$('.countup').each(function () {
+                from = $(this).data("from") ? $(this).data("from") : 0;
+                to = $(this).data("to") ? $(this).data("to") : 100;
+                duration = $(this).data("duration") ? $(this).data("duration") : 2;
+                delay = $(this).data("delay") ? $(this).data("delay") : 1000;
+                decimals = $(this).data("decimals") ? $(this).data("decimals") : 0;
+                var options = {
+                    useEasing: true,
+                    useGrouping: true,
+                    separator: ',',
+                    prefix: $(this).data("prefix") ? $(this).data("  prefix") : '',
+                    suffix: $(this).data("suffix") ? $(this).data("suffix") : ''
+                };
+                var numAnim = new countUp($(this).get(0), from, to, decimals, duration, options);
+                setTimeout(function () {
+                    numAnim.start();
+                }, 1000);
+            });
+
+        }
+        
+        /**
+         * 当前任务完成的任务数
+         */
+        function lineMonthChart(data) {
+        	// 生成图表 月
+        	var xAxis = [], series = [];
+			for (var i = 0; i < data.length; i++) {
+				xAxis.push(data[i].taskDate);
+				series.push(data[i].taskCount || 0);
+			}
+        	var option = {
+        		title: {
+        			text: '本月内每天完成任务数量',
+        			subtext: data[0].yearMonth,
+        			left: 'center',
+        			subtextStyle: {
+            			fontSize: 15,
+            			color: '#c23531'
+        			}
+    			},
+    			tooltip : {
+        			trigger: 'axis'
+    			},
+    			grid: {
+        			left: '3%',
+        			right: '4%',
+        			bottom: '3%',
+        			containLabel: true
+    			},
+    			xAxis : [
+        			{
+            			type : 'category',
+            			boundaryGap : true,
+            			data : xAxis
+        			}
+    			],
+    			yAxis : [
+    			    {
+    		        type : 'value'
+    			    }
+    			],
+    			series : [
+    			    {
+    			        name:'完成任务数',
+            			type:'line',
+            			label: {
+                			normal: {
+                    			show: true,
+                    			position: 'top'
+                			}
+            			},
+            			data: series
+        			}
+    			]
+        	};
+        	monthChart.setOption(option);
+        }
+        
+        function lineYearChart(year) {
+        	// 生成图表 年
+			var xAxis = [], series = [];
+			for (var i = 0; i < year.length; i++) {
+				xAxis.push(year[i].taskDate);
+				series.push(year[i].taskCount || 0);
+			}
+        	var option = {
+        		title: {
+        			text: '本年内每月完成任务数量',
+        			subtext: '',
+        			left: 'center'
+    			},
+    			tooltip : {
+        			trigger: 'axis'
+    			},
+    			grid: {
+        			left: '3%',
+        			right: '4%',
+        			bottom: '3%',
+        			containLabel: true
+    			},
+    			xAxis : [
+        			{
+            			type : 'category',
+            			boundaryGap : true,
+            			data : xAxis
+        			}
+    			],
+    			yAxis : [
+    			    {
+    		        type : 'value'
+    			    }
+    			],
+    			series : [
+    			    {
+    			        name:'完成任务数',
+            			type:'line',
+            			label: {
+                			normal: {
+                    			show: true,
+                    			position: 'top'
+                			}
+            			},
+            			data: series
+        			}
+    			]
+        	};
+        	monthChart.setOption(option);
+        }
+        
+        /**
+         * 任务图表
+         */
+        function buildCharts() {
+        	seajs.use(['./assets/plugins/echart/macarons'], function () {
+        		monthChart = echarts.init(that.$('#monthLineChart')[0],'macarons');
+                // 用户图表 年
+                util.sendRequest({
+                    action: 'topic/taskCount.action',
+                    data: {flag: 2},
+                    success: function (resp) {
+                        if (resp.code === 0) {
+                            year = resp.data;
+                            lineYearChart(resp.data);
+                        }
+                    }
+                });
+        		// 用户图表 月
+                util.sendRequest({
+                    action: 'topic/taskCount.action',
+                    data: {flag: 1},
+                    success: function (resp) {
+                        if (resp.code === 0) {
+                            data = resp.data;
+                            lineMonthChart(resp.data);
+                        }
+                    }
+                });
+        	});
+        }
+
+        /**
+         * 面板滚动条
+         */
+//      function customScroll() {
+//          var thisHeight, windowHeight;
+//          if ($.fn.mCustomScrollbar) {
+//              $('.withScroll').each(function () {
+//                  $(this).mCustomScrollbar("destroy");
+//                  var scroll_height = $(this).data('height') ? $(this).data('height') : 'auto';
+//                  var data_padding = $(this).data('padding') ? $(this).data('padding') : 0;
+//                  if ($(this).data('height') == 'window') {
+//                      thisHeight = $(this).height();
+//                      windowHeight = $(window).height() - data_padding - 50;
+//                      if (thisHeight < windowHeight) scroll_height = thisHeight;
+//                      else scroll_height = windowHeight;
+//                  }
+//                  $(this).mCustomScrollbar({
+//                      scrollButtons: {
+//                          enable: false
+//                      },
+//                      autoHideScrollbar: $(this).hasClass('show-scroll') ? false : true,
+//                      scrollInertia: 150,
+//                      theme: "light",
+//                      set_height: scroll_height,
+//                      advanced: {
+//                          updateOnContentResize: true
+//                      }
+//                  });
+//              });
+//          }
+//      }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+
+            config.auth = util.auth || [];
+            config.showAll = !!util.getUrlParameters().showAll;
+
+            that.initTemplate(tpl, config);
+            
+            // 初始化变量
+            monthChart = null;
+         	data = null;
+        	year = null;
+            
+            // 如果为空，强制显示一段文字
+            if(that.$('.widget-table').length === 0){
+                that.$container.html('<H1>欢迎使用盲人读物出版流程管理系统！</H1>');
+            }
+            
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function(){
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+
+    module.exports = Module;
+});

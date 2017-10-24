@@ -1,0 +1,84 @@
+<!--封面印刷-->
+<% if(isEdit) { %>
+<div class="form-horizontal">
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">完成日期<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control date-time" name="finishDatetime" value="<%-info.finishDatetime %>"
+                 data-fv-notempty="true" data-fv-notempty-message="请填写完成日期" />
+          <input type="hidden" name="bookCoverPrintingId" value="<%- info.bookCoverPrintingId %>">
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">印刷数量<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.coverPrintingCount %>" name="coverPrintingCount"
+                 pattern="^[0-9]*$"  placeholder="印刷数量" maxlength="10" data-fv-regexp-message="请输入大于等于0的整数"
+                 data-fv-notempty="true"
+                 data-fv-notempty-message="请填写印刷数量"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group col-xs-12">
+      <label class="col-xs-2 control-label">印刷封面备注</label>
+      <div class="col-xs-10">
+        <textarea class="form-control" maxlength="256" name="coverPrintingRemarks"><%- info.coverPrintingRemarks
+          %></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+<% } else { %>
+<div class="form-horizontal">
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">完成日期:</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.finishDatetime %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">印刷数量:</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.coverPrintingCount %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group col-xs-12">
+      <label class="col-xs-2 control-label">印刷封面备注</label>
+      <div class="col-xs-10">
+        <pre class="form-control-static"><%- info.coverPrintingRemarks %></pre>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">提交人</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitUserName %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">提交时间</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitDatetime %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>

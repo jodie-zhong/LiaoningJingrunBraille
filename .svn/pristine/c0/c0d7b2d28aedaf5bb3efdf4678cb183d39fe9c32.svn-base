@@ -1,0 +1,275 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../common/util');
+    var PageBase = require('../../common/base-page');
+
+    require('../../assets/plugins/countup/countUp.min.js');
+    require('../../assets/plugins/mcustom-scrollbar/jquery.mCustomScrollbar.concat.min.js');
+    require('../../assets/plugins/echart/echarts.common.min.js');
+
+    var Module = PageBase.extend(new function () {
+        var that;
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+
+            that.$container.on('click', 'button.btn-rounded', function(){
+                that.openPage('editor/braille-editor', {});
+                // that.openPage('public/print/print-preview', {content: that.tpl, title: '打印首页'});
+            });
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+
+
+            setTimeout(function () {
+                // 数据初始化完毕后动画
+                animateNumber();
+                // 滚动条
+                customScroll();
+                // 任务图表
+                // buildTaskChart();
+            }, 100);
+        }
+
+        /**
+         * 计数动画
+         */
+        function animateNumber() {
+            var from, to, duration, delay, decimals;
+            that.$('.countup').each(function () {
+                from = $(this).data("from") ? $(this).data("from") : 0;
+                to = $(this).data("to") ? $(this).data("to") : 100;
+                duration = $(this).data("duration") ? $(this).data("duration") : 2;
+                delay = $(this).data("delay") ? $(this).data("delay") : 1000;
+                decimals = $(this).data("decimals") ? $(this).data("decimals") : 0;
+                var options = {
+                    useEasing: true,
+                    useGrouping: true,
+                    separator: ',',
+                    prefix: $(this).data("prefix") ? $(this).data("  prefix") : '',
+                    suffix: $(this).data("suffix") ? $(this).data("suffix") : ''
+                };
+                var numAnim = new countUp($(this).get(0), from, to, decimals, duration, options);
+                setTimeout(function () {
+                    numAnim.start();
+                }, 1000);
+            });
+
+        }
+
+        /**
+         * 面板滚动条
+         */
+        function customScroll() {
+            var thisHeight, windowHeight;
+            if ($.fn.mCustomScrollbar) {
+                $('.withScroll').each(function () {
+                    $(this).mCustomScrollbar("destroy");
+                    var scroll_height = $(this).data('height') ? $(this).data('height') : 'auto';
+                    var data_padding = $(this).data('padding') ? $(this).data('padding') : 0;
+                    if ($(this).data('height') == 'window') {
+                        thisHeight = $(this).height();
+                        windowHeight = $(window).height() - data_padding - 50;
+                        if (thisHeight < windowHeight) scroll_height = thisHeight;
+                        else scroll_height = windowHeight;
+                    }
+                    $(this).mCustomScrollbar({
+                        scrollButtons: {
+                            enable: false
+                        },
+                        autoHideScrollbar: $(this).hasClass('show-scroll') ? false : true,
+                        scrollInertia: 150,
+                        theme: "light",
+                        set_height: scroll_height,
+                        advanced: {
+                            updateOnContentResize: true
+                        }
+                    });
+                });
+            }
+        }
+
+        /**
+         * 任务图表
+         */
+        function buildTaskChart() {
+
+            // 基于准备好的dom，初始化echarts实例
+            var myChart1 = echarts.init(that.$('#taskLineChart')[0]), option;
+
+            option = {
+                title: {
+                    show: false
+                },
+                color: ['#319DB5', '#F2A057', '#C9625F', '#A58BD3', '#18a689', '#2B2E33', '#4584D1'],
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: ['立项任务', '审稿任务', '校对任务']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                toolbox: {
+                    show: false
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: ['03/01', '03/02', '03/03', '03/04', '03/05', '03/06', '03/07', '03/08', '03/09', '03/10']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [
+                    {
+                        name: '立项任务',
+                        type: 'line',
+                        data: [13, 15, 17, 16, 16, 13, 11, 10, 8, 9],
+                        lineStyle: {
+                            normal: {
+                                width: 1
+                            }
+                        }
+                    },
+                    {
+                        name: '审稿任务',
+                        type: 'line',
+                        data: [8, 8, 8, 9, 9, 11, 10, 9, 8, 6],
+                        lineStyle: {
+                            normal: {
+                                width: 1
+                            }
+                        }
+                    },
+                    {
+                        name: '校对任务',
+                        type: 'line',
+                        data: [10, 9, 8, 8, 8, 7, 5, 3, 3, 4],
+                        lineStyle: {
+                            normal: {
+                                width: 1
+                            }
+                        }
+                    }
+                ]
+            };
+
+            myChart1.setOption(option);
+
+            // 饼图
+            var myChart2 = echarts.init(that.$('#taskPieChart')[0]);
+
+            option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b}: {c} ({d}%)"
+                },
+                color: ['#319DB5', '#F2A057', '#C9625F', '#A58BD3', '#18a689', '#2B2E33', '#4584D1'],
+                legend: {
+                    orient: 'vertical',
+                    x: 'right',
+                    data: ['立项', '初审', '复审', '终审', '一校', '二校', '三校']
+                },
+                series: [
+                    {
+                        name: '任务分布',
+                        type: 'pie',
+                        selectedMode: 'single',
+                        radius: [0, '40%'],
+
+                        label: {
+                            normal: {
+                                position: 'inner'
+                            }
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        data: [
+                            {value: 10, name: '立项', selected: true},
+                            {value: 25, name: '审稿'},
+                            {value: 20, name: '校对'}
+                        ]
+                    },
+                    {
+                        name: '任务分布',
+                        type: 'pie',
+                        radius: ['55%', '90%'],
+
+                        data: [
+                            {value: 10, name: '立项'},
+                            {value: 5, name: '初审'},
+                            {value: 8, name: '复审'},
+                            {value: 12, name: '终审'},
+                            {value: 10, name: '一校'},
+                            {value: 8, name: '二校'},
+                            {value: 2, name: '三校'}
+                        ]
+                    }
+                ]
+            };
+
+
+            myChart2.setOption(option);
+        }
+
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            that.initTemplate(tpl, {});
+
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super();
+
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function(){
+            this._super();
+
+            console.log('...');
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+
+    module.exports = Module;
+});

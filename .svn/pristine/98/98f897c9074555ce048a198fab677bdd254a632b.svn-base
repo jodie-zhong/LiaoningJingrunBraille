@@ -1,0 +1,107 @@
+<% if(list.length > 0) { %>
+<% for(var i = 0; i < list.length; i++) { %>
+<tr data-bookId="<%- list[i].bookId %>" data-bookTopicId="<%- list[i].bookTopicId %>" data-taskState="<%- list[i].taskState %>"
+    data-flowId="<%- list[i].flowId %>" data-deploy="<%- list[i].bookDeploymentKey %>" data-taskId="<%- list[i].taskId %>"
+    data-taskUsers="<%- list[i].taskUsers %>" data-users="<%- list[i].taskUsers %>" data-state="<%- list[i].bookPrintState %>">
+  <td><%- (i + 1) %></td>
+  <td title="<%- list[i].bookOneKind %>"><%- list[i].bookOneKind %></td>
+  <td title="<%- list[i].bookName %>"><%- list[i].bookName %></td>
+  <td title="<%- list[i].bookIsbn %>"><%- list[i].bookIsbn %></td>
+  <td title="<%- list[i].bookDetailAuthor %>"><%- list[i].bookDetailAuthor %></td>
+  <td title="<%- list[i].bookDetailSketched %>"><%- list[i].bookDetailSketched %></td>
+  <td title="<%- list[i].bookDetailPublishingHouse %>"><%- list[i].bookDetailPublishingHouse %></td>
+  <td title="<%- list[i].bookDetailPublicationDate %>"><%- list[i].bookDetailPublicationDate %></td>
+  <td title="<%- list[i].bookDetailEdition %>"><%- list[i].bookDetailEdition %></td>
+  <td title="<%- list[i].revision %>"><%- list[i].revision %></td>
+  <td title="<%- list[i].bookTwoKind %>"><%- list[i].bookTwoKind %></td>
+  <td title="<%- list[i].bookSubjectHeadings %>"><%- list[i].bookSubjectHeadings %></td>
+  <td title="<%- list[i].bookDetailClassNum %>"><%- list[i].bookDetailClassNum %></td>
+  <td title=""></td>
+  <td title="<%- list[i].dutyEditor %>"><%- list[i].dutyEditor %></td>
+  <td title="<%- list[i].bookWordsNum %>"><%- list[i].bookWordsNum %></td>
+  <td title="<%- list[i].bookDetailSubmitDatetime %>"><%- list[i].bookDetailSubmitDatetime %></td>
+  <td title=""></td>
+  <td title=""></td>
+  <td title="<%- list[i].secondInstanceUserId %>"><%- list[i].secondInstanceUserId %></td>
+  <td title="<%- list[i].thirdInstanceUserId %>"><%- list[i].thirdInstanceUserId %></td>
+  <!--录入-->
+  <% for(var j = 0; j < list[i].inputVersionNumList.length; j++) { %>
+  <td title="<%- list[i].inputVersionNumList[j].handleUserId %>"><%- list[i].inputVersionNumList[j].handleUserId %></td>
+  <td title="<%- list[i].inputVersionNumList[j].bookWrongVersionNum %>"><%- list[i].inputVersionNumList[j].bookWrongVersionNum %></td>
+  <% } %>
+  <% for(var j = 0; j < list[i].inputWrongList.length; j++) { %>
+  <td title="<%- list[i].inputWrongList[j].bookWrongRate %>"><%- list[i].inputWrongList[j].bookWrongRate %></td>
+  <td title=""></td>
+  <% } %>
+  <!--一校-->
+  <% for(var j = 0; j < list[i].firstRevisalVersionNumList.length; j++) { %>
+  <td title="<%- list[i].firstRevisalVersionNumList[j].handleUserId %>"><%- list[i].firstRevisalVersionNumList[j].handleUserId %></td>
+  <td title="<%- list[i].firstRevisalVersionNumList[j].bookWrongVersionNum %>"><%- list[i].firstRevisalVersionNumList[j].bookWrongVersionNum %></td>
+  <% } %>
+  <% for(var j = 0; j < list[i].firstRevisalWrongList.length; j++) { %>
+  <td title="<%- list[i].firstRevisalWrongList[j].bookWrongRate %>"><%- list[i].firstRevisalWrongList[j].bookWrongRate %></td>
+  <td title=""></td>
+  <% } %>
+  <!--二校-->
+  <% for(var j = 0; j < list[i].secondRevisalVersionNumList.length; j++) { %>
+  <td title="<%- list[i].secondRevisalVersionNumList[j].handleUserId %>"><%- list[i].secondRevisalVersionNumList[j].handleUserId %></td>
+  <td title="<%- list[i].secondRevisalVersionNumList[j].bookWrongVersionNum %>"><%- list[i].secondRevisalVersionNumList[j].bookWrongVersionNum %></td>
+  <% } %>
+  <td title=""></td>
+  <% for(var j = 0; j < list[i].secondRevisalWrongList.length; j++) { %>
+  <td title="<%- list[i].secondRevisalWrongList[j].bookWrongRate %>"><%- list[i].secondRevisalWrongList[j].bookWrongRate %></td>
+  <td title=""></td>
+  <% } %>
+  <!--末校一次-->
+  <% for(var j = 0; j < list[i].lastRevisalOneVersionNumList.length; j++) { %>
+  <td title="<%- list[i].lastRevisalOneVersionNumList[j].handleUserId %>"><%- list[i].lastRevisalOneVersionNumList[j].handleUserId %></td>
+  <td title="<%- list[i].lastRevisalOneVersionNumList[j].bookWrongVersionNum %>"><%- list[i].lastRevisalOneVersionNumList[j].bookWrongVersionNum %></td>
+  <% } %>
+  <td title=""></td>
+  <% for(var j = 0; j < list[i].lastRevisalOneWrongList.length; j++) { %>
+  <td title="<%- list[i].lastRevisalOneWrongList[j].bookWrongRate %>"><%- list[i].lastRevisalOneWrongList[j].bookWrongRate %></td>
+  <td title=""></td>
+  <% } %>
+  <!--末校二次-->
+  <% for(var j = 0; j < list[i].lastRevisalTwoVersionNumList.length; j++) { %>
+  <td title="<%- list[i].lastRevisalTwoVersionNumList[j].handleUserId %>"><%- list[i].lastRevisalTwoVersionNumList[j].handleUserId %></td>
+  <td title="<%- list[i].lastRevisalTwoVersionNumList[j].bookWrongVersionNum %>"><%- list[i].lastRevisalTwoVersionNumList[j].bookWrongVersionNum %></td>
+  <% } %>
+  <% for(var j = 0; j < list[i].lastRevisalTwoWrongList.length; j++) { %>
+  <td title="<%- list[i].lastRevisalTwoWrongList[j].bookWrongRate %>"><%- list[i].lastRevisalTwoWrongList[j].bookWrongRate %></td>
+  <td title=""></td>
+  <% } %>
+  <!--通读-->
+  <% for(var j = 0; j < list[i].readRevisalVersionNumList.length; j++) { %>
+  <td title="<%- list[i].readRevisalVersionNumList[j].handleUserId %>"><%- list[i].readRevisalVersionNumList[j].handleUserId %></td>
+  <td title="<%- list[i].readRevisalVersionNumList[j].bookWrongVersionNum %>"><%- list[i].readRevisalVersionNumList[j].bookWrongVersionNum %></td>
+  <% } %>
+  <!--印前质检-->
+  <% for(var j = 0; j < list[i].prepressQCVersionNumList.length; j++) { %>
+  <td title="<%- list[i].prepressQCVersionNumList[j].handleUserId %>"><%- list[i].prepressQCVersionNumList[j].handleUserId %></td>
+  <td title="<%- list[i].prepressQCVersionNumList[j].bookWrongVersionNum %>"><%- list[i].prepressQCVersionNumList[j].bookWrongVersionNum %></td>
+  <% } %>
+  <td title=""></td>
+  <td title=""></td>
+  <!--最终盲文版数之后内容-->
+  <td title="<%- list[i].bookName %>"><%- list[i].bookName %></td>
+  <% for(var j = 0; j < list[i].inputVersionNumList.length; j++) { %>
+  <td><button data-bookFascicleId="<%- list[i].inputVersionNumList[j].bookFascicleId %>" class="btn btn-default btn-rounded btn-sm">查看详情</button></td>
+  <% } %>
+  <td title="<%- list[i].bookPrice %>"><%- list[i].bookPrice %></td>
+  <td title="<%- list[i].libraryNeedNum %>"><%- list[i].libraryNeedNum %></td>
+  <td title="<%- list[i].readersServiceneedNum %>"><%- list[i].readersServiceneedNum %></td>
+  <td title="<%- list[i].totalPrintNum %>"><%- list[i].totalPrintNum %></td>
+  <td title="<%- list[i].totalPrintPaperNum %>"><%- list[i].totalPrintPaperNum %></td>
+  <td title="<%- list[i].format %>"><%- list[i].format %></td>
+  <td title="<%- list[i].usePaper %>"><%- list[i].usePaper %></td>
+  <td title="<%- list[i].pubDate %>"><%- list[i].pubDate %></td>
+  <td title=""></td>
+  <td title=""></td>
+</tr>
+<% } %>
+<% } else { %>
+<tr data-noselect="true">
+  <td colspan="59"><p class="empty-tips">没有符合指定条件的数据</p></td>
+</tr>
+<% } %>

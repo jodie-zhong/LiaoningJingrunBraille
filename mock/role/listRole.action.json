@@ -1,0 +1,69 @@
+{
+  "code": 0,
+  "message": "查询列表成功",
+  "data": {
+    "records": [
+      {
+        "roleId": "21",
+        "roleName": "出版部排版组长",
+        "roleDesc": "排版组长"
+      },
+      {
+        "roleId": "22",
+        "roleName": "出版部排版员",
+        "roleDesc": "排版员"
+      },
+      {
+        "roleId": "23",
+        "roleName": "出版部设计组长",
+        "roleDesc": "设计组长"
+      },
+      {
+        "roleId": "24",
+        "roleName": "出版部设计员",
+        "roleDesc": "设计员"
+      },
+      {
+        "roleId": "25",
+        "roleName": "出版部物资保管员",
+        "roleDesc": "物资保管员"
+      },
+      {
+        "roleId": "26",
+        "roleName": "出版部责任印刷",
+        "roleDesc": "责任印刷"
+      },
+      {
+        "roleId": "27",
+        "roleName": "发行部部门负责人",
+        "roleDesc": "部门负责人"
+      },
+      {
+        "roleId": "28",
+        "roleName": "发行部业务员",
+        "roleDesc": "业务员"
+      },
+      {
+        "roleId": "29",
+        "roleName": "发行部内勤人员",
+        "roleDesc": "内勤人员"
+      },
+      {
+        "roleId": "30",
+        "roleName": "读者服务部部门负责人",
+        "roleDesc": "部门负责人"
+      }
+    ],
+    "pageindex": {
+      "startindex": 1,
+      "endindex": 4
+    },
+    "pageCount": 4,
+    "pageSize": 10,
+    "pageNow": 3,
+    "rowCount": 37,
+    "startPage": 0,
+    "pagecode": 5,
+    "firstResult": 20
+  }
+}

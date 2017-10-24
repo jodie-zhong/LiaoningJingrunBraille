@@ -1,0 +1,442 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var Class = require('./class');
+    var util = require('./util.js');
+    var config = require('./global-config');
+    // 表单校验组件
+    require('../assets/plugins/form-validation/formValidation.min');
+    require('../assets/plugins/form-validation/formValidation.min.css');
+    // 日期组件
+    require('../assets/plugins/bootstrap-datetimepicker/js/bootstrap-datatimepicker');
+    require('../assets/plugins/bootstrap-datetimepicker/js/moment-with-locales');
+    require('../assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css');
+
+    /**
+     * Page页面基类
+     * 具体模块页面，由Index进行加载管理
+     */
+    var PageBase = Class.extend({
+        /**
+         * 非对话框类页面
+         */
+        isDialog: false,
+
+        /**
+         * 选择容器内对象
+         * @param selector
+         */
+        $: function (selector) {
+            return this.$container.find(selector);
+        },
+
+        /**
+         * 子类中需要在onInit中通过this._super()调用该方法
+         * @param $container
+         * @param tpl
+         * @param data
+         * @param indexRef
+         */
+        onInit: function ($container, tpl, data, indexRef) {
+            this.$container = $container;
+            this.index = indexRef;
+            this.tpl = tpl;
+
+            // this.initTemplate(tpl, {});
+
+            var that = this;
+            // 绑定公共事件
+            that.$container.on('click', 'button[data-open]', function () {
+                var $el = $(this);
+                var module = $el.attr('data-open');
+                var data = $el.attr('data-data') || '{}';
+                data = JSON.parse(data);
+
+                that.onBackElement = $(this).parent().parent().find('input');
+                // 界面值带回给对话框
+                data.id = that.onBackElement.attr('data-id');
+                data.name = that.onBackElement.val();
+                util.openPage(module, data);
+            });
+        },
+
+        /**
+         * 子类中需要在onBack中通过this._super()调用该方法
+         */
+        onBack: function (data) {
+            // 设置返回值公共方法
+            if (data && data.name && data.id && this.onBackElement) {
+                this.onBackElement.val(data.name);
+                this.onBackElement.attr('data-value', data.id);
+                //this.onBackElement.focus();
+                this.onBackElement.change();
+                //this.onBackElement.blue();
+            }
+        },
+
+        /**
+         * 子类需要在onResize中处理窗口缩放事件
+         */
+        onResize: function () {
+
+        },
+
+        /**
+         * 关闭当前页面
+         */
+        close: function (data) {
+            // this.index.closeD(this.id, data);
+        },
+
+        /**
+         * 销毁页面
+         */
+        onDestroy: function () {
+
+        },
+
+        /**
+         * 打开新页面
+         * @param page
+         * @param data
+         * @param silence
+         */
+        openPage: function (page, data, silence) {
+            this.index.openPage(page, data, silence);
+        },
+
+        /**
+         * 打开主页（一般页面初始化异常时调用）
+         */
+        backHome: function () {
+            this.index.openPage(config.defaultModule);
+        },
+
+        /**
+         * 将页面模板初始化到容器中
+         * @param tpl
+         * @param data
+         */
+        initTemplate: function (tpl, data) {
+            this.$container.html(util.template(tpl, data));
+        },
+
+        /**
+         * 权限控制
+         * @param tpl
+         */
+        authControl: function (tpl) {
+
+            return tpl;
+        },
+
+        /**
+         * 初始化表单校验
+         * @param $form
+         */
+        initValidate: function ($form) {
+            // $form.validator({focus: false});
+            $form.formValidation({
+                // 适配Bootstrap框架
+                framework: 'bootstrap',
+                // 中文
+                locale:'zh_CN',
+                trigger:'change blur keyup'
+            });
+        },
+
+        /**
+         * 执行表单校验
+         * @param $form
+         * @returns {boolean}
+         */
+        validate: function ($form) {
+             //$form.find('input[readonly],select[readonly],textarea[readonly]').attr('data-read', 'only').removeAttr('readonly');
+             $form.data('formValidation').validate();
+             //$form.find('input[data-read],select[data-read],textarea[data-read]').attr('readonly', 'true');
+            //
+            // var errorCount = 0, $el;
+            // $form.find('.has-error').each(function () {
+            //     $el = $(this);
+            //     if ($el.is(':hidden') || $el.parents(':hidden').length > 0) {
+            //         return;
+            //     } else {
+            //         errorCount++;
+            //     }
+            // });
+            //
+            // return (errorCount === 0);
+            
+            return $form.data('formValidation').isValid();
+        },
+
+        /**
+         * 派发自定义事件事件
+         * @param eventName
+         * @param data
+         */
+        dispatchEvent: function (eventName, data) {
+            var event = document.createEvent('Events');
+            event.initEvent(eventName.toLowerCase(), false, false);
+            event.data = data;
+            document.dispatchEvent(event);
+        },
+
+        /**
+         * 当前页面所有监听事件列表
+         */
+        listeners: {},
+
+        /**
+         * 添加自定义事件监听
+         * @param eventName
+         * @param listener
+         */
+        addEventListener: function (eventName, listener) {
+            eventName = eventName.toLowerCase();
+            // 记录已经监听的事件
+            this.listeners[eventName] = this.listeners[eventName] || [];
+            this.listeners[eventName].push(listener);
+            document.addEventListener(eventName.toLowerCase(), listener);
+        },
+
+        /**
+         * 清除自定义事件监听（仅能清除当前page的事件）
+         * @param eventName
+         * @param listener
+         */
+        removeEventListener: function (eventName, listener) {
+            eventName = eventName.toLowerCase();
+            var evtListeners = this.listeners[eventName] || [];
+            for (var len = evtListeners.length, i = len - 1; i >= 0; i--) {
+                // 如果指定了listener则移除指定监听，否则移除所有监听
+                if (!listener || evtListeners[i] === listener) {
+                    document.removeEventListener(eventName, evtListeners[i]);
+                    evtListeners.splice(i, 1);
+                }
+            }
+        },
+
+        /**
+         * 生成分页页码
+         * @param pageNow
+         * @param pageCount
+         */
+        buildPagination: function (pageNow, pageCount) {
+            if (pageCount === 0) {
+                var pageTpl = '<nav class="custom-pagination">' + '</nav>';
+                return pageTpl;
+            } else if (pageCount === 1) {
+                var pageTpl = '<nav class="custom-pagination"><ul class="pagination">' +
+                    '<li><a class="disabled"><span>&laquo;</span></a></li>' +
+                    '<li class="active"><a class="disabled"><span>1</span></a></li>' +
+                    '<li><a class="disabled"><span>&raquo;</span></a></li>' +
+                    '</ul></nav>';
+                return pageTpl;
+            } else {
+                var pageTpl = '<nav class="custom-pagination">' +
+                    '<ul class="pagination">' +
+                    '<li>';
+                // 如果是第一页，则不能向前
+                if (pageNow === 1) {
+                    pageTpl += '<a  class="disabled">' +
+                        '<span>&laquo;</span>' +
+                        '</a>';
+                } else {
+                    pageTpl += '<a data-page="' + (pageNow - 1) + '">' +
+                        '<span>&laquo;</span>' +
+                        '</a>';
+                }
+                pageTpl += '</li>';
+
+                // 中间页码
+                if (pageNow !== 1 && pageNow >= 4 && pageCount !== 4) {
+                    pageTpl += '<li><a data-page="1">1</a></li>';
+                }
+                if (pageNow - 2 > 2 && pageNow <= pageCount && pageCount > 5) {
+                    pageTpl += '<li><span>...</span></li>';
+                }
+                var start = pageNow - 2, end = pageNow + 2;
+                if ((start > 1 && pageNow < 4) || pageNow === 1) {
+                    end++;
+                }
+                if (pageNow > pageCount - 4 && pageNow >= pageCount) {
+                    start--;
+                }
+                for (; start <= end; start++) {
+                    if (start <= pageCount && start >= 1) {
+                        if (start !== pageNow) {
+                            pageTpl += '<li><a data-page="' + start + '">' + start + '</a></li>';
+                        } else {
+                            pageTpl += '<li class="active"><a data-page="' + start + '">' + start + '</a></li>';
+                        }
+                    }
+                }
+                if (pageNow + 2 < pageCount - 1 && pageNow >= 1 && pageCount > 5) {
+                    pageTpl += '<li><span>...</span></li>';
+                }
+                if (pageNow !== pageCount && pageNow < pageCount - 2 && pageCount !== 4) {
+                    pageTpl += '<li><a data-page="' + pageCount + '">' + pageCount + '</a>';
+                }
+
+                // 如果是尾页，则不能向后
+                pageTpl += '<li>';
+                if (pageNow === pageCount) {
+                    pageTpl += '<a class="disabled">' +
+                        '<span>&raquo;</span>' +
+                        '</a>';
+                } else {
+                    pageTpl += '<a data-page="' + (pageNow + 1) + '">' +
+                        '<span>&raquo;</span>' +
+                        '</a>';
+                }
+
+                pageTpl += '</li>' +
+                    '</ul>' +
+                    '</nav>';
+
+                return pageTpl;
+            }
+        },
+
+        /**
+         * 根据Form内输入框生成请求参数
+         * @param $els
+         */
+        buildFormParams: function ($els) {
+            var params = {}, $el;
+            $els.each(function () {
+                $el = $(this);
+                switch (this.nodeName) {
+                    case 'INPUT':
+                        if ($el.attr('name')) {
+                            if (this.type === 'text' || this.type === 'email' || this.type === 'number' || this.type === 'password') {
+                                params[$el.attr('name')] = $el.attr('data-value') ? $el.attr('data-value') : $el.val();
+                            } else if (this.type === 'radio') {
+                                if ($el.prop('checked')) {
+                                    params[$el.attr('name')] = $el.val();
+                                }
+                            } else if (this.type === 'checkbox') {
+                                if ($el.prop('checked')) {
+                                    params[$el.attr('name')] = params[$el.attr('name')] || [];
+                                    params[$el.attr('name')].push($el.val());
+                                }
+                            }
+                        }
+
+                        break;
+                    case 'SELECT':
+                        if ($el.attr('name')) {
+                            params[$el.attr('name')] = $el.val();
+                        }
+                        break;
+                    case 'TEXTAREA':
+                        if ($el.attr('name')) {
+                            params[$el.attr('name')] = $el.attr('data-value') ? $el.attr('data-value') : $el.val();
+                        }
+                        break;
+                    default:
+                }
+            });
+
+            // 重新整理
+            for (var i in params) {
+                if (params.hasOwnProperty(i) && typeof params[i] === 'object') {
+                    params[i] = params[i].join(',');
+                }
+            }
+
+            return params;
+        },
+
+        /**
+         * 生成搜索参数
+         * @param $els
+         * @returns {{}}
+         */
+        buildSearchParams: function ($els) {
+            var params = {}, $el;
+            $els.each(function () {
+                $el = $(this);
+                params[$el.attr('data-search')] = $el.val();
+            });
+
+            return params;
+        },
+
+        /**
+         * 设置表格选择状态
+         * @param tableId
+         * @param callback
+         */
+        makeSelectableTable: function (tableId, selectCallback, checkCallback) {
+            this.$container.on('click', tableId + ' tbody td', function () {
+                var $el = $(this);
+                if ($el.attr('data-check')) {
+                    // 处理勾选状态
+                    var isMulti = $el.parents('table').attr('data-multi');
+                    // 如果是非多选则清除选中状态
+                    if (!isMulti) {
+                        $el.parent().find('i[data-action="check"]').removeClass('fa-check-square-o').addClass('fa-square-o');
+                        $el.parent().removeAttr('checked');
+                    }
+                    // 设置选择状态
+                    if ($el.find('i[data-action="check"]').hasClass('fa-check-square-o')) {
+                        $el.find('i[data-action="check"]').removeClass('fa-check-square-o').addClass('fa-square-o');
+                        $el.parent().removeAttr('checked');
+                    } else {
+                        $el.find('i[data-action="check"]').removeClass('fa-square-o').addClass('fa-check-square-o');
+                        $el.parent().attr('checked', 'checked');
+                    }
+
+                    if (checkCallback) {
+                        checkCallback();
+                    }
+                } else {
+                    // 处理当前行
+                    $el.parents('tbody').find('tr').removeClass('info');
+                    var $tr = $el.parent();
+                    if ($tr.hasClass('info')) {
+                        $tr.removeClass('info');
+                    } else {
+                        $tr.addClass('info');
+                    }
+                    // 回调
+                    if (selectCallback) {
+                        selectCallback();
+                    }
+                }
+
+                // 判断全选状态
+                if ($el.parents('tbody').find('i[data-action="check"]:not(.fa-check-square-o)').length === 0) {
+                    $el.parents('table').find('thead i[data-action="check"]').removeClass('fa-square-o').addClass('fa-check-square-o');
+                } else {
+                    $el.parents('table').find('thead i[data-action="check"]').removeClass('fa-check-square-o').addClass('fa-square-o');
+                }
+            });
+
+            this.$container.on('click', tableId + ' thead i[data-action="check"]', function () {
+                var $el = $(this);
+                if ($el.hasClass('fa-check-square-o')) {
+                    // 取消全选
+                    $el.removeClass('fa-check-square-o').addClass('fa-square-o');
+                    $el.parents('table').find('tbody tr i[data-action="check"]').removeClass('fa-check-square-o').addClass('fa-square-o');
+                    $el.parents('table').find('tbody tr[checked]').removeAttr('checked');
+                } else {
+                    // 全选
+                    $el.removeClass('fa-square-o').addClass('fa-check-square-o');
+                    $el.parents('table').find('tbody tr i[data-action="check"]').removeClass('fa-square-o').addClass('fa-check-square-o');
+                    $el.parents('table').find('tbody tr').attr('checked', 'checked');
+                }
+
+                if (checkCallback) {
+                    checkCallback();
+                }
+            });
+        }
+    });
+
+
+    module.exports = PageBase;
+
+});

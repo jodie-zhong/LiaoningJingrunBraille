@@ -1,0 +1,380 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    var PageBase = require('../../../common/base-page');
+    require('../../../assets/plugins/zTree/jquery.ztree.all.min');
+    require('../../../assets/plugins/zTree/css/zTreeStyle/zTreeStyle.css');
+
+    // 角色列表模板
+    var roleListTpl = require('./role-manage-list.tpl');
+    var Module = PageBase.extend(new function () {
+        var that;
+        // 当前选中的角色ID
+        var currentRoleId = '';
+        // 当前选中的角色信息
+        var currentRoleInfo = null;
+        //当前选中的页码
+        var currentPage = 1;
+
+        var treeData = null;
+        var authTree = null;
+
+        /**
+         * 角色列表
+         */
+        function queryRoleList() {
+            // 销毁权限树
+            if (authTree) {
+                authTree.destroy();
+                authTree = null;
+                that.$('#btnAuthSave').attr('disabled', 'disabled');
+                that.$('.empty-tips').show();
+            }
+            // 切换列表
+            currentRoleId = '';
+            var queryData = {
+                page: currentPage
+            };
+            util.showLoading();
+            util.sendRequest({
+                data: queryData,
+                action: 'role/listRole.action',
+                success: function (resp) {
+                    util.hideLoading();
+                    if (resp.code === 0) {
+                        that.$('#roleListTable').html(util.template(roleListTpl, {list: resp.data.records}));
+                        // 分页数据
+                        that.$('#roleManagePaging').html(that.buildPagination(resp.data.pageNow, resp.data.pageCount));
+                    } else {
+                        console.log(resp);
+                        util.showAlert(resp.message || '查询角色列表出错，请稍后重试！');
+                    }
+                },
+                error: function (xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('查询角色列表出错，请稍后重试！');
+                }
+            });
+        }
+
+        /**
+         * 生成权限树
+         * @param authList
+         */
+        function buildAuthTree(authList) {
+            // 先销毁树
+            if (authTree) {
+                authTree.destroy();
+                authTree = null;
+                that.$('#btnAuthSave').attr('disabled', 'disabled');
+                that.$('.empty-tips').show();
+            }
+            // 生成权限树并勾选对应权限
+            that.$('.empty-tips').hide();
+
+            var setting = {
+                check: {
+                    enable: true
+                },
+                data: {
+                    simpleData: {
+                        enable: true
+                    }
+                }
+            };
+            for(var i = 0; i < treeData.length; i++){
+                treeData[i].checked = false;
+                for(var j = 0; j < authList.length; j++){
+                    if(treeData[i].authorityId === authList[j].authorityId){
+                        treeData[i].checked = true;
+                        break;
+                    }
+                }
+            }
+
+            authTree = $.fn.zTree.init(that.$('#authTree'), setting, treeData);
+        }
+
+        /**
+         * 当前选中角色信息
+         */
+        function searchRoleInfo(id) {
+            if (id) {
+                currentRoleId = id;
+                var params = {
+                    roleId: currentRoleId
+                };
+                util.showLoading();
+                util.sendRequest({
+                    data: params,
+                    action: 'role/detailRole.action',
+                    success: function (resp) {
+                        util.hideLoading();
+
+                        if (resp.code === 0) {
+                            currentRoleInfo = resp.data;
+                            // 查询角色权限
+                            searchRoleAuthority();
+                        } else {
+                            console.log(resp);
+                            util.showAlert(resp.message || '查询角色详情出错，请稍后重试！');
+                        }
+                    },
+                    error: function (xhr) {
+                        // XHR错误
+                        util.hideLoading();
+                        console.log(xhr);
+                        util.showAlert('查询角色详情出错，请稍后重试！');
+                    }
+                });
+            }
+        }
+
+        /**
+         * 删除角色行
+         */
+        function deleteRole() {
+            util.showConfirm('确定要将 “' + currentRoleInfo.roleName + '” 删除吗？', function () {
+                var params = {
+                    roleId: currentRoleInfo.roleId
+                };
+
+                util.showLoading();
+                util.sendRequest({
+                    data: params,
+                    action: 'role/removeRole.action',
+                    success: function (resp) {
+                        util.hideLoading();
+                        if (resp.code === 0) {
+                            // 成功删除后直接刷新列表
+                            queryRoleList();
+                            that.$('#btnRoleModify,#btnRoleDelete').attr('disabled', 'disabled');
+                        } else {
+                            console.log(resp);
+                            util.showAlert(resp.message || '删除角色出错，请稍后重试！');
+                        }
+                    },
+                    error: function (xhr) {
+                        // XHR错误
+                        util.hideLoading();
+                        console.log(xhr);
+                        util.showAlert('删除角色出错，请稍后重试！');
+                    }
+                });
+            });
+        }
+
+        /**
+         * 查询角色权限
+         */
+        function searchRoleAuthority() {
+            var params = {
+                roleId: currentRoleId
+            };
+            util.showLoading();
+            util.sendRequest({
+                data: params,
+                action: 'role/roleAuth.action',
+                success: function (resp) {
+                    util.hideLoading();
+                    if (resp.code === 0) {
+                        // 生成权限树
+                        buildAuthTree(resp.data.authEntities || []);
+                        // 成功之后保存按钮可用
+                        that.$('#btnAuthSave').removeAttr('disabled');
+                    } else {
+                        console.log(resp);
+                        util.showAlert(resp.message || '查询角色权限出错，请稍后重试！');
+                    }
+                },
+                error: function (xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('查询角色权限出错，请稍后重试！');
+                }
+            });
+        }
+
+        /**
+         * 保存权限
+         */
+        function saveAuthority() {
+            // 遍历树获取选择的节点
+            var nodes = authTree.getCheckedNodes(true);
+            var auths = [];
+            var lookAuths = [];
+            for (var i = 0; i < nodes.length; i++) {
+                auths.push(nodes[i].authorityId);
+                lookAuths.push('0');
+            }
+
+            util.showLoading();
+            util.sendRequest({
+                action: 'role/setAuth.action',
+                data: {
+                    roleId: currentRoleId,
+                    auths: auths.join(','),
+                    lookAuths: lookAuths.join(',')
+                },
+                success: function (resp) {
+                    util.hideLoading();
+                    if (resp.code === 0) {
+                        util.showAlert('保存角色权限成功！');
+                    } else {
+                        console.log(resp);
+                        util.showAlert(resp.message || '保存角色权限出错，请稍后重试！');
+                    }
+                },
+                error: function (xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('保存角色权限出错，请稍后重试！');
+                }
+            });
+        }
+
+        /**
+         * 跳转页面
+         */
+        function jumpPage() {
+            var $el = $(this);
+            var page = $el.attr('data-page');
+            if (page) {
+                // 修改页面后重新刷新页面数据
+                currentPage = page;
+                queryRoleList();
+                that.$('#btnRoleModify,#btnRoleDelete').attr('disabled', 'disabled');
+            }
+        }
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+            // 选中
+            that.$container.on('click', '#roleListTable tr', function () {
+                // 选中状态
+                that.$('#roleListTable').find('tr').removeClass('info');
+                $(this).addClass('info');
+                // 查询角色详情
+                var id = $(this).attr('data-id');
+                if (id) {
+                    //角色信息查看
+                    searchRoleInfo(id);
+                }
+                // 修改、删除设置按钮可用
+                that.$('#btnRoleModify,#btnRoleDelete').removeAttr('disabled');
+            });
+
+            //新增
+            that.$container.on('click', '#btnRoleAdd', function () {
+                that.openPage('system/role/role-manage-edit', {});
+            });
+            //修改
+            that.$container.on('click', '#btnRoleModify', function () {
+                that.openPage('system/role/role-manage-edit', currentRoleInfo);
+            });
+            // 删除
+            that.$container.on('click', '#btnRoleDelete', deleteRole);
+
+            // 分页
+            that.$container.on('click', '#roleManagePaging a', jumpPage);
+
+            // 保存权限
+            that.$container.on('click', '#btnAuthSave', saveAuthority);
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+            // 查询权限树合集
+            util.showLoading();
+            util.sendRequest({
+                action: 'role/initAuth.action',
+                success: function (resp) {
+                    util.hideLoading();
+                    if (resp.code === 0) {
+                        var list = resp.data;
+                        treeData = [];
+                        for(var i = 0; i < list.length;i++){
+                            list[i].id = list[i].authorityId;
+                            list[i].pId = list[i].authorityFatherId;
+                            list[i].name = list[i].authorityName;
+                            list[i].open = true;
+                            treeData.push(list[i]);
+                        }
+
+                        // 查询基础数据成功之后再查询角色列表
+                        queryRoleList();
+                    } else {
+                        console.log(resp);
+                        util.showAlert(resp.message || '查询权限基础数据出错，请稍后重试！');
+                    }
+                },
+                error: function (xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('查询权限基础数据出错，请稍后重试！');
+                }
+            });
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            that.initTemplate(tpl, {});
+
+            // 初始化数据
+            currentRoleId = '';
+            currentRoleInfo = null;
+            currentPage = 1;
+            treeData = null;
+            authTree = null;
+
+            // 初始化页面事件
+            initPageEvent();
+            // 初始化页面数据
+            initPageData();
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+            if (data && data.refresh === true) {
+                queryRoleList();
+                //将修改与新增按钮置灰
+                that.$('#btnRoleModify,#btnRoleDelete').attr('disabled', 'disabled');
+            }
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function () {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+    }());
+
+    module.exports = Module;
+});

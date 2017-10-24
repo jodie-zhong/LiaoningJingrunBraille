@@ -1,0 +1,38 @@
+{
+	"code": 0,
+	"message": "查询列表成功",
+	"data": {
+		"records": [
+			{
+				"codeId": "1",
+				"code": "0001",
+				"value": "处理状态",
+				"remark": "处理状态",
+				"isUse": 1
+			}, {
+				"codeId": "5",
+				"code": "0002",
+				"value": "选题状态",
+				"remark": "选题状态",
+				"isUse": 2
+			}, {
+				"codeId": "18",
+				"code": "0003",
+				"value": "选题类型",
+				"remark": "选题类型",
+				"isUse": 1
+			}
+		],
+		"pageindex": {
+			"startindex": 1,
+			"endindex": 1
+		},
+		"pageCount": 1,
+		"pageSize": 10,
+		"pageNow": 1,
+		"rowCount": 3,
+		"startPage": 0,
+		"pagecode": 5,
+		"firstResult": 0
+	}
+}

@@ -1,0 +1,11 @@
+{
+  "code": 0,
+  "message": "查询角色详情成功",
+  "data": {
+    "roleId": "10",
+    "roleName": "盲文编译部校对",
+    "roleDesc": "校对",
+    "authEntities": null,
+    "isUse": "1"
+  }
+}

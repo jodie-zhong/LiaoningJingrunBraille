@@ -1,0 +1,40 @@
+{
+	"code": 0,
+	"message": "查询列表成功",
+	"data": {
+		"records": [
+			{
+				"trainId": "2",
+				"trainName": "培训2",
+				"trainNum": "2",
+				"trainUnit": "2",
+				"trainDatetime": "",
+				"trainContent": "",
+				"trainForm": "",
+				"trainHour": "",
+				"trainIntegral": ""
+			}, {
+				"trainId": "1",
+				"trainName": "培训1",
+				"trainNum": "1",
+				"trainUnit": "1",
+				"trainDatetime": "2017-05-23 09:25:15",
+				"trainContent": "",
+				"trainForm": "",
+				"trainHour": "",
+				"trainIntegral": ""
+			}
+		],
+		"pageindex": {
+			"startindex": 1,
+			"endindex": 1
+		},
+		"pageCount": 1,
+		"pageSize": 10,
+		"pageNow": 1,
+		"rowCount": 2,
+		"startPage": 0,
+		"pagecode": 5,
+		"firstResult": 0
+	}
+}

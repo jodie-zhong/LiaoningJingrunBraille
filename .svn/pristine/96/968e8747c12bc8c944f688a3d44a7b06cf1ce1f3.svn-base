@@ -1,0 +1,17 @@
+<!--译校通读-任务分配-->
+<div class="form-horizontal">
+    <div class="row">
+        <div class="col-xs-6 form-group">
+            <label class="col-xs-4 control-label">下一流程</label>
+            <div class="col-xs-8">
+                <p class="form-control-static">接收书稿（任务人），待修改</p>
+            </div>
+        </div>
+        <div class="col-xs-6 form-group">
+            <label class="col-xs-5 control-label">下一流程任务人</label>
+            <div class="col-xs-7">
+                <p class="form-control-static">王芳，待修改</p>
+            </div>
+        </div>
+    </div>
+</div>

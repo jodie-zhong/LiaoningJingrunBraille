@@ -1,0 +1,50 @@
+{
+  "code": 0,
+  "message": "查询流程详情成功",
+  "data": {
+    "bookTopicId": null,
+    "bookTopicName": null,
+    "bookSeriesName": null,
+    "bookTopicType": null,
+    "bookTopicRecommendType": null,
+    "bookTopicFileNo": null,
+    "bookTopicNo": null,
+    "bookTopicOneKind": null,
+    "bookTopicOneKindName": null,
+    "bookTopicTwoKind": null,
+    "bookTopicTwoKindName": null,
+    "bookTopicState": null,
+    "bookTopicIsFascicle": null,
+    "bookTopicFascicleNum": null,
+    "bookTopicIsUrgent": null,
+    "bookTopicSelectProperty": null,
+    "bookTopicResult": null,
+    "bookDetailAuthor": null,
+    "bookDetailWorkWay": null,
+    "bookDetailAuthorEducation": null,
+    "bookDetailWords": null,
+    "bookDetailAuthorTitles": null,
+    "bookDetailSubmitDatetime": null,
+    "bookDetailAuthorSpeciality": null,
+    "bookDetailAuthorResult": null,
+    "bookDetailAuthorContactWay": null,
+    "bookDetailName": null,
+    "bookDetailEdition": null,
+    "bookDetailPublishingHouse": null,
+    "bookDetailPublicationDate": null,
+    "bookDetailSketched": null,
+    "bookDetailMarketMsg": null,
+    "submitUserId": null,
+    "submitUserName": null,
+    "submitDatetime": null,
+    "nextTaskFlowInfoEntities": null,
+    "nextFlowInfoEntities": [
+      {
+        "nextFlowId": "3",
+        "nextFlowName": "部门负责人审核",
+        "flowDepartment": "5",
+        "flowRole": "7"
+      }
+    ]
+  }
+}

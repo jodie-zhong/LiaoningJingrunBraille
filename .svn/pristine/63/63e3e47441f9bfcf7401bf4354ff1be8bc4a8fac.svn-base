@@ -1,0 +1,44 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    module.exports = {
+        /* 选题申报 */
+        // 选题申报
+        'brailleTopicDeclare': 'topic-manage/topic-manage-create',
+        // 部门负责人审核
+        'brailleEditorialTrial': 'topic-manage/topic-manage-principal',
+        // 总编辑/副总编辑审批意见
+        'brailleChiefEditorTrial': 'topic-manage/topic-manage-chief',
+        // 选题上报信息
+        'brailleTopicReport':'topic-manage/topic-manage-report',
+        // 选题大会信息
+        'brailleTopicConference': 'topic-manage/topic-manage-conference',
+        // 待定确认
+        'braillePend': 'topic-manage/topic-manage-hold',
+        
+        
+        /* 选题备案 */
+       	// 选题备案新增
+       	'': 'topic-record/topic-record-create',
+    	// 重大选题备案登记表
+    	'bigTopicRecordRegister': 'topic-record/import-topic-register',
+    	// 重大部门负责人审核意见
+    	'bigBrailleEditorialTrial': 'topic-record/topic-record-principal',
+    	// 重大总编辑/副总编辑审核
+    	'bigBrailleChiefEditorTrial': 'topic-record/topic-record-chief',
+    	// 重大上报版署
+    	'bigReportBureauPublication': 'topic-record/topic-record-report',
+    	// 重大备案登记
+		'bigRecordRegister': 'topic-record/topic-record-copy',
+		// 引进选题备案登记表
+    	'importTopicRecordRegister': 'topic-record/cite-topic-register',
+    	// 引进部门负责人审核意见
+    	'importBrailleEditorialTrial': 'topic-record/topic-record-principal',
+    	// 引进总编辑/副总编辑审核
+    	'importBrailleChiefEditorTrial': 'topic-record/topic-record-chief',
+    	// 引进备案登记
+		'importRecordRegister': 'topic-record/topic-record-copy',
+
+
+    };
+});

@@ -1,0 +1,458 @@
+<!--成本预算-编校印制成本核算-->
+<!---------------------------------------------------------------------------------------------编辑状态--------------------------------------------------------------------------------------------->
+<% if(isEdit) { %>
+<div class="form-horizontal">
+  <div class="row">
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">图书名称<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input class="form-control" value="<%- info.topicDetailOldEdition %>" name="topicDetailOldEditionM" placeholder="图书名称" maxlength="16" data-fv-notempty="true"
+                 data-fv-notempty-message="请填写图书名称"/>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">组稿种类</label>
+        <div class="col-xs-8">
+          <select name="printColorNum" class="form-control" data-fv-notempty="true" data-fv-notempty-message="请选择组稿种类" title="组稿种类">
+            <% if(info.bookFascicleList && info.bookFascicleList.length > 0) { %>
+            <% for(var k = 0; k < info.bookFascicleList.length; k++) { %>
+            <% if(info.bookFascicleList[k].bookFascicleId === info.rightWrongList[i].bookFascicleId){ %>
+            <option value='<%- info.bookFascicleList[k].bookFascicleId %>' selected><%- info.bookFascicleList[k].bookFascicleBookName %></option>
+            <% }else{ %>
+            <option value='<%- info.bookFascicleList[k].bookFascicleId %>'><%- info.bookFascicleList[k].bookFascicleBookName %></option>
+            <% } %>
+            <% } %>
+            <% } %>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">组稿数量<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input class="form-control" value="<%- info.topicDetailOldEdition %>" name="topicDetailOldEditionM" placeholder="组稿数量" maxlength="16" data-fv-notempty="true"
+                 data-fv-notempty-message="请填写组稿数量"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">一审 种类</label>
+        <div class="col-xs-8">
+          <select name="printColorNum" class="form-control" data-fv-notempty="true" data-fv-notempty-message="请选择一审种类" title="一审种类">
+            <% if(info.bookFascicleList && info.bookFascicleList.length > 0) { %>
+            <% for(var k = 0; k < info.bookFascicleList.length; k++) { %>
+            <% if(info.bookFascicleList[k].bookFascicleId === info.rightWrongList[i].bookFascicleId){ %>
+            <option value='<%- info.bookFascicleList[k].bookFascicleId %>' selected><%- info.bookFascicleList[k].bookFascicleBookName %></option>
+            <% }else{ %>
+            <option value='<%- info.bookFascicleList[k].bookFascicleId %>'><%- info.bookFascicleList[k].bookFascicleBookName %></option>
+            <% } %>
+            <% } %>
+            <% } %>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">A档工作量（千字）<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input class="form-control" value="<%- info.topicDetailOldEdition %>" name="topicDetailOldEditionM" placeholder="A档工作量（千字）" maxlength="16" data-fv-notempty="true"
+                 data-fv-notempty-message="请填写A档工作量（千字）"/>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">B档工作量（千字）<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input class="form-control" value="<%- info.topicDetailOldEdition %>" name="topicDetailOldEditionM" placeholder="B档工作量（千字）" maxlength="16" data-fv-notempty="true"
+                 data-fv-notempty-message="请填写B档工作量（千字）"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">二审 种类</label>
+        <div class="col-xs-8">
+          <select name="printColorNum" class="form-control" data-fv-notempty="true" data-fv-notempty-message="请选择二审种类" title="二审种类">
+            <% if(info.bookFascicleList && info.bookFascicleList.length > 0) { %>
+            <% for(var k = 0; k < info.bookFascicleList.length; k++) { %>
+            <% if(info.bookFascicleList[k].bookFascicleId === info.rightWrongList[i].bookFascicleId){ %>
+            <option value='<%- info.bookFascicleList[k].bookFascicleId %>' selected><%- info.bookFascicleList[k].bookFascicleBookName %></option>
+            <% }else{ %>
+            <option value='<%- info.bookFascicleList[k].bookFascicleId %>'><%- info.bookFascicleList[k].bookFascicleBookName %></option>
+            <% } %>
+            <% } %>
+            <% } %>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">A档工作量（千字）<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input class="form-control" value="<%- info.topicDetailOldEdition %>" name="topicDetailOldEditionM" placeholder="A档工作量（千字）" maxlength="16" data-fv-notempty="true"
+                 data-fv-notempty-message="请填写A档工作量（千字）"/>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">B档工作量（千字）<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input class="form-control" value="<%- info.topicDetailOldEdition %>" name="topicDetailOldEditionM" placeholder="B档工作量（千字）" maxlength="16" data-fv-notempty="true"
+                 data-fv-notempty-message="请填写B档工作量（千字）"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">三审</label>
+        <div class="col-xs-8"></div>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">A档工作量（千字）<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input class="form-control" value="<%- info.topicDetailOldEdition %>" name="topicDetailOldEditionM" placeholder="A档工作量（千字）" maxlength="16" data-fv-notempty="true"
+                 data-fv-notempty-message="请填写A档工作量（千字）"/>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">B档工作量（千字）<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input class="form-control" value="<%- info.topicDetailOldEdition %>" name="topicDetailOldEditionM" placeholder="B档工作量（千字）" maxlength="16" data-fv-notempty="true"
+                 data-fv-notempty-message="请填写B档工作量（千字）"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">质检工作量（千字）<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input class="form-control" value="<%- info.topicDetailOldEdition %>" name="topicDetailOldEditionM" placeholder="质检工作量（千字）" maxlength="16" data-fv-notempty="true"
+                 data-fv-notempty-message="请填写质检工作量（千字）"/>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">封面设计工作量<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input class="form-control" value="<%- info.topicDetailOldEdition %>" name="topicDetailOldEditionM" placeholder="封面设计工作量" maxlength="16" data-fv-notempty="true"
+                 data-fv-notempty-message="请填写封面设计工作量"/>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">编务费数量<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input class="form-control" value="<%- info.topicDetailOldEdition %>" name="topicDetailOldEditionM" placeholder="编务费数量" maxlength="16" data-fv-notempty="true"
+                 data-fv-notempty-message="请填写编务费数量"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-8">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">印制成本<span class="must">*</span></label>
+        <div class="col-xs-10">
+          <input class="form-control" value="<%- info.topicDetailOldEdition %>" name="topicDetailOldEditionM" placeholder="印制成本" maxlength="16" data-fv-notempty="true"
+                 data-fv-notempty-message="请填写印制成本"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-8">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">版税率<span class="must">*</span></label>
+        <div class="col-xs-10">
+          <input class="form-control" value="<%- info.topicDetailOldEdition %>" name="topicDetailOldEditionM" placeholder="版税率" maxlength="16" data-fv-notempty="true"
+                 data-fv-notempty-message="请填写版税率"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-8">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">定价<span class="must">*</span></label>
+        <div class="col-xs-10">
+          <input class="form-control" value="<%- info.topicDetailOldEdition %>" name="topicDetailOldEditionM" placeholder="定价" maxlength="16" data-fv-notempty="true"
+                 data-fv-notempty-message="请填写定价"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-8">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">作者稿酬<span class="must">*</span></label>
+        <div class="col-xs-10">
+          <input class="form-control" value="<%- info.topicDetailOldEdition %>" name="topicDetailOldEditionM" placeholder="作者稿酬" maxlength="16" data-fv-notempty="true"
+                 data-fv-notempty-message="请填写作者稿酬"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% if(info.userTaskEntities) { %>
+  <% for(var i = 0; i < info.userTaskEntities.length; i++) { %>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">下一流程</label>
+        <div class="col-xs-8">
+          <% if(!info.userTaskEntities[i].deptAndRoles) { %>
+          <p class="form-control-static"><%- info.userTaskEntities[i].flowName %></p>
+          <% } else { %>
+          <p class="form-control-static">
+            <!--<%- info.userTaskEntities[i].flowName %>（-->
+            <!--<%- info.userTaskEntities[i].deptNames %> - -->
+            <!--<%- info.userTaskEntities[i].roleNames %>）-->
+            <%- info.userTaskEntities[i].flowName %>（<%- info.userTaskEntities[i].deptAndRoles %>）
+          </p>
+          <% } %>
+          <input type="hidden" name="flowId" value="<%- info.userTaskEntities[i].flowId %>">
+          <input type="hidden" name="flowName" value="<%- info.userTaskEntities[i].flowName %>">
+          <input type="hidden" name="nextCategory" value="<%- info.userTaskEntities[i].category %>">
+          <input type="hidden" name="deptIds" value="<%- info.userTaskEntities[i].deptIds %>">
+          <input type="hidden" name="roleIds" value="<%- info.userTaskEntities[i].roleIds %>">
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <% if(info.userTaskEntities[i].roleIds) { %>
+      <div class="form-group">
+        <label class="col-xs-4 control-label">任务人<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <div class="input-group with-clear">
+            <input class="form-control" name="taskUsers" value="<%- info.userTaskEntities[i].nextFlowTaskUserNames %>" data-value="<%- info.userTaskEntities[i].nextFlowTaskUserIds %>"
+                   placeholder="任务人" data-data="{roleIds: '<%- info.userTaskEntities[i].roleIds %>', searchDepartmentId: '<%- info.userTaskEntities[i].deptIds %>'}" data-fv-notempty="true"
+                   data-fv-notempty-message="请选择下一任务人" title="<%- info.userTaskEntities[i].nextFlowTaskUserNames %>" readonly>
+            <span class="input-group-btn">
+              <button class="btn btn-clear" type="button" data-action="clear"><i class="fa fa-remove box"></i></button>
+              <button class="btn btn-default" type="button" data-data='{"roleIds": "<%- info.userTaskEntities[i].roleIds %>", "deptIds": "<%- info.userTaskEntities[i].deptIds %>"}'
+                      data-open="public/user/select-users">
+                <i class="fa fa-user-o"></i>
+              </button>
+            </span>
+          </div>
+        </div>
+      </div>
+      <% } %>
+    </div>
+  </div>
+  <% } %>
+  <% } %>
+</div>
+<!---------------------------------------------------------------------------------------------查看状态--------------------------------------------------------------------------------------------->
+<% } else { %>
+<div class="form-horizontal">
+  <div class="row">
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">图书名称</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitUserName %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">组稿种类</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitUserName %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">组稿数量</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitUserName %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">一审 种类</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitUserName %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">A档工作量（千字）</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitUserName %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">B档工作量（千字）</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitUserName %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">二审 种类</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitUserName %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">A档工作量（千字）</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitUserName %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">B档工作量（千字）</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitUserName %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">三审</label>
+        <div class="col-xs-8"></div>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">A档工作量（千字）</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitUserName %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">B档工作量（千字）</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitUserName %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">质检工作量（千字）</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitUserName %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">封面设计工作量</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitUserName %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-4">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">编务费数量</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitUserName %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-8">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">印制成本</label>
+        <div class="col-xs-10">
+          <p class="form-control-static"><%- info.submitUserName %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-8">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">版税率</label>
+        <div class="col-xs-10">
+          <p class="form-control-static"><%- info.submitUserName %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-8">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">定价</label>
+        <div class="col-xs-10">
+          <p class="form-control-static"><%- info.submitUserName %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-8">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">作者稿酬</label>
+        <div class="col-xs-10">
+          <p class="form-control-static"><%- info.submitUserName %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">提交人</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitUserName %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">提交时间</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitDatetime %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>

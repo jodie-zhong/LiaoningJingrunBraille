@@ -1,0 +1,10 @@
+<% for(var i = 0; i < roll.length; i++) { %>
+<tr data-id = "<%- roll[i].userId %>">
+	<td><%- (i + 1) %></td>
+	<td><%- roll[i].userName %></td>
+    <td><%- roll[i].userPhone %></td>
+    <td><%- roll[i].departmentName %></td>
+    <td><%- roll[i].roleNames %></td>
+    <td><%- roll[i].userIntegral %></td>
+</tr>
+<% } %>

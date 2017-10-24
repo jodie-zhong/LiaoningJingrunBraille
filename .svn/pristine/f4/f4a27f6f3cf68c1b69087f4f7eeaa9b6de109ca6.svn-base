@@ -1,0 +1,19 @@
+<% if(list.kindNumEntityList.length > 0) { %>
+<% for(var i = 0; i < list.kindNumEntityList.length; i++) { %>
+<tr>
+  <td title="<%- list.kindNumEntityList[i].bookOneKind %>"><%- list.kindNumEntityList[i].bookOneKind %></td>
+  <td title="<%- list.kindNumEntityList[i].kindNumOfMonth %>"><%- list.kindNumEntityList[i].kindNumOfMonth %></td>
+  <td title="<%- list.kindNumEntityList[i].wordNumOfMonth %>"><%- list.kindNumEntityList[i].wordNumOfMonth %></td>
+  <td title="<%- list.kindNumEntityList[i].kindNumOfYear %>"><%- list.kindNumEntityList[i].kindNumOfYear %></td>
+  <td title="<%- list.kindNumEntityList[i].wordNumOfYear %>"><%- list.kindNumEntityList[i].wordNumOfYear %></td>
+</tr>
+<% } %>
+<% } %>
+<tr>
+  <td >合计</td>
+  <td title="<%- list.total.kindNumOfMonthTotal %>"><%- list.total.kindNumOfMonthTotal %></td>
+  <td title="<%- list.total.wordNumOfMonthTotal %>"><%- list.total.wordNumOfMonthTotal %></td>
+  <td title="<%- list.total.kindNumOfYearTotal %>"><%- list.total.kindNumOfYearTotal %></td>
+  <td title="<%- list.total.wordNumOfYearTotal %>"><%- list.total.wordNumOfYearTotal %></td>
+</tr>
+

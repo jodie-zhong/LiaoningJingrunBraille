@@ -1,0 +1,28 @@
+<div class="modal-dialog dialog-container">
+  <div class="modal-content">
+    <div class="panel">
+      <div class="panel-header border-bottom">
+        <h3><i class="fa fa-user-o"></i>上报编辑</h3>
+        <div class="control-btn">
+          <a class="panel-close btn-close"><i class="fa fa-close"></i></a>
+        </div>
+      </div>
+      <div class="panel-content">
+        <div class="form-horizontal" id="formReportEdit">
+          <div class="row">
+            <div class="form-group col-xs-12">
+              <label class="col-xs-2 control-label">上报名称<span class="must">*</span></label>
+              <div class="col-xs-4">
+                <input type="text" maxlength="32" value="<%- info.reportTopicName %>" name="reportTopicName"
+                       class="form-control" data-fv-notempty="true" data-fv-notempty-message="请填写上报名称">
+              </div>
+            </div>
+          </div>
+          <div class="dialog-options">
+            <button class="btn btn-primary" id="btnReportSave">保存</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

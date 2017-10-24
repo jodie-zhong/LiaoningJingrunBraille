@@ -1,0 +1,339 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    var PageBase = require('../../../common/base-page');
+    //编辑界面模板
+    var listTpl = require('./train-manage-list.tpl');
+    var rollTpl = require('./train-manage-roll.tpl');
+    
+    var Module = PageBase.extend(new function () {
+        var that;
+        // 当前选中的培训ID
+        var currentTrainId = '';
+        var currentTrainState = '';
+        // 当前选中的培训信息
+        var currentTrainInfo = null;
+        // 当前页数
+        var currentPage = 1;
+        var searchParams = {};
+        var trainIds = '';
+        var trainNames = '';
+        
+        /*
+         *  查询培训列表
+         */
+        function searchTrainList () {
+        	searchTrainRoll('0');
+        	var params = $.extend({},searchParams);
+        	params.page = currentPage;
+        	
+        	util.showLoading();
+        	util.sendRequest({
+        		type: 'POST',
+        		data: params,
+        		action: 'train/listTrain.action',
+        		success: function (resp) {
+        			util.hideLoading();
+        			console.log(resp);
+        			if (resp.code === 0) {
+        				that.$('#trainListTable').html(util.template(listTpl,{
+        					list: resp.data.records,
+        					action: true
+        				}));
+        				// 分页数据
+        				that.$('#trainListPaging').html(that.buildPagination(resp.data.pageNow, resp.data.pageCount));
+        			} else{
+        				util.showAlert(resp.message || '查询培训列表出错，请稍后重试！');
+        			}
+        		},
+        		error: function(xhr) {
+        			// XHR错误
+        			util.hideLoading();
+        			console.log(xhr);
+        			util.showAlert('查询培训列表出错，请稍后重试！');
+        		}
+        	});
+        }
+        
+        /*
+         * 当前选中培训信息
+         */
+        function searchTrainInfo(id, isModify) {
+        	if (id) {       		
+        		var params = {
+        			trainId: id
+        		};
+        		util.showLoading();
+        		util.sendRequest({
+        			type: 'POST',
+        			data: params,
+        			action: 'train/detailTrain.action',
+        			success: function(resp) {
+        				util.hideLoading();
+        				console.log(resp);
+        				if (resp.code === 0) {
+        					if (isModify) {
+        						that.openPage('system/train/train-manage-edit', resp.data);
+        					}
+        				} else{
+        					util.showAlert(resp.message || '查询培训信息出错，请稍后重试！');
+        				}
+        			},
+        			error: function(xhr) {
+        				// XHR错误
+						util.hideLoading();
+						console.log(xhr);
+						util.showAlert('查询培训信息出错，请稍后重试！');
+        			}
+        		});
+        	}
+        }
+        
+        /**
+         * 查询培训人员名单
+         */
+        function searchTrainRoll(id) {
+        	if (id) {
+        		var params = {
+        			trainId: id
+        		};
+        		util.showLoading();
+        		util.sendRequest({
+        			type: 'POST',
+        			data: params,
+        			action: 'train/listTrainUser.action',
+        			success: function(resp) {
+        				util.hideLoading();
+        				console.log(resp);
+        				if (resp.code === 0) {
+        					that.$('#trainRollTable').html(util.template(rollTpl,{
+        						roll: resp.data,
+        						action: true
+        					}));
+        				} else{
+        					util.showAlert(resp.message || '查询人员列表出错，请稍后重试！');
+        				}
+        			},
+        			error: function(xhr) {
+        				// XHR错误
+						util.hideLoading();
+						console.log(xhr);
+						util.showAlert('查询人员列表出错，请稍后重试！');
+        			}
+        		});
+        	}
+        }
+        
+        /*
+         * 删除培训行
+         */
+        function setTrainDel() {
+        	util.showConfirm('确定要将“' + trainNames + '”删除吗？', function() {
+        		var params = {
+        			trainIds: trainIds
+        		};        		
+        		util.showLoading();
+        		util.sendRequest({
+        			type: 'POST',
+        			data: params,
+        			action: 'train/removeTrain.action',
+        			success: function(resp) {
+        				util.hideLoading();
+        				console.log(resp);
+        				if (resp.code === 0) {
+        					// 成功删除后直接刷新列表
+        					searchTrainList();
+        					that.$('#btnTrainModify,#btnTrainDel,#btnTrainSubmit').attr('disabled','disabled');
+        				} else{
+        					util.showAlert(resp.message || '培训删除出错，请稍后重试！');
+        				}
+        			},
+        			error: function(xhr) {
+        				// XHR错误
+						util.hideLoading();
+						console.log(xhr);
+						util.showAlert('培训删除出错，请稍后重试！');
+        			}
+        		});
+        	});
+        }
+        
+        /**
+         * 培训提交
+         * */
+        function setTrainSubmit() {
+        	util.showConfirm('确定要将' + trainNames + '提交吗？提交后的培训不可删除。', function() {
+        		var params = {
+        			trainIds: trainIds
+        		};
+        		util.showLoading();
+        		util.sendRequest({
+        			type: 'POST',
+        			data: params,
+        			action: 'train/submitTrain.action',
+        			success: function(resp) {
+        				util.hideLoading();
+        				console.log(resp);
+        				if (resp.code === 0) {
+        					// 成功删除后直接刷新列表
+        					searchTrainList();
+        					that.$('#btnTrainModify,#btnTrainDel,#btnTrainSubmit').attr('disabled','disabled');
+        				} else{
+        					util.showAlert(resp.message || '培训提交出错，请稍后重试！');
+        				}
+        			},
+        			error: function(xhr) {
+        				// XHR错误
+						util.hideLoading();
+						console.log(xhr);
+						util.showAlert('培训提交出错，请稍后重试！');
+        			}
+        		});
+        	});
+        }
+        
+        /*
+		 * 跳转页面
+		 */
+		function jumpPage(){
+			var $el = $(this);
+			var page = $el.attr('data-page');
+			if(page){
+				// 修改页面后重新刷新页面数据
+				currentPage = page;
+				searchTrainList();
+			}
+		}
+		
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+        	// 选中
+        	that.makeSelectableTable('#trainListTableContainer',
+        		function(){
+        			var id = that.$('#trainListTable').find('tr.info').attr('data-id');
+        			searchTrainInfo(id);
+        			searchTrainRoll(id);
+        		}, function() {
+        			that.$('#btnTrainModify,#btnTrainDel,#btnTrainSubmit').attr('disabled','disabled');
+        			var $row, count = 0;
+        			var ids = [], names = [], state = [];
+        			that.$('#trainListTable tr').each(function(){
+        				$row = $(this);
+        				if ($row.find('i[data-action="check"]').hasClass('fa-check-square-o')) {
+        					ids.push($row.attr('data-id'));
+        					names.push($row.attr('data-name'));
+        					state.push($row.attr('data-state'));
+        					currentTrainId = $row.attr('data-id');
+        					currentTrainState = $row.attr('data-state');
+        					count++;
+        				}
+        			});
+        			// 当选中的培训均为未提交时， 修改、删除、提交按钮可用
+        			if (state.indexOf('1') !== -1 && state.indexOf('2') === -1) {
+        				that.$('#btnTrainDel,#btnTrainSubmit').removeAttr('disabled');
+        			} else {
+        				that.$('#btnTrainDel,#btnTrainSubmit').attr('disabled','disabled');
+        			}
+        			trainIds = ids.join(',');
+        			trainNames = names.join(',');
+//      			console.log(trainIds);
+        			if (count === 1 && currentTrainState === '1') {
+        				that.$('#btnTrainModify').removeAttr('disabled');
+        			} else{
+        				currentTrainId = '';
+        			}
+        	});
+    	
+			// 查询
+			that.$container.on('click', '#btnSearchTrain', function(){
+				searchParams = that.buildSearchParams(that.$('#formSearchTrain input[data-search],select[data-search]'));
+				currentPage = 1;
+				searchTrainList();
+			});
+			
+			// 新增
+			that.$container.on('click', '#btnTrainAdd', function() {
+				that.openPage('system/train/train-manage-edit', {});
+			});
+			
+			// 修改
+			that.$container.on('click', '#btnTrainModify', function() {
+				searchTrainInfo(currentTrainId, true);
+//				that.openPage('system/train/train-manage-edit', currentTrainInfo);
+			});
+			
+			// 删除
+			that.$container.on('click', '#btnTrainDel', setTrainDel);
+			// 提交
+			that.$container.on('click','#btnTrainSubmit',setTrainSubmit);
+			// 分页
+			that.$container.on('click','#trainListPaging a',jumpPage);
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+        	// 培训列表
+        	searchTrainList();
+
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            that.initTemplate(tpl, {});
+			// 重新初始化数据
+			currentTrainId = '';
+        	currentTrainInfo = null;
+	        currentPage = 1;
+	        searchParams = {};
+	        trainIds = '';
+        	trainNames = '';
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+            
+            if(data && data.refresh === true) {
+				currentPage = 1;
+				searchTrainList();
+			}
+
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function(){
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+
+    module.exports = Module;
+});

@@ -1,0 +1,17 @@
+{
+  "code": 0,
+  "message": "错误",
+  "data": {
+    "userName": "管理员",
+    "userLoginName": "admin",
+    "age": "17",
+    "userIdCard": "210181199312272114",
+    "userHead": "/user/user.png",
+    "departmentName": "社长/总编辑",
+    "userSex": "1",
+    "roleNames": "系统管理员,社长/总编辑",
+    "userEmail": "332211225@qq.com",
+    "userSpecialty": "用户专业",
+    "userPhone": "13232234565"
+  }
+}

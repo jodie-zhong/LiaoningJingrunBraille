@@ -1,0 +1,101 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+    var util = require('../../../../../common/util.js');
+
+    /**
+     * Workflow Item
+     */
+    var Item = ItemBase.extend({
+        // 保存/提交接口
+        saveAction: 'cnReprint/saveOrSubmitCNReprint.action',
+
+        // 查询接口
+        detailAction: 'cnReprint/searchCNReprintDetail.action',
+        getFormData:function () {
+            var $form = this.$('#formEdit');
+            var params = {};
+            // var params = this._super();
+            // var params={};
+            // 处理上传部份数据结构
+            // var arr=[];
+            // $form.find('div[data-area="resultMap"]').each(function(){
+            //     var $e=$(this);
+            //     var inArr=[];
+            //     var obj={};
+            //     $e.find('tr[data-type="ebook"]').each(function () {
+            //         var $el=$(this);
+            //         var inObj={};
+            //         inObj.bookFascicleId=$el.attr('data-bookFascicleId');
+            //         inObj.hBookFileName=$el.find('input.bookAddress').val();
+            //         inObj.hBookFileAddress=$el.find('input.bookAddress').attr('data-value');
+            //         inArr.push(inObj);
+            //     });
+            //     obj.hBookCoverSchemeName=$e.find('input[name="hBookCoverSchemeName"]').val();
+            //     obj.mwBookFascicleList=inArr;
+            //     arr.push(obj);
+            // });
+            // params.mwHBookCoverSchemeList=arr;
+            // 填写封面设计通知单
+            $form.find('div[data-flow="cn_coverFirst"]').each(function () {
+                var $el=$(this);
+                params.parallelFlowId=$el.find('input[name="flowId"]').val();
+                params.parallelFlowName=$el.find('input[name="flowName"]').val();
+                params.parallelDeptIds=$el.find('input[name="deptIds"]').val();
+                params.parallelRoleIds=$el.find('input[name="roleIds"]').val();
+                params.parallelTaskUsers=$el.find('input[name="taskUsers"]').attr('data-value');
+            });
+            // 审稿任务分配
+            $form.find('div[data-flow="cn_coverEditorFirst"]').each(function () {
+                var $el=$(this);
+                params.flowId=$el.find('input[name="flowId"]').val();
+                params.flowName=$el.find('input[name="flowName"]').val();
+                params.deptIds=$el.find('input[name="deptIds"]').val();
+                params.roleIds=$el.find('input[name="roleIds"]').val();
+                params.taskUsers=$el.find('input[name="taskUsers"]').attr('data-value');
+                params.nextCategory=$el.find('input[name="nextCategory"]').val();
+            });
+            return params;
+        },
+
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+        },
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function (container, tpl) {
+            this._super(container, tpl);
+        },
+
+        /**
+         * 渲染页面
+         */
+        render: function () {
+            this._super();
+
+            this.initPageEvent();
+
+            this.initPageData();
+        }
+
+    });
+
+
+    module.exports = Item;
+
+});
+
+

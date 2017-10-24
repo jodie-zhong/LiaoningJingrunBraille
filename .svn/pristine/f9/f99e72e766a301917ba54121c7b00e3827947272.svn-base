@@ -1,0 +1,11 @@
+<% for(var i = 0; i < list.length; i++) { %>
+<tr data-id="<%- list[i].bookTopicId %>" data-name="<%- list[i].bookTopicName %>">
+  <td><%- (i + 1) %></td>
+  <td data-check="true"><i class="fa fa-square-o" data-action="check"></i></td>
+  <td><%- list[i].bookTopicName %></td>
+  <td><%- list[i].bookDetailAuthor %></td>
+  <td><%- list[i].bookDetailWordsNum %></td>
+  <td><%- list[i].bookTopicOneKindName %></td>
+  <td><%- list[i].createUserName %></td>
+</tr>
+<% } %>

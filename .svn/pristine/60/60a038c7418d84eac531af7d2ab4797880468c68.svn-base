@@ -1,0 +1,211 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+    var util = require('../../../../../common/util.js');
+
+    /**
+     * Workflow Item
+     */
+    var Item = ItemBase.extend({
+        // 保存/提交接口
+        saveAction: 'cipEditionApply/createOrModifyApplication.action',
+
+        // 查询接口
+        detailAction: 'cipApply/searchApplyDetail.action',
+
+        cipInfo : null,
+
+        checkedBookDate:{},
+
+        getFormData:function () {
+            if(this.checkedBookDate.id){
+                var $form = this.$('#formEdit');
+                // 先调用父类生成基本的数据结构
+//      	var params = {};
+                var params = this._super();
+                params.bookIds=this.checkedBookDate.id;
+                params.isbncipApplyId=this.cipInfo || '';
+                return params;
+            }else{
+                utit.showAlert('请添加一本图书再提交');
+            }
+        },
+
+
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+            var that = this;
+            that.$container.on('click','button',function () {
+                if($(this).attr('data-address')){
+                    window.open(util.getServerBase() + 'common/downloadFile.action?path=' + encodeURIComponent($(this).attr('data-address')), '_blank');
+                }
+            });
+            //图书添加
+            that.$container.on('click', '#btnAddBook', function () {
+                that.openPage('manage/cip-version/cip-version-select',that.checkedBookDate);
+            });
+
+            // 每本书的删除事件
+            that.$container.on('click', 'button.book-delete', function () {
+                var $el=$(this);
+                var id=$el.attr('data-id');
+                var ids=that.checkedBookDate.id.split(',');
+                var bookNames=that.checkedBookDate.name.split(',');
+                var index=$.inArray(id,ids);
+                if (index >= 0){
+                    ids.splice(index, 1);
+                    bookNames.splice(index, 1);
+                }
+                var $tbody=$("#selectBookTable");
+                // 重新渲染tobdy
+                $tbody.empty();
+                for(var i=0;i<bookNames.length;i++){
+                    var bookTr=$('<tr><td>'+(i + 1+ length)+'</td><td>'+ bookNames[i]+'</td><td><button data-id="' + ids[i] +'" data-name="' +bookNames[i] +'" class="btn btn-xs btn-danger btn-rounded book-delete">删除</button></td></tr>');
+                    $tbody.append(bookTr);
+                }
+                if(ids){
+                    that.checkedBookDate={
+                        id: ids.join(','),
+                        name: bookNames.join(',')
+                    };
+                }
+            });
+
+            //下载事件
+            that.$container.on('click', '#btnDownloadBook',
+                function () {
+                var cipApplyName=$('input[name="isbncipApplyName"]').val();
+                if(thst.checkedBookDate.id){
+                    var url = util.getServerBase() + 'cipEditionApply/doDownload.action?';
+                    url += 'bookIds=' + thst.checkedBookDate.id;
+                    url += '&isbncipApplyName='+encodeURIComponent(cipApplyName);
+
+                    window.open(url, '_blank');
+                }
+
+            });
+            // 查看事件
+            that.$container.on('click', '#btnDetailBook',function () {
+                if(thst.checkedBookDate.id){
+                    util.sendRequest({
+                        data: {bookIds:thst.checkedBookDate.id},
+                        action: 'cipEditionApply/searchBookInfoList.action',
+                        success: function (resp) {
+                            console.log(resp);
+                            if (resp.code === 0) {
+                                that.openPage('manage/cip-version/cip-version-search',resp);
+                            } else {
+                                // 业务执行失败
+                                util.showAlert(resp.message || '查询出错，请稍后重试！');
+                            }
+                        },
+                        error: function (xhr) {
+                            // XHR错误
+                            console.log(xhr);
+                            util.showAlert( '查询出错，请稍后重试！');
+                        }
+                    });
+                }
+            });
+
+        },
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+// 修改模式有数据，渲染模板
+            if(cipInfo.bookNameList){
+                var addIds=[],bookNames=[];
+                for(var i=0;i<cipInfo.bookNameList.length;i++){
+                    for(var j in cipInfo.bookNameList[i]){
+                        if(j==='bookId'){
+                            addIds.push(cipInfo.bookNameList[i][j]);
+                        }
+                        if(j==='bookName'){
+                            bookNames.push(cipInfo.bookNameList[i][j]);
+                        }
+                    }
+                }
+                var $tbody=$("#selectBookTable");
+                for(var i=0;i<addIds.length;i++){
+                    var bookTr=$('<tr><td>'+(i + 1+ length)+'</td><td>'+ bookNames[i]+'</td><td><button data-id="' + addIds[i] +'" data-name="' +bookNames[i] +'" class="btn btn-xs btn-danger btn-rounded book-delete">删除</button></td></tr>');
+                    $tbody.append(bookTr);
+                }
+                this.checkedBookDate={
+                    id: addIds.join(','),
+                    name: bookNames.join(',')
+                }
+            }
+
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function (container, tpl) {
+            this._super(container, tpl);
+
+        },
+        /**
+         * 渲染页面
+         */
+        render: function () {
+            this._super();
+
+            this.initPageEvent();
+
+            this.initPageData();
+        },
+
+        back:function () {
+            this._super(data);
+            if(data){
+                this.checkedBookDate=data;
+                console.log(data);
+                var length=$('#selectBookTable tr').length;
+                var ids=[], names=[];
+                if(data.id.indexOf(',') >= 0){
+                    ids=data.id.split(',');
+                }else{
+                    ids[0]=data.id
+                }
+                if(data.id.indexOf(',') >= 0){
+                    names=data.name.split(',');
+                }else{
+                    names[0]=data.name
+                }
+                //将数据添加到已有的table表格数据后
+                var $tbody=$("#selectBookTable");
+                for(var i=0;i<names.length;i++){
+                    var bookTr=$('<tr><td>'+(i + 1+ length)+'</td><td>'+ names[i]+'</td><td><button data-id="' + ids[i] +'" data-name="' +names[i] +'" class="btn btn-xs btn-danger btn-rounded book-delete">删除</button></td></tr>');
+                    $tbody.append(bookTr);
+                }
+                // 获取渲染后的所有tr上的id与name，将bookDate替换
+                var newId=[],newName=[];
+                $("#selectBookTable tr").each(function () {
+                    var $el1=$(this);
+                    newId.push($el1.find('button').attr('data-id'));
+                    newName.push($el1.find('button').attr('data-name'));
+                })
+                this.checkedBookDate={
+                    id:newId.join(','),
+                    name:newName.join(',')
+                }
+            }
+
+        }
+
+    });
+
+
+    module.exports = Item;
+
+});
+
+

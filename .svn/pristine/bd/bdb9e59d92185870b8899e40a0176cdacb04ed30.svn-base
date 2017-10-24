@@ -1,0 +1,897 @@
+<!--批量装订-->
+<% if(isEdit) { %>
+<div class="form-horizontal">
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group ">
+				<label class="col-xs-4 control-label">书名</label>
+				<div class="col-xs-8">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group ">
+				<label class="col-xs-4 control-label">印制状态</label>
+				<div class="col-xs-8">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group ">
+				<label class="col-xs-4 control-label">责任编辑</label>
+				<div class="col-xs-8">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group ">
+				<label class="col-xs-4 control-label">编室</label>
+				<div class="col-xs-8">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group ">
+				<label class="col-xs-4 control-label">印数</label>
+				<div class="col-xs-8">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group ">
+				<label class="col-xs-4 control-label">页数</label>
+				<div class="col-xs-8">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">印张</label>
+				<div class="col-xs-8">
+					<input type="text" class="form-control" value="" name="" placeholder="印张" />
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">图书种类</label>
+				<div class="col-xs-8">
+					<select name="" class="form-control" id="bookType"></select>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">成品尺寸(mm)</label>
+				<div class="col-xs-8">
+					<input type="text" class="form-control" value="" name="" placeholder="成品尺寸(mm)" />
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">开本</label>
+				<div class="col-xs-8">
+					<input type="text" class="form-control" value="" name="" placeholder="开本" />
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">定价</label>
+				<div class="col-xs-8">
+					<input type="text" class="form-control" value="" name="" placeholder="定价" />
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">作者样书数量</label>
+				<div class="col-xs-8">
+					<input type="text" class="form-control" value="" name="" placeholder="作者样书数量" />
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label">版次</label>
+				<div class="col-xs-2">
+					<input type="text" class="form-control" value="" name="" />
+				</div>
+				<div class="col-xs-3">
+					<div class="input-group">
+						<span class="input-group-addon">第</span>
+						<input type="text" class="form-control" value="" name="" />
+						<span class="input-group-addon">版</span>
+					</div>
+				</div>
+				<div class="col-xs-2">
+					<input type="text" class="form-control" value="" name="" />
+				</div>
+				<div class="col-xs-3">
+					<div class="input-group">
+						<span class="input-group-addon">第</span>
+						<input type="text" class="form-control" value="" name="" />
+						<span class="input-group-addon">次印刷</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">出版单位</label>
+				<div class="col-xs-8">
+					<input type="text" class="form-control" value="" name="" placeholder="出版单位" />
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">印刷企业</label>
+				<div class="col-xs-8">
+					<select name="" class="form-control" id="publish"></select>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">封面用纸</label>
+				<div class="col-xs-4">
+					<div class="input-group">
+						<input type="text" class="form-control" value="" name="" />
+						<span class="input-group-addon">克</span>
+					</div>
+				</div>
+				<div class="col-xs-4">
+					<div class="input-group">
+						<input type="text" class="form-control" value="" name="" />
+						<span class="input-group-addon">纸</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">印刷色数</label>
+				<div class="col-xs-8">
+					<select name="" class="form-control" id="publishColor"></select>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">封面用纸总量(令)</label>
+				<div class="col-xs-8">
+					<input type="text" class="form-control" value="" name="" placeholder="封面用纸总量(令)" />
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">用纸规格</label>
+				<div class="col-xs-8">
+					<input type="text" class="form-control" value="" name="" placeholder="用纸规格" />
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label">用纸供应</label>
+				<div class="col-xs-4">
+					<select name="" class="form-control" id="paper"></select>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label">环衬</label>
+				<div class="col-xs-4">
+					<label class="radio-inline">
+            <% if(!info.handleState || info.handleState === '1') { %>
+            <input type="radio" name="handleState" value="1" checked/>前
+            <% } else { %>
+            <input type="radio" name="handleState" value="1"/>前
+            <% } %>
+          </label>
+					<label class="radio-inline">
+            <% if(info.handleState === '2') { %>
+            <input type="radio" name="handleState" value="2" checked/>后
+            <% } else { %>
+            <input type="radio" name="handleState" value="2"/>后
+            <% } %>
+          </label>
+				</div>
+				<div class="col-xs-3">
+					<div class="input-group">
+						<input type="text" class="form-control" value="" name="" />
+						<span class="input-group-addon">克</span>
+					</div>
+				</div>
+				<div class="col-xs-3">
+					<div class="input-group">
+						<input type="text" class="form-control" value="" name="" />
+						<span class="input-group-addon">纸</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">勒口</label>
+				<div class="col-xs-8">
+					<label class="radio-inline">
+            <% if(!info.handleState || info.handleState === '1') { %>
+            <input type="radio" name="handleState" value="1" checked/>有
+            <% } else { %>
+            <input type="radio" name="handleState" value="1"/>有
+            <% } %>
+          </label>
+					<label class="radio-inline">
+            <% if(info.handleState === '2') { %>
+            <input type="radio" name="handleState" value="2" checked/>无
+            <% } else { %>
+            <input type="radio" name="handleState" value="2"/>无
+            <% } %>
+          </label>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">尺寸</label>
+				<div class="col-xs-8">
+					<input type="text" class="form-control" value="" name="" />
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">正文用纸</label>
+				<div class="col-xs-4">
+					<div class="input-group">
+						<input type="text" class="form-control" value="" name="" />
+						<span class="input-group-addon">克</span>
+					</div>
+				</div>
+				<div class="col-xs-4">
+					<div class="input-group">
+						<input type="text" class="form-control" value="" name="" />
+						<span class="input-group-addon">纸</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">印刷色数</label>
+				<div class="col-xs-8">
+					<select name="" class="form-control" id="publishColorNum"></select>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">正文用纸总量(令)</label>
+				<div class="col-xs-8">
+					<input type="text" class="form-control" value="" name="" placeholder="正文用纸总量(令)" />
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">用纸规格</label>
+				<div class="col-xs-8">
+					<input type="text" class="form-control" value="" name="" placeholder="用纸规格" />
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label">用纸供应</label>
+				<div class="col-xs-4">
+					<select name="" class="form-control" id="paperText"></select>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">彩插</label>
+				<div class="col-xs-8">
+					<label class="radio-inline">
+            <% if(!info.handleState || info.handleState === '1') { %>
+            <input type="radio" name="handleState" value="1" checked/>有
+            <% } else { %>
+            <input type="radio" name="handleState" value="1"/>有
+            <% } %>
+          </label>
+					<label class="radio-inline">
+            <% if(info.handleState === '2') { %>
+            <input type="radio" name="handleState" value="2" checked/>无
+            <% } else { %>
+            <input type="radio" name="handleState" value="2"/>无
+            <% } %>
+          </label>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">页数</label>
+				<div class="col-xs-8">
+					<input type="text" class="form-control" value="" name="" />
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">彩插用纸</label>
+				<div class="col-xs-4">
+					<div class="input-group">
+						<input type="text" class="form-control" value="" name="" />
+						<span class="input-group-addon">克</span>
+					</div>
+				</div>
+				<div class="col-xs-4">
+					<div class="input-group">
+						<input type="text" class="form-control" value="" name="" />
+						<span class="input-group-addon">纸</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">印刷色数</label>
+				<div class="col-xs-8">
+					<select name="" class="form-control" id="publishColorNum"></select>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">装订方式</label>
+				<div class="col-xs-8">
+					<select name="" class="form-control" id="zdfs"></select>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">封面装订处理</label>
+				<div class="col-xs-8">
+					<select name="" class="form-control" id="fmzdcl"></select>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label">晒上版</label>
+				<div class="col-xs-5">
+					<div class="input-group">
+						<span class="input-group-addon">封面</span>
+						<select name="" class="form-control" id="fm"></select>
+					</div>
+				</div>
+				<div class="col-xs-5">
+					<div class="input-group">
+						<span class="input-group-addon">正文</span>
+						<select name="" class="form-control" id="zw"></select>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label"></label>
+				<div class="col-xs-5">
+					<div class="input-group">
+						<span class="input-group-addon">环衬</span>
+						<select name="" class="form-control" id="hc"></select>
+					</div>
+				</div>
+				<div class="col-xs-5">
+					<div class="input-group">
+						<span class="input-group-addon">彩插</span>
+						<select name="" class="form-control" id="cc"></select>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label">装订顺序</label>
+				<div class="col-xs-10">
+					<textarea class="form-control" name="handleContentOne" placeholder="装订顺序（不超过2048字）" maxlength="2048"><%- info.handleContentOne %></textarea>
+					<div class="help-block with-errors"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<% if(info.userTaskEntities) { %>
+	<% for(var i = 0; i < info.userTaskEntities.length; i++) { %>
+	<div class="row" data-flow="<%- info.userTaskEntities[i].flowId %>" data-area="nextFlow" style="display: none;">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">下一流程</label>
+				<div class="col-xs-8">
+					<% if(!info.userTaskEntities[i].deptAndRoles) { %>
+					<p class="form-control-static">
+						<%- info.userTaskEntities[i].flowName %>
+					</p>
+					<% } else { %>
+					<p class="form-control-static">
+						<%- info.userTaskEntities[i].flowName %>（
+						<%- info.userTaskEntities[i].deptAndRoles %>）
+					</p>
+					<% } %>
+					<input type="hidden" name="flowId" value="<%- info.userTaskEntities[i].flowId %>">
+					<input type="hidden" name="flowName" value="<%- info.userTaskEntities[i].flowName %>">
+					<input type="hidden" name="nextCategory" value="<%- info.userTaskEntities[i].category %>">
+					<input type="hidden" name="deptIds" value="<%- info.userTaskEntities[i].deptIds %>">
+					<input type="hidden" name="roleIds" value="<%- info.userTaskEntities[i].roleIds %>">
+					<input type="hidden" name="taskId" value="<%- info.taskId %>">
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<% if(info.userTaskEntities[i].roleIds) { %>
+			<div class="form-group">
+				<label class="col-xs-4 control-label">任务人<span class="c-red">*</span></label>
+				<div class="col-xs-8">
+					<div class="input-group with-clear">
+						<input type="text" class="form-control" name="taskUsers" title="<%- info.userTaskEntities[i].nextFlowTaskUserNames %>" value="<%- info.userTaskEntities[i].nextFlowTaskUserNames %>" data-value="<%- info.userTaskEntities[i].nextFlowTaskUserIds %>" placeholder="任务人" readonly data-data="{searchRoleId: '', searchDepartmentId: ''}" data-fv-notempty="true" data-fv-notempty-message="请选择下一任务人">
+						<span class="input-group-btn">
+              <button class="btn btn-clear" type="button" data-action="clear" ><i class="fa fa-remove box"></i></button>
+              <button class="btn btn-default" type="button" data-open="public/user/select-users" data-data='{"roleIds": "<%- info.userTaskEntities[i].roleIds %>", "deptIds": "<%- info.userTaskEntities[i].deptIds %>"}'><i
+                      class="fa fa-user-o"></i></button>
+            </span>
+					</div>
+				</div>
+			</div>
+			<% } %>
+		</div>
+	</div>
+	<% } %>
+	<% } %>
+</div>
+<% } else { %>
+<div class="form-horizontal">
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group ">
+				<label class="col-xs-4 control-label">书名</label>
+				<div class="col-xs-8">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group ">
+				<label class="col-xs-4 control-label">印制状态</label>
+				<div class="col-xs-8">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group ">
+				<label class="col-xs-4 control-label">责任编辑</label>
+				<div class="col-xs-8">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group ">
+				<label class="col-xs-4 control-label">编室</label>
+				<div class="col-xs-8">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group ">
+				<label class="col-xs-4 control-label">印数</label>
+				<div class="col-xs-8">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group ">
+				<label class="col-xs-4 control-label">页数</label>
+				<div class="col-xs-8">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">印张</label>
+				<div class="col-xs-8">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">图书种类</label>
+				<div class="col-xs-8">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">成品尺寸(mm)</label>
+				<div class="col-xs-8">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">开本</label>
+				<div class="col-xs-8">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">定价</label>
+				<div class="col-xs-8">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">作者样书数量</label>
+				<div class="col-xs-8">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label">版次</label>
+				<div class="col-xs-5">
+					<p class="form-control-static">第版</p>
+				</div>
+				<div class="col-xs-5">
+					<p class="form-control-static">第次印刷</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">出版单位</label>
+				<div class="col-xs-8">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">印刷企业</label>
+				<div class="col-xs-8">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">封面用纸</label>
+				<div class="col-xs-4">
+					<p class="form-control-static">克</p>
+				</div>
+				<div class="col-xs-4">
+					<p class="form-control-static">纸</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">印刷色数</label>
+				<div class="col-xs-8">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">封面用纸总量(令)</label>
+				<div class="col-xs-8">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">用纸规格</label>
+				<div class="col-xs-8">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label">用纸供应</label>
+				<div class="col-xs-4">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label">环衬</label>
+				<div class="col-xs-4">
+					<p class="form-control-static">
+            <% if(!info.handleState || info.handleState === '1') { %>
+            前
+            <% } %>
+            <% if(info.handleState && info.handleState === '2') { %>
+            后
+            <% } %>
+          </p>
+				</div>
+				<div class="col-xs-3">
+					<p class="form-control-static">克</p>
+				</div>
+				<div class="col-xs-3">
+					<p class="form-control-static">纸</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">勒口</label>
+				<div class="col-xs-8">
+					<p class="form-control-static">
+            <% if(!info.handleState || info.handleState === '1') { %>
+            有
+            <% } %>
+            <% if(info.handleState && info.handleState === '2') { %>
+            无
+            <% } %>
+          </p>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">尺寸</label>
+				<div class="col-xs-4">
+					<p class="form-control-static">克</p>
+				</div>
+				<div class="col-xs-4">
+					<p class="form-control-static">纸</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">正文用纸总量(令)</label>
+				<div class="col-xs-8">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">用纸规格</label>
+				<div class="col-xs-8">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label">用纸供应</label>
+				<div class="col-xs-4">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">彩插</label>
+				<div class="col-xs-8">
+					<p class="form-control-static">
+            <% if(!info.handleState || info.handleState === '1') { %>
+            有
+            <% } %>
+            <% if(info.handleState && info.handleState === '2') { %>
+            无
+            <% } %>
+          </p>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">页数</label>
+				<div class="col-xs-8">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">彩插用纸</label>
+				<div class="col-xs-4">
+					<p class="form-control-static">克</p>
+				</div>
+				<div class="col-xs-4">
+					<p class="form-control-static">纸</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">印刷色数</label>
+				<div class="col-xs-8">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">装订方式</label>
+				<div class="col-xs-8">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">封面装订处理</label>
+				<div class="col-xs-8">
+					<p class="form-control-static"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label">晒上版</label>
+				<div class="col-xs-5">
+					<p class="form-control-static">封面</p>
+				</div>
+				<div class="col-xs-5">
+					<p class="form-control-static">正文</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label"></label>
+				<div class="col-xs-5">
+					<p class="form-control-static">环衬</p>
+				</div>
+				<div class="col-xs-5">
+					<p class="form-control-static">彩插</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label">装订顺序</label>
+				<div class="col-xs-10">
+					<pre class="form-control-static"><%- info.handleContentOne %></pre>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">提交人</label>
+				<div class="col-xs-8">
+					<p class="form-control-static">
+						<%- info.submitUserName %>
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">提交时间</label>
+				<div class="col-xs-8">
+					<p class="form-control-static">
+						<%- info.submitDatetime %>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<% } %>

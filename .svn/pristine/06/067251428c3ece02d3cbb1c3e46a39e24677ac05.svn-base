@@ -1,0 +1,50 @@
+<!--会议提交-->
+<div class="modal-dialog dialog-container">
+    <div class="modal-content">
+        <div class="panel">
+            <div class="panel-header border-bottom">
+                <h3><i class="fa fa-user-o"></i>会议提交</h3>
+                <div class="control-btn">
+                    <a class="panel-close btn-close"><i class="fa fa-close"></i></a>
+                </div>
+            </div>
+            <div class="panel-content">
+                <div class="form-horizontal" id="formMeetingCreateEdit">
+                    <div class="row">
+                        <div class="table-5-static">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                <tr>
+                                    <th>参会选题名称</th>
+                                    <th>讨论结果</th>
+                                    <th>选题类型</th>
+                                    <th>下一流程</th>
+                                    <th>下一流程任务人</th>
+                                </tr>
+                                </thead>
+                                <tbody id="conSubListTable">
+                                    <tr>
+                                        <td>三国演义</td>
+                                        <td>通过</td>
+                                        <td>盲文读物</td>
+                                        <td>下发</td>
+                                        <td>
+                                            <select>
+                                                <option>张帆</option>
+                                                <option>李文</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="dialog-options">
+                        <button class="btn btn-primary" id="btnConRegSave">保存</button>
+                        <button class="btn btn-primary" id="btnConRegSubmit">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

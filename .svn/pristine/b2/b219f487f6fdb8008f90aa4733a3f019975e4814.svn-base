@@ -1,0 +1,171 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+    var util = require('../../../../../common/util.js');
+
+    /**
+     * Workflow Item
+     */
+    var Item = ItemBase.extend({
+        // 保存/提交接口
+        saveAction: 'cover/saveOrSubmitCover.action',
+
+        // 查询接口
+        detailAction: 'cover/searchCoverDetail.action',
+
+        designData:{
+
+        },
+
+        getFormData:function () {
+            var $form = this.$('#formEdit');
+            var params = this._super();
+            // 处理上传部份数据结构
+            var arr=[];
+            $form.find('tr[data-type="ebook"]').each(function(){
+                var $el=$(this);
+                var obj={};
+                obj.bookFileId=$el.attr('data-bookFileId');
+                obj.bookFileName=$el.find('input.bookAddress').val();
+                obj.bookFileAddress=$el.find('input.bookAddress').attr('data-value');
+                obj.bookFascicleId=$el.attr('data-bookFascicleId');
+                obj.bookFascicleBookName=$el.find('.bookFileName').html();
+                obj.bookFileType=$el.attr('data-bookFileType');
+                obj.createDatetime=$el.find('.createDatetime').html();
+                obj.createUserId=$el.attr('data-createUserId');
+                arr.push(obj);
+            });
+            console.log(arr);
+            params.coverInfoEntities=arr;
+            return params;
+        },
+
+        // 添加工作量
+        onDesignContentPlus: function($dwp) {
+            var workRow = this.$('#workDesignTemplate').html();
+            this.$('#formEdit').append(workRow);
+        },
+        // 工作量删除
+        onDesignContentMinus: function($dwp) {
+            $dwp.parents('div[data-area="resultMap"]').remove();
+            // this.searchButtonNum();
+        },
+
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+            var that = this;
+            this.$container.on('click','.btn-design',function () {
+                that.designButton = $(this);
+                var $parent=$(this).parents('tr');
+                var $btn=$parent.find('.btn-download');
+                window.designerCallback = function(resp){
+                    if(resp.code=== 0 ){
+                        var userId = util.getUserInfo().userId;
+                        var userName =util.getUserInfo().userName;
+                        var createTime=new Date();
+                        var timeStr=createTime.getFullYear()+'-'+(parseInt(createTime.getMonth())+1)+'-'+createTime.getDate()+' '+createTime.getHours()+':'+createTime.getMinutes()+':'+createTime.getSeconds()
+                        $btn.removeAttr('disabled');
+                        $parent.find('.btn-download').attr('data-address',resp.data.address);
+                        $parent.find('.bookFileName').html(resp.data.name);
+                        $parent.find('.bookAddress').val(resp.data.name);
+                        $parent.find('.bookAddress').attr('data-value',resp.data.address);
+                        $parent.find('.createDatetime').html(timeStr);
+                        $parent.find('.createDatetime').attr('title',timeStr);
+                        $parent.find('.createUserName').html(userName);
+                        $parent.find('.createUserName').attr('title',userName);
+                        $parent.attr('data-createUserId',userId);
+                    }
+                };
+                window.open('designer/designer.html' , '_blank');
+            });
+            this.$container.on('change','input.bookAddress',function () {
+                var userId = util.getUserInfo().userId;
+                var userName =util.getUserInfo().userName;
+                var createTime=new Date();
+                var timeStr=createTime.getFullYear()+'-'+(parseInt(createTime.getMonth())+1)+'-'+createTime.getDate()+' '+createTime.getHours()+':'+createTime.getMinutes()+':'+createTime.getSeconds()
+                console.log(timeStr)
+                var $el=$(this);
+                var $parent=$el.parents('tr');
+                var $btn=$parent.find('.btn-download');
+                var ads=$el.attr('data-value');
+                var adsName=$el.val();
+                $parent.find('.bookFileName').html(adsName);
+                $parent.find('.btn-download').attr('data-address',ads);
+                $parent.find('.createDatetime').html(timeStr);
+                $parent.find('.createDatetime').attr('title',timeStr);
+                $parent.find('.createUserName').html(userName);
+                $parent.find('.createUserName').attr('title',userName);
+                $parent.attr('data-createUserId',userId);
+                if($el.val()===''){
+                    $btn.attr('disabled','disabled');
+                }else {
+                    $btn.removeAttr('disabled');
+                }
+
+            });
+            // 添加工作量
+            this.$container.on('click', 'button[data-type="day-plus"]', function() {
+                that.onDesignContentPlus($(this));
+
+            });
+
+            // 删除工作量
+            this.$container.on('click', 'button[data-type="day-minus"]', function() {
+                that.onDesignContentMinus($(this));
+            });
+
+        },
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+            var that=this;
+            this.designData={
+                coverDesign:[]
+            };
+            this.$container.on('click','.btn-download',function () {
+                var $el=$(this);
+                if($el.attr('data-address')){
+                    window.open(util.getServerBase() + 'common/downloadFile.action?path=' + encodeURIComponent($el.attr('data-address')), '_blank');
+                }
+            });
+            this.$container.on('click','#downCip',function () {
+                var $el=$(this);
+                if($el.attr('data-id')){
+                    window.open(util.getServerBase() + 'cover/downloadCip.action?bookId=' + encodeURIComponent($el.attr('data-id')), '_blank');
+                }
+            });
+
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function (container, tpl) {
+            this._super(container, tpl);
+
+        },
+        /**
+         * 渲染页面
+         */
+        render: function () {
+            this._super();
+
+            this.initPageEvent();
+
+            this.initPageData();
+        }
+
+    });
+
+
+    module.exports = Item;
+
+});
+

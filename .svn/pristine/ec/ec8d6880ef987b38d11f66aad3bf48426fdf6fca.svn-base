@@ -1,0 +1,157 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+
+    /**
+     * Workflow Item
+     */
+    module.exports = ItemBase.extend({
+        // 保存/提交接口
+        saveAction: 'CNQuality/saveOrSubmitCNQuality.action',
+        // 批量保存/提交接口
+        batchSaveAction: '',
+        // 查询接口
+        detailAction: 'CNQuality/searchCNQualityDetail.action',
+
+        /**
+         * 计算差错
+         */
+        caculateDiff: function () {
+            var count = 0;
+            this.$("#dataTBody").children().each(function () {
+                if ($(this).attr("data-isConfirm") === '1' || !$(this).find("input[name='checkResult']:checked").prop("checked")) {
+                    count++;
+                }
+            });
+            var total = this.data.info.bookWordsNum;
+            this.$("input[name='hAcErrorNumber']").val(count);
+            if (total) {
+                this.$("input[name='hAcErrorRate']").val((count / total).toFixed(4));
+            }
+        },
+
+        /**
+         * 是否同意监听
+         */
+        onAgreeChange: function (caller) {
+            var selectionRow = $(caller).parents('tr');
+            // 同意
+            if ($(caller).prop('checked')) {
+                // 判断全选
+                var allChecked = true;
+                selectionRow.parent().find('input[name="checkResult"]').each(function () {
+                    if (!$(caller).prop('checked')) {
+                        allChecked = false;
+                        return false;
+                    }
+                });
+                if (allChecked) {
+                    $(caller).parents('table').find('input[name="checkResultBatch"]').prop('checked', 'checked');
+                }
+            }
+            // 不同意
+            else {
+                // 去掉全选
+                $(caller).parents('table').find('input[name="checkResultBatch"]').removeProp('checked');
+            }
+            // 计算差错率
+            this.caculateDiff();
+        },
+
+        /**
+         * 批量同意监听
+         */
+        onBatchAgreeChange: function (caller) {
+            var table = $(caller).parents('table');
+            // 同意
+            if ($(caller).prop('checked')) {
+                // 设置复选框选中
+                table.find('input[name="checkResult"]').prop('checked', 'checked');
+            }
+            // 不同意
+            else {
+                // 设置复选框不选中
+                $(caller).parents('table').find('input[name="checkResult"]').removeProp('checked');
+            }
+            // 计算差错率
+            this.caculateDiff();
+        },
+
+        /**
+         * 生成参数
+         */
+        getFormData: function () {
+            var params = this._super();
+            params.bookWordsNum = this.data.info.bookWordsNum;
+            params.hAcWordsNum = this.data.info.hAcWordsNum;
+            params.hAcPageNum = this.data.info.hAcPageNum;
+            params.cnRightWrongList = [];
+            // 勘误表数据
+            this.$("#dataTBody").children().each(function () {
+                params.cnRightWrongList.push({
+                    rigthWrongId: $(this).attr("data-rigthWrongId"),
+                    page: $(this).find("input[name='page']").val(),
+                    line: $(this).find("input[name='line']").val(),
+                    wrongInformation: $(this).find("input[name='wrongInformation']").val(),
+                    rigthInformation: $(this).find("input[name='rigthInformation']").val(),
+                    checkResult: $(this).find("input[name='checkResult']").prop("checked") ? "1" : "2"
+                });
+            });
+            return params;
+        },
+
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+            var that = this;
+            // 是否同意监听
+            this.$container.on('change', 'input[name="checkResult"]', function () {
+                that.onAgreeChange(this);
+            });
+            // 是否批量同意
+            this.$container.on('change', 'input[name="checkResultBatch"]', function () {
+                that.onBatchAgreeChange(this);
+            });
+        },
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+            // 判断全选
+            var allChecked = true;
+            this.$('input[name="checkResult"]').each(function () {
+                // 不同意
+                if (!$(this).prop('checked')) {
+                    // 去掉全选
+                    allChecked = false;
+                }
+            });
+            if (allChecked) {
+                this.$('input[name="checkResultBatch"]').prop('checked', 'checked');
+            }
+            // 计算差错率
+            this.caculateDiff();
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function (container, tpl) {
+            this._super(container, tpl);
+        },
+
+        /**
+         * 渲染页面
+         */
+        render: function () {
+            this._super();
+            this.initPageEvent();
+            this.initPageData();
+        }
+    });
+});

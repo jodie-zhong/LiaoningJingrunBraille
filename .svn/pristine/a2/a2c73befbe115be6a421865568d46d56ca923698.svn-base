@@ -1,0 +1,19 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    module.exports = {
+        /* 选题申报 */
+        // 选题申报
+        'brailleTopicDeclare': 'topic-manage/topic-manage-create',
+        // 部门负责人审核
+        'brailleEditorialTrial': 'topic-manage/topic-manage-principal',
+        // 总编辑/副总编辑审批意见
+        'brailleChiefEditorTrial': 'topic-manage/topic-manage-chief',
+        // 选题上报信息
+        'brailleTopicReport':'topic-manage/topic-manage-report',
+        // 选题大会信息
+        'brailleTopicConference': 'topic-manage/topic-manage-conference',
+        // 待定确认
+        'braillePend': 'topic-manage/topic-manage-hold'
+    };
+});

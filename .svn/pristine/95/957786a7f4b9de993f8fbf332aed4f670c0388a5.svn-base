@@ -1,0 +1,193 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var FileUpload = function () {
+        var uploadParas = {};
+        var uploadFiles = {};
+
+        var setAttr = function (el, attrs) {
+            for (var prop in attrs){
+                el.setAttribute(prop, attrs[prop]);
+            }
+            return el;
+        };
+
+        /**
+         * 创建表单
+         * @param id
+         * @returns {Node}
+         */
+        var createForm = function (id) {
+            var formId = 'ajaxFileUploadForm' + id;
+            var form = document.createElement('form');
+            setAttr(form,
+                {
+                    'action': '',
+                    'method': 'POST',
+                    'name': formId,
+                    'id': formId,
+                    'enctype': 'multipart/form-data',
+                    'encoding': 'multipart/form-data'
+                });
+            form.style.cssText = 'position:absolute; top:-9999px; left:-9999px';
+            return document.body.appendChild(form);
+        };
+
+        /**
+         * 创建iFrame
+         * @param id
+         * @param url
+         * @returns {Node}
+         */
+        var createIframe = function (id, url) {
+            var frameId = 'ajaxFileUploadFrame' + id, iFrame;
+            var IE = /msie ((\d+\.)+\d+)/i.test(navigator.userAgent) ? (document.documentMode || RegExp['\x241']) : false,
+                url = url || 'javascript:false';
+            if (IE && IE < 8) {
+                iFrame = document.createElement('<iframe id="' + frameId + '" name="' + frameId + '" />');
+            }
+            else {
+                iFrame = document.createElement('iframe');
+                setAttr(iFrame,
+                    {
+                        'id': frameId,
+                        'name': frameId
+                    });
+            }
+            iFrame.style.cssText = 'position:absolute; top:-9999px; left:-9999px';
+            return document.body.appendChild(iFrame);
+        };
+
+        /**
+         * 克隆并添加File
+         * @param form
+         * @param oldFile
+         */
+        var cloneFile = function (form, oldFile) {
+            var newFile = oldFile.cloneNode(true);
+            oldFile.parentNode.insertBefore(newFile, oldFile);
+            form.appendChild(oldFile);
+        };
+
+        /**
+         * 添加Input
+         * @param form
+         * @param parm
+         */
+        var createInput = function (form, name, value) {
+            var input = document.createElement('input');
+            input.setAttribute('name', name);
+            input.value = value;
+            form.appendChild(input);
+        };
+
+        /**
+         *
+         * @returns {string} 判断浏览器是不是火狐
+         */
+        var myBrowser=function (){
+            var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
+            if (userAgent.indexOf("Firefox") > -1) {
+                return "FF";
+            }
+        };
+
+
+        /**
+         * 上传回调函数
+         * @param id
+         * @param callback
+         */
+        var uploadCallback = function (id, callback) {
+            var frame = document.getElementById('ajaxFileUploadFrame' + id)
+            var form = document.getElementById('ajaxFileUploadForm' + id);
+            var data = {};
+            var db = document.body;
+            try {
+                if (frame.contentWindow) {
+                    data.responseText = frame.contentWindow.document.body ? frame.contentWindow.document.body.innerHTML : null;
+                    data.responseXML = frame.contentWindow.document.XMLDocument ? frame.contentWindow.document.XMLDocument : frame.contentWindow.document;
+                }
+                else {
+                    data.responseText = frame.contentDocument.document.body ? frame.contentDocument.document.body.innerHTML : null;
+                    data.responseXML = frame.contentDocument.document.XMLDocument ? frame.contentDocument.document.XMLDocument : frame.contentDocument.document;
+                }
+            } catch (e) {
+
+            }
+            callback && callback(data);
+            setTimeout(function () {
+                var mb = myBrowser();
+                if ("FF" == mb) {
+                    history.back();
+                }
+                db.removeChild(frame);
+                db.removeChild(form);
+            }, 100);
+        };
+
+
+
+        /**
+         * 设置请求参数
+         * @param paras
+         */
+        this.setParameters = function (paras) {
+            uploadParas = paras;
+        };
+
+        /**
+         * 设置上传的文件
+         * @param files
+         */
+        this.setFiles = function (files) {
+            uploadFiles = files;
+        };
+
+        /**
+         * 执行上传请求
+         * @param option
+         */
+        this.upload = function (url, callback) {
+            if (typeof(url) != 'string') throw new Error('[FileUpload] Error Url');
+            if (typeof(callback) != 'function') throw new Error('[FileUpload] Error Callback');
+
+            // 动态创建表单和iFrame
+            var id = (new Date()).getTime() + Math.ceil(Math.random() * 100000);
+            var form = createForm(id);
+            var frame = createIframe(id, url);
+
+            // 添加文件
+            for (var i = 0; i < uploadFiles.length; i++) {
+                cloneFile(form, uploadFiles[i]);
+            }
+            // 添加参数
+            for (var j in uploadParas) {
+                createInput(form, j, uploadParas[j]);
+            }
+
+            // 准备Form
+            form.setAttribute('target', frame.id);
+            form.setAttribute('action', url);
+
+
+            setTimeout(function () {
+                if (frame.attachEvent) {
+                    frame.attachEvent('onload', function () {
+                        frame.detachEvent('onload');
+                        uploadCallback(id, callback);
+                    });
+                }
+                else {
+                    frame.onload = function () {
+                        frame.onload = null;
+                        uploadCallback(id, callback);
+                    };
+                }
+                form.submit();
+            }, 100);
+        };
+    };
+
+    return FileUpload;
+});

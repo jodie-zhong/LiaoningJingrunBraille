@@ -1,0 +1,98 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+    var util = require('../../../../../common/util.js');
+    var that;
+
+    /**
+     * Workflow Item
+     */
+    var Item = ItemBase.extend({
+        // 保存/提交接口
+        saveAction: 'cnColoyhon/saveOrSubmitCnColophon.action',
+        // 查询接口
+        detailAction: 'cnColoyhon/searchCnColophonDetail.action',
+
+        getFormData: function () {
+            var $form = this.$('#formEdit');
+            var params = {};
+            var mwHColophonEntity = this._super();
+            params.mwHColophonEntity=mwHColophonEntity;
+            if(params.mwHColophonEntity.flowId){
+                params.flowId=params.mwHColophonEntity.flowId;
+            }
+            if(params.mwHColophonEntity.flowName){
+                params.flowName=params.mwHColophonEntity.flowName;
+            }
+            if(params.mwHColophonEntity.roleIds){
+                params.roleIds=params.mwHColophonEntity.roleIds;
+            }
+            if(params.mwHColophonEntity.taskUsers){
+                params.taskUsers=params.mwHColophonEntity.taskUsers;
+            }
+            if(params.mwHColophonEntity.operationType){
+                params.operationType=params.mwHColophonEntity.operationType;
+            }
+            if(params.mwHColophonEntity.bookId){
+                params.bookId=params.mwHColophonEntity.bookId;
+            }
+            if(params.mwHColophonEntity.taskId){
+                params.taskId=params.mwHColophonEntity.taskId;
+            }
+            if(params.mwHColophonEntity.currentFlowId){
+                params.currentFlowId=params.mwHColophonEntity.currentFlowId;
+            }
+            if(params.mwHColophonEntity.deptIds){
+                params.deptIds=params.mwHColophonEntity.deptIds;
+            }
+            return params;
+        },
+
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+
+        },
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+            // 初始化日期组件
+            this.$('input.date-time').datetimepicker({
+                format: 'YYYY-MM',
+                locale: 'zh-cn',
+                sideBySide: true
+            });
+
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function (container, tpl) {
+            this._super(container, tpl);
+        },
+
+        /**
+         * 渲染页面
+         */
+        render: function () {
+            this._super();
+
+            that = this;
+
+            this.initPageEvent();
+
+            this.initPageData();
+        }
+    });
+
+
+    module.exports = Item;
+
+});

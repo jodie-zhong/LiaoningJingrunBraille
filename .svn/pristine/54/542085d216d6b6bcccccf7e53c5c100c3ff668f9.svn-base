@@ -1,0 +1,242 @@
+<!--图书排版-录排-->
+<!---------------------------------------------------------------------------------------------编辑状态--------------------------------------------------------------------------------------------->
+<% if(isEdit) { %>
+<div class="form-horizontal">
+  <div class="fileList">
+    <% if(info.fascicleList && info.fascicleList.length > 0) { %>
+    <% for(var i = 0; i < info.fascicleList.length; i++) { %>
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="form-group">
+          <label class="col-xs-2 control-label">录排文件</label>
+          <div class="col-xs-6">
+            <div class="input-group with-clear">
+              <input class="form-control uploadFile" value="<%- info.fascicleList[i].hBookFileName %>" placeholder="请选择文件" data-file="bookFileName" data-value="<%- info.fascicleList[i].bookPath %>"
+                     readonly>
+              <span class="input-group-btn">
+                <button class="btn btn-clear" type="button" data-action="clear"><i class="fa fa-remove box"></i></button>
+                <button style="padding-left: 15px;" class="btn btn-default" type="button" data-open="public/file/file-upload" data-data='{"type": "*.doc;*.docx;*.pdf"}'><i
+                    class="fa fa-file-o"></i></button>
+              </span>
+              <% if(info.fascicleList[i].bookPath) { %>
+              <button style="margin: -25px 0 0 0;" class="btn btn-xs btn-default downloadFile" data-download-address="<%- info.fascicleList[i].bookPath %>">下载</button>
+              <button style="margin: -25px 0 0 5px;" class="btn btn-xs btn-default preview" data-download-address="<%- info.fascicleList[i].bookPath %>">预览</button>
+              <% } else { %>
+              <button style="margin: -25px 0 0 0;" class="btn btn-xs btn-default downloadFile" disabled>下载</button>
+              <button style="margin: -25px 0 0 5px;" class="btn btn-xs btn-default preview" disabled>预览</button>
+              <% } %>
+            </div>
+          </div>
+          <% if(i === 0) { %>
+          <button style='margin: 7px 0 0 0;' class="addRow btn btn-xs btn-default"><i class="fa fa-plus box"></i></button>
+          <% } else { %>
+          <button style='margin: 7px 0 0 0;' class="removeRow btn btn-xs btn-danger"><i class="fa fa-minus box"></i></button>
+          <% } %>
+        </div>
+      </div>
+    </div>
+    <% } %>
+    <% } else { %>
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="form-group">
+          <label class="col-xs-2 control-label">录排文件</label>
+          <div class="col-xs-6">
+            <div class="input-group with-clear">
+              <input class="form-control uploadFile" placeholder="请选择文件" data-file="bookFileName" readonly>
+              <span class="input-group-btn">
+                <button class="btn btn-clear" type="button" data-action="clear"><i class="fa fa-remove box"></i></button>
+                <button style="padding-left: 15px;" class="btn btn-default" type="button" data-open="public/file/file-upload" data-data='{"type": "*.doc;*.docx;*.pdf"}'><i
+                    class="fa fa-file-o"></i></button>
+              </span>
+              <button style="margin: -25px 0 0 0;" class="btn btn-xs btn-default downloadFile" disabled>下载</button>
+              <button style="margin: -25px 0 0 5px;" class="btn btn-xs btn-default preview" disabled>预览</button>
+            </div>
+          </div>
+          <button style='margin: 7px 0 0 0;' class="addRow btn btn-xs btn-default"><i class="fa fa-plus box"></i></button>
+        </div>
+      </div>
+    </div>
+    <% } %>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">录排页数</label>
+        <div class="col-xs-8">
+          <input class="form-control" value="<%- info.typeSettingNum %>" name="typeSettingNum" placeholder="录排页数" maxlength="8" pattern="^[1-9][0-9]*$" data-fv-regexp-message="请输入大于0的整数"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">录排备注</label>
+        <div class="col-xs-10">
+          <textarea class="form-control" name="remark" placeholder="录排备注（最大1024字）" maxlength="1024"><%- info.remark %></textarea>
+          <div><label class="len">0/1024</label></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">是否打样</label>
+        <div class="col-xs-8">
+          <% if(info.isProofing === '2') { %>
+          <label class="radio-inline"><input type="radio" name="isProofing" value="1"/>是</label>
+          <label class="radio-inline"><input type="radio" name="isProofing" value="2" checked/>否</label>
+          <% } else { %>
+          <label class="radio-inline"><input type="radio" name="isProofing" value="1" checked/>是</label>
+          <label class="radio-inline"><input type="radio" name="isProofing" value="2"/>否</label>
+          <% } %>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6" id="pageNumDiv">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">打样张数<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input class="form-control" value="<%- info.proofingNum %>" name="proofingNum" placeholder="打样张数" maxlength="5" pattern="^[1-9][0-9]*$" data-fv-regexp-message="请输入大于0的整数"
+                 data-fv-notempty="true" data-fv-notempty-message="请填写打样张数"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% if(info.userTaskEntities) { %>
+  <% for(var i = 0; i < info.userTaskEntities.length; i++) { %>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">下一流程</label>
+        <div class="col-xs-8">
+          <% if(!info.userTaskEntities[i].deptAndRoles) { %>
+          <p class="form-control-static"><%- info.userTaskEntities[i].flowName %></p>
+          <% } else { %>
+          <p class="form-control-static">
+            <!--<%- info.userTaskEntities[i].flowName %>（-->
+            <!--<%- info.userTaskEntities[i].deptNames %> - -->
+            <!--<%- info.userTaskEntities[i].roleNames %>）-->
+            <%- info.userTaskEntities[i].flowName %>（<%- info.userTaskEntities[i].deptAndRoles %>）
+          </p>
+          <% } %>
+          <input type="hidden" name="flowId" value="<%- info.userTaskEntities[i].flowId %>">
+          <input type="hidden" name="flowName" value="<%- info.userTaskEntities[i].flowName %>">
+          <input type="hidden" name="nextCategory" value="<%- info.userTaskEntities[i].category %>">
+          <input type="hidden" name="deptIds" value="<%- info.userTaskEntities[i].deptIds %>">
+          <input type="hidden" name="roleIds" value="<%- info.userTaskEntities[i].roleIds %>">
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <% if(info.userTaskEntities[i].roleIds) { %>
+      <div class="form-group">
+        <label class="col-xs-4 control-label">任务人<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <div class="input-group with-clear">
+            <input class="form-control" name="taskUsers" value="<%- info.userTaskEntities[i].nextFlowTaskUserNames %>" data-value="<%- info.userTaskEntities[i].nextFlowTaskUserIds %>"
+                   placeholder="任务人" data-fv-notempty="true" data-fv-notempty-message="请选择下一任务人" data-data="{searchRoleId: '', searchDepartmentId: ''}"
+                   title="<%- info.userTaskEntities[i].nextFlowTaskUserNames %>" readonly>
+            <span class="input-group-btn">
+              <button class="btn btn-clear" type="button" data-action="clear"><i class="fa fa-remove box"></i></button>
+              <button class="btn btn-default" type="button" data-data='{"roleIds": "<%- info.userTaskEntities[i].roleIds %>", "deptIds": "<%- info.userTaskEntities[i].deptIds %>"}'
+                      data-open="public/user/select-users">
+                <i class="fa fa-user-o"></i></button>
+            </span>
+          </div>
+        </div>
+      </div>
+      <% } %>
+    </div>
+  </div>
+  <% } %>
+  <% } %>
+</div>
+<!---------------------------------------------------------------------------------------------查看状态--------------------------------------------------------------------------------------------->
+<% } else { %>
+<div class="form-horizontal">
+  <% if(info.fascicleList && info.fascicleList.length > 0) { %>
+  <% for(var i = 0; i < info.fascicleList.length; i++) { %>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">录排文件</label>
+        <div class="col-xs-6">
+          <p class="form-control-static">
+            <%- info.fascicleList[i].hBookFileName %>
+            <% if(info.fascicleList[i].bookPath && info.fascicleList[i].bookPath !=='') { %>
+            <button style="margin: 0;" class="btn btn-xs btn-default downloadFile" data-download-address="<%- info.fascicleList[i].bookPath %>">下载</button>
+            <button style="margin: 0;" class="btn btn-xs btn-default preview" data-download-address="<%- info.fascicleList[i].bookPath %>">预览</button>
+            <% } else { %>
+            <button style="margin: 0;" class="btn btn-xs btn-default downloadFile" disabled>下载</button>
+            <button style="margin: 0;" class="btn btn-xs btn-default preview" disabled>预览</button>
+            <% } %>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% } %>
+  <% } %>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">录排页数</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.typeSettingNum %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">录排备注</label>
+        <div class="col-xs-10">
+          <p class="form-control-static"><%- info.remark %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">是否打样</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.isProofing === '1' ? '是' : (info.isProofing === '2' ? '否' : '') %></p>
+        </div>
+      </div>
+    </div>
+    <% if(info.isProofing && info.isProofing === '1') { %>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">打样张数</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.proofingNum %></p>
+        </div>
+      </div>
+    </div>
+    <% } %>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">提交人</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitUserName %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">提交时间</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitDatetime %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>

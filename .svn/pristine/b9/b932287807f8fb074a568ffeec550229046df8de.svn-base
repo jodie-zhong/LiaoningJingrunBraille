@@ -1,0 +1,153 @@
+<div class="form-compact">
+  <div class="row">
+    <div class="col-xs-5">
+      <div class="form-group">
+        <div  id="bookCover" style="background-image: url(<%- info.bookCoverPath || 'img/book-cover.jpg' %>)" >
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-7">
+      <div class="row border-bottom">
+        <div class="col-xs-12">
+          <div class="form-group">
+            <label class="col-xs-4 control-label">书名：</label>
+            <div class="col-xs-8">
+              <p class="form-control-static" title="<%- info.bookName %>"><%- info.bookName %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row border-bottom">
+        <div class="col-xs-12">
+          <div class="form-group">
+            <label class="col-xs-4 control-label">类别：</label>
+            <div class="col-xs-8">
+              <p class="form-control-static" title="<%- info.bookTypeName %>"><%- info.bookTypeName %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row border-bottom">
+        <div class="col-xs-12">
+          <div class="form-group">
+            <label class="col-xs-4 control-label">作者：</label>
+            <div class="col-xs-8">
+              <p class="form-control-static" title="<%- info.bookDetailOldAuthor  %>"><%- info.bookDetailOldAuthor %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row border-bottom">
+        <div class="col-xs-12">
+          <div class="form-group">
+            <label class="col-xs-4 control-label">字数：</label>
+            <div class="col-xs-8">
+              <p class="form-control-static" title="<%- info.bookDetailWordsNum  %>"><%- info.bookDetailWordsNum %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row border-bottom">
+        <div class="col-xs-12">
+          <div class="form-group">
+            <label class="col-xs-4 control-label">原出版社：</label>
+            <div class="col-xs-8">
+              <p class="form-control-static" title="<%- info.bookDetailOldPublishingHouse %>"><%-
+                info.bookDetailOldPublishingHouse %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row border-bottom">
+        <div class="col-xs-12">
+          <div class="form-group">
+            <label class="col-xs-4 control-label">原出版时间：</label>
+            <div class="col-xs-8">
+              <p class="form-control-static" title="<%- info.bookDetailOldPublicationDate  %>"><%-
+                info.bookDetailOldPublicationDate %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row border-bottom">
+        <div class="col-xs-12">
+          <div class="form-group">
+            <label class="col-xs-4 control-label">盲文形式：</label>
+            <div class="col-xs-8">
+              <p class="form-control-static" title="<%- info.bookDetailBrailleForm  %>"><%- info.bookDetailBrailleForm %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row border-bottom">
+    <div class="col-xs-5">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">原版次：</label>
+        <div class="col-xs-8">
+          <p class="form-control-static" title="<%- info.bookDetailOldEdition  %>"><%- info.bookDetailOldEdition %></p>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="col-xs-7">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">编排次序：</label>
+        <div class="col-xs-8">
+          <p class="form-control-static" title="<%- info.bookDetailLayoutOrder %>"><%- info.bookDetailLayoutOrder %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row border-bottom">
+    <div class="col-xs-5">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">书号：</label>
+        <div class="col-xs-8">
+          <p class="form-control-static" title="<%- info.bookIsbn %>"><%- info.bookIsbn %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-7">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">责任编辑：</label>
+        <div class="col-xs-8">
+          <p class="form-control-static" title="<%- info.bookDetailDutyEditorName %>"><%- info.bookDetailDutyEditorName %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row border-bottom">
+    <div class="col-xs-5">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">印数：</label>
+        <div class="col-xs-8">
+          <p class="form-control-static" title="<%- info.bookDetailPrintNum  %>"><%- info.bookDetailPrintNum %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row border-bottom">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label" style="margin-left: -18px">作者简介：</label>
+        <div class="col-xs-10">
+          <p class="form-control-static" title="<%- info.bookDetailAuthorMsg %>"><%- info.bookDetailAuthorMsg %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row border-bottom">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label" style="margin-left: -18px">内容简介：</label>
+        <div class="col-xs-10">
+          <p class="form-control-static" title="<%- info.bookDetailSketched %>"><%- info.bookDetailSketched %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,26 @@
+<!-- 版权合同库 -->
+<div class="modal-dialog dialog-container">
+	<div class="modal-content">
+		<div class="panel">
+			<div class="panel-header">
+        <h3><i class="fa fa-user-o"></i> 续约合同</h3>
+        <div class="control-btn">
+          <a class="panel-close btn-close"><i class="fa fa-close"></i></a>
+        </div>
+      </div>
+      <div class="panel-content">
+      	<div class="form-horizontal">
+      		<div class="row">
+      			<div class="col-xs-12">
+      				<div class="form-group">
+      					<% for(var i = 0; i < info.length; i++) { %>
+      					<p><%- i+1 %></p>	
+      					<% } %>
+      				</div>
+      			</div>
+      		</div>
+      	</div>
+      </div>
+		</div>
+	</div>
+</div>

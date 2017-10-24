@@ -1,0 +1,136 @@
+<!-- 报表统计 -->
+<div class="row">
+    <div class="col-xs-3">
+        <!-- 左侧树 -->
+        <div class="panel">
+            <div class="panel-header custom-panel-header">
+                <h3><i class="fa fa-braille"></i>盲文图书报表统计</h3>
+            </div>
+            <div class="panel-content panel-height-1">
+                <div id="monthTree">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-9">
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="panel">
+                    <div class="panel-header custom-panel-header">
+                        <h3>编辑译校情况统计表
+                            <span class="icheck-inline task-about" id=""></span>
+                        </h3>
+                        <div class="control-btn">
+                            <button class="btn btn-xs btn-primary" data-auth="" disabled>查看全部</button>
+                        </div>
+                    </div>
+                    <div class="panel-content">
+                        <div class="table-10">
+                            <table class="table table-striped table-hover"  id="">
+                                <thead>
+                                <tr>
+                                <tr>
+                                    <th style="width: 50px">序号</th>
+                                    <th>种类</th>
+                                    <th>书名</th>
+                                </tr>
+                                </thead>
+                                <tbody id="">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="panel">
+                    <div class="panel-header custom-panel-header">
+                        <h3>编辑译校质量情况统计表
+                            <span class="icheck-inline task-about" id=""></span>
+                        </h3>
+                        <div class="control-btn">
+                            <button class="btn btn-xs btn-primary" data-auth="" disabled>查看全部</button>
+                        </div>
+                    </div>
+                    <div class="panel-content">
+                        <div class="table-10">
+                            <table class="table table-striped table-hover"  id="">
+                                <thead>
+                                <tr>
+                                <tr>
+                                    <th style="width: 50px">序号</th>
+                                    <th>种类</th>
+                                    <th>书名</th>
+                                </tr>
+                                </thead>
+                                <tbody id="">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="panel">
+                    <div class="panel-header custom-panel-header">
+                        <h3>发稿情况统计表
+                            <span class="icheck-inline task-about" id=""></span>
+                        </h3>
+                        <div class="control-btn">
+                            <button class="btn btn-xs btn-primary" data-auth="" disabled>查看全部</button>
+                        </div>
+                    </div>
+                    <div class="panel-content">
+                        <div class="table-10">
+                            <table class="table table-striped table-hover"  id="">
+                                <thead>
+                                <tr>
+                                <tr>
+                                    <th style="width: 50px">序号</th>
+                                    <th>种类</th>
+                                    <th>书名</th>
+                                </tr>
+                                </thead>
+                                <tbody id="">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="panel">
+                    <div class="panel-header custom-panel-header">
+                        <h3>末读情况统计表
+                            <span class="icheck-inline task-about" id=""></span>
+                        </h3>
+                        <div class="control-btn">
+                            <button class="btn btn-xs btn-primary" data-auth="" disabled>查看全部</button>
+                        </div>
+                    </div>
+                    <div class="panel-content">
+                        <div class="table-10">
+                            <table class="table table-striped table-hover"  id="">
+                                <thead>
+                                <tr>
+                                <tr>
+                                    <th style="width: 50px">序号</th>
+                                    <th>种类</th>
+                                    <th>书名</th>
+                                </tr>
+                                </thead>
+                                <tbody id="">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

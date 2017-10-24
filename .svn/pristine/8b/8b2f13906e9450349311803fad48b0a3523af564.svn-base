@@ -1,0 +1,144 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    // 工作流类窗口继承自工作流Base
+    var Base = require('../../other/base/book-base');
+
+    // var topicManageListTpl = require('./topic-manage-list.tpl');
+
+    var Module = Base.extend(new function () {
+        var that;
+
+        // 查询任务树中未完成任务数的接口
+        // this.untreatedTaskAction = 'topic/unreadTopicCount.action';
+        // // 选题任务列表接口
+        // this.taskListActoin = 'topic/topicList.action';
+
+        this.searchBookType = 'brailleTopic';
+
+        /**
+         * 选择行变更事件回调
+         */
+        this.onSelectRowChanged = function(){
+            // // that.$("#btnTopicDelete").attr('disabled', 'disabled');
+            // // that.$("#btnTopicSubmit").attr('disabled', 'disabled');
+            // // that.$("#btnTopicView").attr('disabled', 'disabled');
+            // // that.$("#btnPrincipalCheck").attr('disabled', 'disabled');
+            // // that.$("#btnChiefCheck").attr('disabled', 'disabled');
+            // // that.$("#btnTopicHold").attr('disabled', 'disabled');
+            //
+            // that.$("#btnTopicDelete").removeAttr('disabled');
+            // that.$("#btnTopicSubmit").removeAttr('disabled');
+            // that.$("#btnTopicView").removeAttr('disabled');
+            // that.$("#btnPrincipalCheck").removeAttr('disabled');
+            // that.$("#btnChiefCheck").removeAttr('disabled');
+            // that.$("#btnTopicHold").removeAttr('disabled');
+            //
+            // var $row = that.$('#taskListTable tr.info');
+            // if($row.length === 0){
+            //     that.currentTaskId = '';
+            //     that.currentFlowId = '';
+            //     that.currentBookId = '';
+            //     that.currentBookState = '';
+            //     this.currentFlowFatherId = '';
+            // } else if($row.length === 1){
+            //     that.currentTaskId = $row.attr('data-taskId');
+            //     that.currentFlowId = $row.attr('data-flowId');
+            //     that.currentBookId = $row.attr('data-bookId');
+            //     that.currentBookState = $row.attr('data-bookState');
+            //     this.currentFlowFatherId = $row.attr('data-fatherId');
+            //
+            //     // that.$('#btnTopicDelete').removeAttr('disabled');
+            // }
+
+
+
+        };
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+            that.openPage('public/workflow/workflow-dialog', {
+                debug: true,
+                flowTemplate: 'cite-topic-record/cite-topic-register',
+                isEdit: true
+            });
+
+            // // 新建选题
+            // that.$container.on('click', '#btnTopicAdd', function () {
+            //     // 选题新建步骤
+            //     that.openPage('public/workflow/workflow-dialog', {flowId: 2});
+            // });
+            //
+            // // 申报选题
+            // that.$container.on('click', '#btnTopicSubmit', function () {
+            //     that.openPage('public/workflow/workflow-dialog', {
+            //         taskId:that.currentTaskId,
+            //         flowId:that.currentFlowId,
+            //         bookId:that.currentBookId,
+            //         flowFatherId: that.currentFlowFatherId
+            //     });
+            // });
+
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+
+
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            // that.initTemplate(tpl, {});
+
+            // // 初始化数据前需要设置列表模板
+            // this.listTpl = topicManageListTpl;
+
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+
+            // TODO: 测试
+            // that.openPage('public/workflow/workflow-dialog', {});
+            // that.openPage('public/file/file-upload', {});
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function () {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+
+    module.exports = Module;
+});

@@ -1,0 +1,13 @@
+{
+  "message" : "查询列表成功",
+  "data" : [ {
+    "departmentId" : "1",
+    "departmentName" : "社长/总编辑",
+    "departmentUserNum" : "0"
+  }, {
+    "departmentId" : "2",
+    "departmentName" : "副总编辑",
+    "departmentUserNum" : "0"
+  } ],
+  "code" : "0"
+}

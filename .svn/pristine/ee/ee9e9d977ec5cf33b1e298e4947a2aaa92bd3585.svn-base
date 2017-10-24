@@ -1,0 +1,339 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    var DialogBase = require('../../../common/base-dialog');
+    var listTpl = require('./remuneration-apply-sheet-list.tpl');
+    var printDialogTpl=require('./print-dialog.tpl');
+    var Module = DialogBase.extend(new function () {
+        var that;
+        var info = null;
+
+        function SaveTwo() {
+            that.$('.save-two').each(function () {
+                var $el=$(this)
+                var price = $el.val();
+                var bPrice = parseFloat(price).toFixed(2);
+                if (isNaN(bPrice)) {
+                    bPrice = '0.00';
+                }
+                $el.val(bPrice);
+            });
+        }
+        // 判断有几条数据（适用第一个）
+        function searchOne(ele) {
+            var phoneLength = that.$(ele).find('tr').length;
+            if (phoneLength !== 1) {
+                that.$(ele).find('button[data-type="minus"]').show();
+                that.$(ele).find('button[data-type="plus"]').hide();
+                that.$(ele).find('button[data-type="plus"]').last().show();
+            } else {
+                that.$(ele).find('button[data-type="minus"]').hide();
+                that.$(ele).find('button[data-type="plus"]').show();
+            }
+            var i = 1;
+            that.$(ele).find('tr').each(function () {
+                $(this).find('td[data-value="number"]').text(i++);
+            });
+        }
+
+        // 判断有几条数据（适用第二个和第三个）
+        function searchTwo(ele, e) {
+            var phoneLength = that.$(ele).find(e).length;
+            if (phoneLength !== 1) {
+                that.$(ele).find('button[data-type="minus"]').show();
+                that.$(ele).find('button[data-type="plus"]').hide();
+                that.$(ele).find('button[data-type="plus"]').last().show();
+            } else {
+                that.$(ele).find('button[data-type="minus"]').hide();
+                that.$(ele).find('button[data-type="plus"]').show();
+            }
+            // that.addValidateField(that.$('#formEdit'));
+        }
+
+        // 添加（适用第一个）
+        function onContentPlusOne(ele, par) {
+            var workRow = that.$(ele).html();
+            that.$(par).append(workRow);// 把workRow放到$(par)之中
+            searchOne(par);
+            that.addValidateField($('#formEdit'), $('input'));
+        }
+
+        // 添加（适用第二个和第三个）
+        function onContentPlusTwo(ele, par, $el) {
+            var workRow = that.$(ele).html();
+            that.$(par).after(workRow);// 把workRow放到.$(par)之后
+            var $tbody = that.$(par).parents('tbody');
+            searchTwo($tbody, $el);
+            that.addValidateField($('#formEdit'), $('input'));
+        }
+
+        // 删除（适用第一个）
+        function onContentMinusOne($dwp) {
+            var $par = $dwp.parents('tbody');
+            $dwp.parents('tr').remove();
+            searchOne($par);
+        }
+
+        // 删除（适用第二个和第三个）
+        function onContentMinusTwo($dwp, $el) {
+            var $par = $dwp.parents('tbody');
+            $dwp.parents('tr').remove();
+            searchTwo($par, $el);
+        }
+
+        /**
+         * 查询列表
+         */
+        function searchList() {
+            util.showLoading('正在查询列表……');
+            var formEdit = $("#formEdit");
+            var params = {
+                bookId: info.bookId
+            };
+            util.sendRequest({
+                data: params,
+                action: 'remuneration/searchReward.action',
+                success: function (resp) {
+                    util.hideLoading();
+                    if (resp.code === 0) {
+                        resp.data.onOff=info.state;
+                        formEdit.html(util.template(listTpl, {info: resp.data}));
+                        searchOne('#tableEditableTop tbody');
+                        searchTwo('#tableEditableMiddle', '.rewardMiddle');
+                        searchTwo('#tableEditableBottom', '.rewardMiddle');
+                        SaveTwo();
+                        that.initValidate(that.$('#formEdit'));
+                    } else {
+                        util.showAlert(resp.message || '查询权限列表出错，请稍后重试！');
+                    }
+                },
+                error: function (xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('查询权限列表出错，请稍后重试！');
+                }
+            });
+        }
+
+        /**
+         * 执行保存或提交操作
+         */
+        function doSave(params) {
+            // 下发请求
+            util.showLoading();
+            util.sendRequest({
+                data: params,
+                action: 'remuneration/modifyReward.action',
+                success: function (resp) {
+                    util.hideLoading();
+                    if (resp.code === 0) {
+                        util.showAlert(resp.message || '提交成功', function () {
+                            that.close({refresh: true});
+                        });
+                    } else {
+                        // 业务执行失败
+                        console.log(resp);
+                        util.showAlert(resp.message || '提交出错，请稍后重试！');
+                    }
+                },
+                error: function (xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('提交出错，请稍后重试！');
+                }
+            });
+        }
+        /**
+         * 打印发稿单
+         */
+        function printInfo() {
+            util.showLoading('正在查询信息……');
+            util.sendRequest({
+                data: {bookId: info.bookId},
+                action: 'remuneration/searchReward.action',
+                success: function (resp) {
+                    console.log(resp);
+                    if (resp.code === 0) {
+                        setTimeout(function () {
+                            util.hideLoading();
+                            util.openPage('public/print/print-preview', {
+                                content: util.template(printDialogTpl, {info: resp.data}),
+                                title: '打印稿酬通知单'
+                            });
+                        }, 500);
+                    } else {
+                        util.hideLoading();
+                        util.showAlert(resp.message || '信息出错，请稍后重试！');
+                    }
+                },
+                error: function (xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('信息出错，请稍后重试！');
+                }
+            });
+        }
+
+        /**
+         * 保存数据
+         */
+        function saveConferenceInfo(isTrue) {
+            // 表单验证
+            var $form = that.$('#formEdit');
+            // 没有错误开始处理
+            if (that.validate($form) === true) {
+                // 通过公共方法生成表单参数（此处将每个list子集作为）
+                var params = {};
+                params.hRwardState = isTrue ? '2' : '1';
+                var listOne = [], listTwo = [], listThree = [];
+                $form.find('#tableEditableTop tbody tr').each(function () {
+                    var obj = that.buildFormParams($(this).find('input'));
+                    listOne.push(obj);
+                });
+                $form.find('#tableEditableMiddle .rewardMiddle').each(function () {
+                    var obj = that.buildFormParams($(this).find('input'));
+                    listTwo.push(obj);
+                });
+                $form.find('#tableEditableBottom .rewardMiddle').each(function () {
+                    var obj = that.buildFormParams($(this).find('input'));
+                    listThree.push(obj);
+                });
+                params.rewardAuthorEntities = listOne;
+                params.rewardDetailEntities = listTwo;
+                params.rewardTaxEntities = listThree;
+                params.bookId = that.$('input[name="bookId"]').val();
+                params.bookName = that.$('input[name="bookName"]').val();
+                params.bookIsbn = that.$('input[name="bookIsbn"]').val();
+                params.bookDetailDutyEditor = that.$('input[name="bookDetailDutyEditor"]').val();
+                params.hRewardPricing = that.$('input[name="hRewardPricing"]').val();
+                params.hRewardAddPrint = that.$('input[name="hRewardAddPrint"]').val();
+                params.hRewardThisPrint = that.$('input[name="hRewardThisPrint"]').val();
+                params.hRewardId = that.$('input[name="hRewardId"]').val();
+                params.hRewardRemark = that.$('input[name="hRewardRemark"]').val();
+                params.realCapitalCountPay = that.$('input[name="realCapitalCountPay"]').val();
+                params.realCountPay = that.$('input[name="realCountPay"]').val();
+                if (isTrue) {
+                    // 确认是否下发
+                    util.showConfirm('确定要将本月数据提交么？', function () {
+                        doSave(params);
+                    });
+                } else {
+                    doSave(params);
+                }
+            }
+        }
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+            // 第一个添加
+            that.$container.on('click', '#tableEditableTop button[data-type="plus"]', function () {
+                var $el = $(this);
+                var ele = $el.attr('data-addE');
+                var par = $el.parents('tbody');
+                onContentPlusOne(ele, par);
+            });
+            // 第一个删除
+            that.$container.on('click', '#tableEditableTop button[data-type="minus"]', function () {
+                onContentMinusOne($(this));
+            });
+            // 第二个三个添加
+            that.$container.on('click', '#tableEditableMiddle button[data-type="plus"],#tableEditableBottom button[data-type="plus"]', function () {
+                var $el = $(this);
+                var ele = $el.attr('data-addE');
+                var par = $el.parents('tbody').find('.rewardMiddle').last();
+                onContentPlusTwo(ele, par, '.rewardMiddle');
+            });
+            // 第二个三个删除
+            that.$container.on('click', '#tableEditableMiddle button[data-type="minus"],#tableEditableBottom button[data-type="minus"]', function () {
+                onContentMinusTwo($(this), '.rewardMiddle');
+            });
+
+            // 保存
+            that.$container.on('click', '#btnSave', function () {
+                saveConferenceInfo(false);
+            });
+
+            // 提交
+            that.$container.on('click', '#btnSubmit', function () {
+                saveConferenceInfo(true);
+            });
+
+            // 打印
+            that.$container.on('click', '#btnPrint',printInfo);
+            // 自动计算（第二）
+            that.$container.on('input', '.lose-focus', function () {
+                var $el = $(this);
+                var num = parseFloat($el.parent().parent().find('.lose-focus').eq(0).val()) - parseFloat($el.parent().parent().find('.lose-focus').eq(1).val()) -parseFloat($el.parent().parent().find('.lose-focus').eq(2).val()) - parseFloat($el.parent().parent().find('.lose-focus').eq(3).val())-parseFloat($el.parent().parent().find('.lose-focus').eq(4).val());
+
+                $el.parent().parent().find('.lose-count').val(num.toFixed(2));
+                $el.parents('table').find('input[name="realCountPay"]').val(num.toFixed(2));
+            });
+
+            // 自动计算（第三）
+            that.$container.on('input', '.lose-inp,.rate-inp', function () {
+                var $el = $(this);
+                var num = parseFloat($el.parent().parent().find('.lose-inp').eq(0).val()) - parseFloat($el.parent().parent().find('.lose-inp').eq(1).val());
+                $el.parent().parent().find('.count-inp-one').val(num.toFixed(2));
+                var numRate=parseFloat(num) * (parseFloat($el.parent().parent().find('.rate-inp').val()));
+                $el.parent().parent().find('.count-inp-two').val(numRate.toFixed(2));
+            });
+            // 保存两位小数
+            that.$container.on('change', '.save-two', SaveTwo);
+        }
+
+        /**
+         * 初始化页面数据
+         */
+
+        function initPageData() {
+            searchList();
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            info = data;
+            that.initTemplate(tpl, {info: info});
+
+            // 初始化页面事件
+            initPageEvent();
+            // 初始化页面数据
+            initPageData();
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function () {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+    }());
+
+    module.exports = Module;
+});

@@ -1,0 +1,51 @@
+<!--译校通读众包管理-->
+<div class="row">
+  <div class="col-xs-12">
+    <div class="panel">
+      <div class="panel-header custom-panel-header">
+        <h3>
+          <i class="fa fa-braille"></i>汉文读物管理 -劳务管理<span class="icheck-inline task-about">[ <label><input type="checkbox" id="aboutMe" checked>可领用</label> ]</span>
+        </h3>
+      </div>
+      <div class="panel-content border-bottom">
+        <div class="form-horizontal">
+          <div class="row">
+            <div class="col-xs-5">
+              <div class="form-group">
+                <label class="col-xs-4 control-label">流程查看</label>
+              </div>
+            </div>
+            <div class="col-xs-4"></div>
+            <div class="col-xs-3">
+              <button style="float: right;" class="btn btn-primary" data-auth="0321" id="btnCrowdSourceGet" disabled>导入</button>
+              <button style="float: right; margin-right: 25px;" class="btn btn-primary" id="btnSearchWork">录入</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-content">
+        <div class="table-10">
+          <table class="table table-striped table-nowrap table-hover" id="crowdSourceTable">
+            <thead>
+            <tr>
+              <th class="w-table">序号</th>
+              <th class="w-table"></th><!--<i class="fa fa-square-o" data-action="check"></i>      没有复选-->
+              <th>姓名</th>
+              <th>出勤天数</th>
+              <th>全勤奖</th>
+              <th>加班费</th>
+              <th>劳务费</th>
+              <th>效益津贴</th>
+              <th>伙食补贴</th>
+              <th>郊区补贴</th>
+              <th>合计</th>
+            </tr>
+            </thead>
+            <tbody id="crowdSourceList"></tbody>
+          </table>
+        </div>
+        <div class="clearfix" id="crowdSourceListPaging"></div>
+      </div>
+    </div>
+  </div>
+</div>

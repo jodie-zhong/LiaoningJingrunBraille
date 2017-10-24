@@ -1,0 +1,24 @@
+<% if(list.length > 0) { %>
+<% for(var i = 0; i < list.length; i++) { %>
+<tr data-id="<%- list[i].bookId %>" data-flowId="<%- list[i].flowId %>" data-taskId="<%- list[i].taskId %>" >
+  <td><%- (i + 1) %></td>
+  <td data-check="true" style="width: 50px;"><i class="fa fa-circle-o" data-action="check"></i></td>
+  <td title="<%- list[i].bookName %>"><%- list[i].bookName %></td>
+  <td title="<%- list[i].bookStylebookNum %>"><%- list[i].bookStylebookNum %></td>
+  <% if(list[i].isExceed==='1'){ %>
+  <td title="<%- list[i].isExceed %>">否</td>
+  <% }else if (list[i].isExceed==='2'){ %>
+  <td title="<%- list[i].isExceed %>">是</td>
+  <% } else {%>
+<td></td>
+  <% }%>
+</tr>
+<% } %>
+<% } else { %>
+<tr>
+  <td colspan="5"><p class="empty-tips">没有符合指定条件的数据</p></td>
+</tr>
+<% } %>
+
+
+

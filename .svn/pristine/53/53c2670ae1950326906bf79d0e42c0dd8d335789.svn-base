@@ -1,0 +1,113 @@
+<!-- 变更备案 -->
+<div class="row">
+	<!-- 左侧树 -->
+	<div class="col-xs-3">
+		<div class="panel">
+			<div class="panel-header custom-panel-header">
+				<h3><i class="fa fa-braille"> 盲文读物管理- 变更备案</i></h3>
+			</div>
+			<div class="panel-content panel-height-1">
+				<div id="monthTree"></div>
+			</div>
+		</div>
+	</div>
+	<div class="col-xs-9">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="panel">
+					<div class="panel-header custom-panel-header">
+						<h3>申请列表</h3>
+						<div class="control-btn">
+							<button class="btn btn-xs btn-primary" id="btnTopicSubmit">处理</button>
+						</div>
+					</div>
+					<div class="panel-content border-bottom">
+						<div class="form-horizontal" id="formSearchWork">
+							<div class="row">
+								<div class="col-xs-5">
+									<div class="form-group">
+										<label class="col-xs-4 control-label">筛选</label>
+										<div class="col-sm-8">
+											<select class="form-control" name="searchTaskAbout" data-search="searchTaskAbout">
+												<option value="1">待我处理</option>
+												<option value="2">与我相关</option>
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="col-xs-5">
+								</div>
+								<div class="col-xs-2">
+									<button class="btn btn-primary" id="btnSearchWork">搜索</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="panel-content">
+						<div class="table-10">
+							<table class="table table-striped table-hover" data-multi="true" id="workListTable">
+								<thead id="workListTHeader">
+								<tr>
+									<th>序号</th>
+									<th><i class="fa fa-square-o" data-action="check"></i></th>
+									<th>变更图书</th>
+									书号
+
+
+
+									变更项
+
+
+
+									申请状态
+
+									<th>责任编辑</th>
+									<th>选题来源</th>
+									<th>是否加急</th>
+									<th>处理人</th>
+									<th>选题状态</th>
+								</tr>
+								</thead>
+								<tbody id="workListTBody">
+
+								</tbody>
+							</table>
+						</div>
+						<div class="pagination-container" id="workListPaging">
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="panel">
+					<div class="panel-header custom-panel-header">
+						<h3>流程查看</h3>
+					</div>
+					<div class="panel-content">
+						<div class="table-5-static">
+							<table class="table table-striped table-hover">
+								<thead>
+								<tr>
+									<th>序号</th>
+									<th>状态</th>
+									<th>负责人</th>
+									<th>起始时间</th>
+									<th>完成时间</th>
+									<th>审核结果</th>
+									<th>详细信息</th>
+								</tr>
+								</thead>
+								<tbody id="taskWorkflowTable">
+
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

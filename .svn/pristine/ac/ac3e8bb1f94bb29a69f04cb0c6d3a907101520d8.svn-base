@@ -1,0 +1,139 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    module.exports = {
+        /* 选题申报 */
+        // 选题申报
+        'brailleTopicDeclare': 'topic-manage/topic-manage-create',
+        // 部门负责人审核
+        'brailleEditorialTrial': 'topic-manage/topic-manage-principal',
+        // 总编辑/副总编辑审批意见
+        'brailleChiefEditorTrial': 'topic-manage/topic-manage-chief',
+        // 选题上报信息
+        'brailleTopicReport': 'topic-manage/topic-manage-report',
+        // 选题大会信息
+        'brailleTopicConference': 'topic-manage/topic-manage-conference',
+        // 待定确认
+        'braillePend': 'topic-manage/topic-manage-hold',
+
+
+        /* 选题备案 */
+        // 选题备案新增
+        'topicRecordCreate': 'topic-record/topic-record-create',
+        // 重大选题备案登记表
+        'bigTopicRecordRegister': 'topic-record/import-topic-register',
+        // 重大部门负责人审核意见
+        'bigBrailleEditorialTrial': 'topic-record/topic-record-principal',
+        // 重大总编辑/副总编辑审核
+        'bigBrailleChiefEditorTrial': 'topic-record/topic-record-chief',
+        // 重大上报版署
+        'bigReportBureauPublication': 'topic-record/topic-record-report',
+        // 重大备案登记
+        'bigRecordRegister': 'topic-record/topic-record-copy',
+        // 引进选题备案登记表
+        'importTopicRecordRegister': 'topic-record/cite-topic-register',
+        // 引进部门负责人审核意见
+        'importBrailleEditorialTrial': 'topic-record/topic-record-principal',
+        // 引进总编辑/副总编辑审核
+        'importBrailleChiefEditorTrial': 'topic-record/topic-record-chief',
+        // 引进备案登记
+        'importRecordRegister': 'topic-record/topic-record-copy',
+
+        /******************************************************译校通读******************************************************/
+        // 任务分配
+        'taskAllocation ': 'translation-proofreading/tprt-task-assignment',
+        // 任务接受
+        'translationTaskLead': 'translation-proofreading/tprt-task-acception',
+        // 任务接受
+        'firstProofreaTaskLead': 'translation-proofreading/tprt-task-acception',
+        // 任务接受
+        'secondProofreaTaskLead': 'translation-proofreading/tprt-task-acception',
+        // 任务接受
+        'thirdProofreaTaskLead': 'translation-proofreading/tprt-task-acception',
+        // 任务接受
+        'otherThirdProofreaTaskLead': 'translation-proofreading/tprt-task-acception',
+        // 任务接受
+        'readTaskLead': 'translation-proofreading/tprt-task-acception',
+        // 发送书稿
+        '3': 'translation-proofreading/tprt-manuscript-sending',
+        // 接收书稿
+        '4': 'translation-proofreading/tprt-manuscript-acception',
+        // 译录
+        '5': 'translation-proofreading/tprt-translation-entering',
+        // 书稿归还确认
+        '6': 'translation-proofreading/tprt-manuscript-returning',
+        // 一校
+        '7': 'translation-proofreading/tprt-deal',
+        // 二校
+        '8': 'translation-proofreading/tprt-deal',
+        // 三校
+        '9': 'translation-proofreading/tprt-deal',
+        // 二次三校
+        '10': 'translation-proofreading/tprt-deal',
+        // 通读
+        '11': 'translation-proofreading/tprt-deal',
+        // 一校正误表确认
+        '12': 'translation-proofreading/tprt-deal-confirmation',
+        // 二校正误表确认
+        '13': 'translation-proofreading/tprt-deal-confirmation',
+        // 三校正误表确认
+        '14': 'translation-proofreading/tprt-deal-confirmation',
+        // 二次三校正误表确认
+        '15': 'translation-proofreading/tprt-deal-confirmation',
+        // 通读正误表确认
+        '16': 'translation-proofreading/tprt-deal-confirmation',
+        // 一校正误表审核
+        '17': 'translation-proofreading/tprt-deal-checking',
+        // 二校正误表审核
+        '18': 'translation-proofreading/tprt-deal-checking',
+        // 三校正误表审核
+        '19': 'translation-proofreading/tprt-deal-checking',
+        // 二次三校正误表审核
+        '20': 'translation-proofreading/tprt-deal-checking',
+        // 通读正误表审核
+        '21': 'translation-proofreading/tprt-deal-checking',
+        // 一校修改
+        '22': 'translation-proofreading/tprt-deal-modification',
+        // 二校修改
+        '23': 'translation-proofreading/tprt-deal-modification',
+        // 三校修改
+        '24': 'translation-proofreading/tprt-deal-modification',
+        // 二次三校修改
+        '25': 'translation-proofreading/tprt-deal-modification',
+        // 通读修改
+        '26': 'translation-proofreading/tprt-deal-modification',
+
+
+        /* 书号和CIP号申请 */
+        // 提交申请
+        'applyISDNCIP': 'cip-apply/cip-apply-create',
+        // 审核
+        'applyAudit': 'cip-apply/cip-apple-review',
+        // 书号和CIP申请信息
+        'informationOfISDNCIP': 'cip-apply/cip-apple-information',
+        // 下发
+        'issued': 'cip-apply/cip-apply-issued',
+        //未通过处理
+        'failureApply': 'cip-apply/cip-apply-failure',
+        //补全图书信息
+        'completionBook': 'cip-apply/complete-book-information',
+        //盲文封面信息补全
+        'completionCoverBook': 'cip-apply/complete-book-cover',
+        //备案登记确认
+        'registrationConfirmation': 'cip-apply/cip-apply-sure',
+
+
+        /* 审稿 */
+        // 部门负责人下发
+        'deptIssued': 'review/review-principal',
+        // 初审
+        'firstAudit': 'review/review-first',
+        // 复审
+        'secondAudit': 'review/review-second',
+        // 终审
+        'finalAudit': 'review/review-final',
+        // 上传电子书稿
+        'uploadEbook': 'review/review-ebook'
+
+    };
+});

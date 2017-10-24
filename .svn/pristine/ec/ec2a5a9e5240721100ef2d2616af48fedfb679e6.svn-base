@@ -1,0 +1,149 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    var Base = require('../../../common/base-dialog');
+    // 表单校验
+    require('../../../assets/plugins/bootstrap-validator/validator');
+
+    var Module = Base.extend(new function () {
+        var that;
+        var oldPassword=false;
+        function oldPasswordCheck() {
+            var $oldUserPwd=$("#oldUserPwd");
+            var oldPasswordData = {};
+            oldPasswordData[$oldUserPwd.attr('name')] = $oldUserPwd.val();
+            console.log($oldUserPwd.val());
+            if($oldUserPwd.val()!==''){
+                util.sendRequest({
+                    type: 'POST',
+                    data: oldPasswordData,
+                    action: 'user/checkLoginUserPwd.action',
+                    success: function (data) {
+                        util.hideLoading();
+                        console.log(data);
+                        if (data && data.code === 0) {
+                            // 服务器原密码校验成功,状态至为true，只有true才可进行密码修改
+                            oldPassword=true;
+                        } else {
+                            // 服务器原密码校验失败
+                            util.showAlert(data.message ||'原密码出错，请稍后重试！');
+                            $oldUserPwd.val('');
+                        }
+                    },
+                    error: function (xhr) {
+                        // XHR错误
+                        util.hideLoading();
+                        console.log(xhr);
+                        util.showAlert('登录出错，请稍后重试！');
+                    }
+                });
+            }
+
+
+        }
+        function  submitPasswordInfo() {
+            var $form = that.$('#formPersonEdit');
+            $form.validator('validate');
+            var passwordData = {}, $el, error = false;
+            // 不存在错误并且原密码检验成功才执行密码修改
+            if ($form.find('.has-error').length === 0&&oldPassword) {
+                var $userPwd=$('#userPwd');
+                passwordData[$userPwd.attr('name')] = $userPwd.val();
+                // 准备密码修改验证
+                console.log(passwordData);
+                // 登录
+                util.showLoading('正在提交……');
+                util.sendRequest({
+                    type: 'POST',
+                    data: passwordData,
+                    action: 'user/modifyUserPwd.action',
+                    success: function (data) {
+                        util.hideLoading();
+                        console.log(data);
+                        if (data && data.code === 0) {
+                            // 服务器返回成功
+                            sessionStorage.setItem('userInfo', JSON.stringify(data));
+                            window.open('index.html', '_self');
+                        } else {
+                            // 服务器返回失败
+                            setErrorMsg(data.message || '登录出错，请稍后重试！');
+                        }
+                    },
+                    error: function (xhr) {
+                        // XHR错误
+                        util.hideLoading();
+                        console.log(xhr);
+                        setErrorMsg('登录出错，请稍后重试！');
+                    }
+                });
+            }
+            /**
+             * 设置错误信息
+             * @param msg
+             */
+            function setErrorMsg(msg) {
+                $('#errorMessage').text(msg);
+            }
+        }
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+            that.$("#submit-form").on("click",function () {
+                submitPasswordInfo();
+            });
+            that.$("#oldUserPwd").on("blur",function () {
+                oldPasswordCheck();
+            });
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+            that.$('#formPersonEdit').validator();
+        }
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            that.initTemplate(tpl, {});
+
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function(){
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+
+    module.exports = Module;
+});

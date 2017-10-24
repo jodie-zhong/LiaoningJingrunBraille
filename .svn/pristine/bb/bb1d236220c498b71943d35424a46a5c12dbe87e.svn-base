@@ -1,0 +1,21 @@
+<% if(list.length > 0) { %>
+<% for(var i = 0; i < list.length; i++) { %>
+<tr data-id="<%- list[i].reportTopicId %>" data-state = "<%- list[i].reportTopicState %>" data-number= "<%- list[i].reportTopicNum %>" data-name="<%- list[i].reportTopicName %>">
+  <td><%- (i + 1) %></td>
+  <td data-check="true"><i class="fa fa-square-o" data-action="check"></i></td>
+  <td><%- list[i].reportTopicName %></td>
+  <td><%- list[i].reportTopicDepartmentName %></td>
+  <td><%- list[i].reportTopicNum %></td>
+  <td><%- list[i].reportTopicDatetime %></td>
+  <% if(list[i].reportTopicState === '1') { %>
+  	<td>待上报</td>
+  <% } else { %>
+  	<td>已完成</td>
+  <% } %>
+</tr>
+<% } %>
+<% } else { %>
+<tr data-noselect="true">
+  <td colspan="7"><p class="empty-tips">没有符合指定条件的数据</p></td>
+</tr>
+<% } %>

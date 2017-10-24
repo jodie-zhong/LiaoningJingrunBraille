@@ -1,0 +1,41 @@
+{
+	"message": "查询列表成功",
+	"data": {
+		"records": [
+			{
+				"codeId": "2",
+				"parentId": "1",
+				"code": "121",
+				"value": "啊飒飒",
+				"remark": "哈哈备注",
+				"isUse": 1
+			},{
+				"codeId": "3",
+				"parentId": "1",
+				"code": "121",
+				"value": "啊飒飒",
+				"remark": "哈哈备注",
+				"isUse": 2
+			},{
+				"codeId": "4",
+				"parentId": "1",
+				"code": "121",
+				"value": "啊飒飒",
+				"remark": "哈哈备注",
+				"isUse": 1
+			}
+		],
+		"pageindex": {
+			"startindex": 1,
+			"endindex": 1
+		},
+		"pageCount": 1,
+		"pageSize": 20,
+		"pageNow": 1,
+		"rowCount": 1,
+		"startPage": 0,
+		"pagecode": 5,
+		"firstResult": 0
+	},
+	"code": 0
+}

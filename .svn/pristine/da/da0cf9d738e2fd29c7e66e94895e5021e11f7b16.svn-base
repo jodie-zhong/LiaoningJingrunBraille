@@ -1,0 +1,14 @@
+
+<% for(var i = 0; i < list.length; i++) { %>
+<tr data-id="<%- list[i].bookTopicId %>" data-name="<%- list[i].bookTopicName %>">
+  <td><%- (i + 1) %></td>
+  <td><input type="text"></td>
+  <td>是否通过</td>
+  <td><input type="text"></td>
+  <td><input type="text"></td>
+  <td><input type="text"></td>
+  <td>
+    <button data-taskid="" data-flowid="" class="btn btn-xs btn-rounded">上传</button>
+  </td>
+</tr>
+<% } %>

@@ -1,0 +1,257 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util.js');
+    // 工作流类窗口继承自工作流Base
+    var Base = require('../../other/base/book-base');
+
+    var topicManageListTpl = require('./reprint-list.tpl');
+
+    var FLOW_LA_REPRINT = 'rpt_launchReprint';                           // 重印发起
+    var FLOW_ADD_APPLY = 'rpt_additionalApplication';                    // 附加申请
+    var FLOW_INFO = 'rpt_informDeptHead';	                             // 告知部门负责人
+    var FLOW_MODIFY = 'rpt_modifyCoverAndBook';	                         // 修改盲文封底及电子书稿
+    var FLOW_RE_STATE = 'rpt_reprintAuditState';	                     // 重印审核状态
+
+
+    var Module = Base.extend(new function () {
+        var that;
+
+        this.deployKey = 'ReprintBraille';
+
+        // 与我相关
+        this.searchTaskAbout = '1';
+        // 其他搜索选项
+        this.searchParams = {};
+
+        this.flowInfoAction = 'common/searchBookFlowList.action';
+
+        /**
+         * 搜索任务列表的接口(覆盖父级)
+         */
+        // this.taskListAction= 'cipApply/searchBookList.action';
+
+        this.treeName = '重印图书';
+
+        /**
+         * 树节点变更事件
+         */
+        this.onTreeNodeChanged = function(){
+            var date = new Date();
+            this.$('#btnAdd').attr('disabled', 'disabled');
+            if(this.currentYear === date.getFullYear()){
+                if(!this.currentMonth || this.currentMonth === (date.getMonth() + 1)){
+                    this.$('#btnAdd').removeAttr('disabled');
+                }
+            }
+        };
+
+
+        /**
+         * 选择行变更事件回调
+         */
+        this.onSelectRowChanged = function () {
+            // params[this.searchFlowListKey] = this.currentId;
+        };
+
+        this.onCheckRowChanged = function () {
+            // 默认全部禁用
+
+            this.$('#btnSingle').attr('disabled', 'disabled');         // 处理
+            this.$('#btnSearch').attr('disabled', 'disabled');         // 查看
+
+            var count = 0, flowId = null, users = null, bookIds = [], taskIds = [];
+            var laReprint = true, addApply = true, info = true, modify = true, reprint = true, allMe = true, allUnfinished = true;
+            var userId = util.getUserInfo().userId;
+            that.$('#workListTBody').find('tr[checked]').each(function () {
+                flowId = $(this).attr('data-flowId');
+                users = $(this).attr('data-users') || '';
+                users = users ? users.split(',') : [];
+                // 包含非重印发起
+                if (flowId !== FLOW_LA_REPRINT) {
+                    laReprint = false;
+                }
+                // 包含非附加申请
+                if (flowId !== FLOW_ADD_APPLY) {
+                    addApply = false;
+                }
+                // 包含非告知部门负责人
+                if (flowId !== FLOW_INFO) {
+                    info = false;
+                }
+                // 包含非修改盲文封底及电子书稿
+                if (flowId !== FLOW_MODIFY) {
+                    modify = false;
+                }
+                // 包含非重印审核状态
+                if (flowId !== FLOW_RE_STATE) {
+                    reprint = false;
+                }
+
+                // 待我处理
+                if (users.indexOf(userId) < 0) {
+                    allMe = false;
+                }
+                // 任务状态未完成
+                if ($(this).attr('data-taskState') === '2') {
+                    allUnfinished = false;
+                }
+                bookIds.push($(this).attr('data-bookId'));
+                taskIds.push($(this).attr('data-taskId'));
+                count++;
+            });
+
+            this.currentBookId = bookIds.join(',');
+            this.currentTaskId = taskIds.join(',');
+            this.currentFlowId = flowId;
+
+            // 只选择了一条，处理（对应该模块所有的flowid状态）可用
+            if (count === 1) {
+                if ((addApply || info || modify || reprint ) && allUnfinished && allMe) {
+                    this.$('#btnSingle').removeAttr('disabled');
+                }
+                // 查看可用
+                if (addApply || info || modify || reprint ){
+                    this.$('#btnSearch').removeAttr('disabled');
+                }
+            }
+            // 选择一条或多条
+            if (count > 1 && (addApply || info) && allUnfinished && allMe  ) {
+                this.$('#btnSingle').removeAttr('disabled');
+            }
+        };
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+            // 处理
+            //  that.openPage('public/workflow/workflow-dialog', {
+            //     debug: true,
+            //     flowTemplate: 'cip-apply/cip-apply-create',
+            //     isEdit: false
+            // });
+
+            // 新增
+            that.$container.on('click','#btnAdd',function () {
+                util.showLoading();
+                util.sendRequest({
+                    data: {},
+                    action: 'reprint/addReprint.action',
+                    success: function (resp) {
+                        util.hideLoading();
+                        if (resp.code === 0) {
+                            that.openPage('braille/reprint/reprint-add', {});
+                        } else {
+                            console.log(resp);
+                            util.showAlert(resp.message || '出错，请稍后重试！');
+                        }
+                    },
+                    error: function (xhr) {
+                        // XHR错误
+                        util.hideLoading();
+                        console.log(xhr);
+                        util.showAlert('出错，请稍后重试！');
+                    }
+                });
+            });
+
+            // 处理
+            that.$container.on('click', '#btnSingle', function () {
+                var btnText = $(this).text();
+                if(that.currentFlowId===FLOW_ADD_APPLY || that.currentFlowId===FLOW_INFO){// 证明是附加申请模块或告知部门负责人
+                    that.openPage('public/workflow/workflow-dialog', {
+                        flowInfoAction: that.flowInfoAction,
+                        bookId: that.currentBookId,
+                        taskId: that.currentTaskId,
+                        deployId: that.deployKey,
+                        showAllList:true,
+                        btnText: btnText
+                    });
+                }else{
+                    that.openPage('public/workflow/workflow-dialog', {
+                        flowInfoAction: that.flowInfoAction,
+                        bookId: that.currentBookId,
+                        taskId: that.currentTaskId,
+                        deployId: that.deployKey,
+                        btnText: btnText
+                    });
+                }
+
+            });
+
+            // 查看
+            that.$container.on('click', '#btnSearch', function () {
+                that.openPage('public/workflow/workflow-dialog', {
+                    flowInfoAction: that.flowInfoAction,
+                    bookId: that.currentBookId,
+                    taskId: that.currentTaskId,
+                    deployId: that.deployKey,
+                    isView: true
+                });
+            });
+
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+
+
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            // that.initTemplate(tpl, {});
+
+            // 初始化数据前需要设置列表模板
+            this.baseTpl = topicManageListTpl;
+
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+
+            // TODO: 测试
+            // that.openPage('public/workflow/workflow-dialog', {});
+            // that.openPage('public/file/file-upload', {});
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+            if (data && data.refresh === true) {
+                this.$('#btnCipSingle').attr('disabled', 'disabled');        // 处理
+                this.$('#btnCipBatch').attr('disabled', 'disabled');         // 批量处理
+                this.$('#btnCipSearch').attr('disabled', 'disabled');        // 查看
+            }
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function () {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+
+    module.exports = Module;
+});

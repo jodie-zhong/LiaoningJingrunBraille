@@ -1,0 +1,88 @@
+<!----------------------------------------------------------------------------------------------查看审核结果---------------------------------------------------------------------------------------------->
+<% if(showWhat === 1){ %>
+<div class="modal-dialog dialog-container">
+  <div class="modal-content">
+    <div class="panel">
+      <div class="panel-header border-bottom">
+        <h3><i class="fa fa-user-o"></i>审核结果</h3>
+        <div class="control-btn">
+          <a class="panel-close btn-close"><i class="fa fa-close"></i></a>
+        </div>
+      </div>
+      <div class="panel-content">
+        <div class="form-horizontal">
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="form-group">
+                <label class="col-xs-4 control-label">审核结果</label>
+                <div class="col-xs-8">
+                  <p class="form-control-static">通过还是不通过</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="form-group">
+                <label class="col-xs-4 control-label">审核意见</label>
+                <div class="col-xs-8">
+                  <p class="form-control-static">审核意见的内容啊</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="form-group">
+                <label class="col-xs-4 control-label">审核人</label>
+                <div class="col-xs-8">
+                  <p class="form-control-static">审核人</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>
+<!----------------------------------------------------------------------------------------------查看清样稿打印---------------------------------------------------------------------------------------------->
+<% if(showWhat === 2){ %>
+<div class="modal-dialog dialog-container">
+  <div class="modal-content">
+    <div class="panel">
+      <div class="panel-header border-bottom">
+        <h3><i class="fa fa-user-o"></i>清样稿打印</h3>
+        <div class="control-btn">
+          <a class="panel-close btn-close"><i class="fa fa-close"></i></a>
+        </div>
+      </div>
+      <div class="panel-content">
+        <div class="form-horizontal">
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="form-group">
+                <label class="col-xs-4 control-label">打印结果</label>
+                <div class="col-xs-8">
+                  <p class="form-control-static">打印结果</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="form-group">
+                <label class="col-xs-4 control-label">当前打印状态</label>
+                <div class="col-xs-8">
+                  <p class="form-control-static">当前打印状态</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>

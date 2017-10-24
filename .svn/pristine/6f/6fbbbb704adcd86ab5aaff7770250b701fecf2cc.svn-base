@@ -1,0 +1,456 @@
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track-piece {
+  background-color: #DDD;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:vertical {
+  height: 5px;
+  background-color: #999;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+  width: 5px;
+  background-color: #999;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+}
+
+/* 年月树顶部搜索 */
+.search-header {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+}
+
+.search-header .search-inputs {
+  flex: 1;
+}
+
+.search-header .search-buttons {
+  flex: 0;
+  width: 50px;
+  padding-left: 10px;
+}
+
+/* 加载动画 */
+#loading {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  top: 0;
+  left: 0;
+  z-index: 9999;
+}
+
+.loader {
+  position: absolute;
+  width: 150px;
+  top: 50%;
+  left: 50%;
+  margin-top: -50px;
+  margin-left: -75px;
+  /*background-color: rgba(0,0,0,0.4);*/
+}
+
+.loader-text {
+  color: #FFF;
+  text-align: center;
+  font-size: 14px;
+}
+
+.loader-animate {
+  width: 40px;
+  height: 40px;
+  border: 1px rgba(255, 255, 255, 1) solid;
+  margin: 15px auto;
+  position: relative;
+  -webkit-animation: fill_color 5s linear infinite;
+  -moz-animation: fill_color 5s linear infinite;
+  animation: fill_color 5s linear infinite;
+}
+
+.loader-animate:after {
+  width: 4px;
+  height: 4px;
+  position: absolute;
+  content: "";
+  background-color: rgba(255, 255, 255, 1);
+  top: -8px;
+  left: 0;
+  -webkit-animation: square_check 1s ease-in-out infinite;
+  -moz-animation: square_check 1s ease-in-out infinite;
+  animation: square_check 1s ease-in-out infinite;
+}
+
+.loading-overflow {
+  /*overflow: hidden;*/
+}
+
+@-webkit-keyframes square_check {
+  25% {
+    left: 42px;
+    top: -8px;
+  }
+  50% {
+    left: 42px;
+    top: 42px;
+  }
+  75% {
+    left: -9px;
+    top: 42px;
+  }
+  100% {
+    left: -9px;
+    top: -7px;
+  }
+}
+
+@-moz-keyframes square_check {
+  25% {
+    left: 42px;
+    top: -8px;
+  }
+  50% {
+    left: 42px;
+    top: 42px;
+  }
+  75% {
+    left: -9px;
+    top: 42px;
+  }
+  100% {
+    left: -9px;
+    top: -7px;
+  }
+}
+
+@keyframes square_check {
+  25% {
+    left: 42px;
+    top: -8px;
+  }
+  50% {
+    left: 42px;
+    top: 42px;
+  }
+  75% {
+    left: -9px;
+    top: 42px;
+  }
+  100% {
+    left: -9px;
+    top: -7px;
+  }
+}
+
+@-webkit-keyframes fill_color {
+  0% {
+    box-shadow: inset 0 0 0 0 rgba(255, 255, 255, 0.1);
+  }
+  100% {
+    box-shadow: inset 0 -40px 0 0 rgba(255, 255, 255, 1);
+  }
+}
+
+@-moz-keyframes fill_color {
+  0% {
+    box-shadow: inset 0 0 0 0 rgba(255, 255, 255, 0.1);
+  }
+  100% {
+    box-shadow: inset 0 -40px 0 0 rgba(255, 255, 255, 1);
+  }
+}
+
+@keyframes fill_color {
+  0% {
+    box-shadow: inset 0 0 0 0 rgba(255, 255, 255, 0.1);
+  }
+  100% {
+    box-shadow: inset 0 -40px 0 0 rgba(255, 255, 255, 1);
+  }
+}
+
+/* 菜单控制 */
+@media screen and (max-width: 1435px) {
+  .top-menu-item {
+    display: none;
+  }
+
+  .nav-parent:hover .top-menu-item {
+    display: inline;
+  }
+}
+
+/* 一些高度值 */
+.height-sm {
+  height: 200px;
+}
+
+.height-md {
+  height: 300px;
+}
+
+/* 分页样式 */
+.pagination-container {
+  height: 54px;
+}
+
+.custom-pagination {
+  float: right;
+}
+
+.custom-pagination .pagination {
+  margin-bottom: 0;
+}
+
+.custom-pagination a {
+  cursor: pointer;
+}
+
+.custom-pagination a.disabled {
+  cursor: not-allowed;
+}
+
+.pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus {
+  background: none;
+  border: none;
+  color: #319DB5;
+}
+
+/* 流程提示框 */
+.process-helper {
+  width: 200px;
+  position: absolute;
+  right: -201px;
+  top: 0;
+  background-color: #FFF;
+  -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
+}
+
+@media screen and (max-width: 1200px) {
+  .process-helper {
+    display: none;
+  }
+}
+
+.process-helper .process-item {
+  font-size: 14px;
+  line-height: 20px;
+  padding: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 覆盖顶部Logo宽度 */
+.sidebar-hover .topnav .logopanel2 {
+  width: 320px;
+  padding-left: 20px;
+}
+
+.modal-dialog.dialog-container {
+  width: 900px;
+  margin-top: 50px;
+}
+
+/* 表格高度外框 */
+.table-10 {
+  min-height: 440px;
+}
+
+.table-10-static {
+  height: 440px;
+  overflow-y: auto;
+}
+
+.table-5 {
+  min-height: 240px;
+}
+
+.tbody-5-static{
+  height: 217px;
+  overflow-y: auto;
+}
+
+.table-5-static {
+  height: 190px;
+  overflow-y: auto;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+.dialog-options {
+  height: 50px;
+  text-align: right;
+  padding-top: 10px;
+}
+
+/* 页面高度 */
+.panel-height-0 {
+
+}
+
+.panel-height-1 {
+  height: 893px;
+}
+.panel-height-2 {
+  height: 905px;
+}
+
+/* 文件上传 */
+.file-upload .image-preview {
+  height: 100px;
+  max-width: 460px;
+  border: 1px dashed #DDD;
+  margin: 0 auto;
+}
+
+.file-upload .progress {
+  position: relative;
+  width: 300px;
+  float: left;
+  margin-top: 8px;
+}
+
+.file-upload .progress span {
+  color: #FFF;
+  text-shadow: 2px 2px 2px #333;
+  position: absolute;
+  top: 0;
+  left: 50%;
+}
+
+/* 流程面板 */
+.flow-panel {
+  margin: 10px 0;
+  border-bottom: 1px dashed #319DB5;
+}
+
+.flow-panel-header {
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #319DB5;
+}
+
+.flow-panel-body {
+  overflow-x: hidden;
+  padding: 15px;
+}
+
+/* 自定义面板样式 */
+.custom-panel-header {
+  border-top: 3px solid #319DB5 !important;
+  border-bottom: 1px solid #efefef;
+  /*background-color:#d7eff5;*/
+}
+
+/* 空列表提示 */
+table, tbody {
+  position: relative;
+}
+
+.table-nowrap {
+  table-layout: fixed;
+}
+
+.table-top {
+  margin-bottom: 0;
+}
+
+.table-nowrap td, .table-nowrap th {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.empty-tips {
+  text-align: center;
+  font-size: 14px;
+  color: #8f8f8f;
+  margin: 0;
+}
+
+/* 与我相关选项 */
+.task-about {
+  position: relative;
+  display: inline-block;
+  height: 18px;
+  margin-left: 15px;
+  float: none;
+}
+
+.task-about label {
+  font-weight: normal;
+}
+
+.must {
+  color: red;
+  position: absolute;
+  right: 7px;
+  top: 3px;
+}
+
+.must-td {
+  color: red;
+  margin-left: 2px;
+}
+
+/* 表格列宽 */
+.td-no-width {
+  width: 50px;
+}
+
+.td-check-width {
+  width: 50px;
+}
+
+/* 图书详情 */
+.book-detail {
+  height: 544px;
+}
+/* 工作流查看 */
+.form-horizontal p.form-control-static {
+  line-height: 24px;
+  word-break:break-word;
+  min-height: 38px;
+}
+
+.dialog-resize{
+  max-height: 500px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 10px;
+}
+
+/* 审稿分册区分 */
+.fascicle {
+  border-bottom: 1px dashed #319DB5;
+  margin-bottom: 15px;
+}
+/* 登陆页浏览器提示语 */
+.browser-warn {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	line-height: 32px;
+	text-align: center;
+	display: none;
+	z-index: 99;
+}
+.browser-warn a {
+	text-decoration: underline;
+}

@@ -1,0 +1,123 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+    var util = require('../../../../../common/util');
+    var changeRecordConfig = require('./change-record-apply-config');
+    var itemTpl = require('./change-record-apply-item.tpl');
+
+    /**
+     * Workflow Item
+     */
+    var Item = ItemBase.extend({
+        // 保存/提交接口
+        saveAction: 'changeRecord/saveOrUpdateChangeRecord.action',
+        // 查询接口
+        detailAction: 'changeRecord/searchChangeRecordDetail.action',
+        
+        onHandleChange: function() {
+        	var handle = this.$('input[name="mChangeFileItem"]:checked').val();
+        	this.$('input[name="handleState"]').val(handle);
+        	console.log(handle);
+        	this.$('div[data-area="nextFlow"]').hide();
+            if (handle === '1') {
+                // 部门负责人审核
+                this.$('div[data-flow="toExamine"]').show();
+            } else {
+            	// 终止出版
+                this.$('div[data-flow="terminationOfPublication"]').show();
+            }
+        },
+        
+        // 变更项添加
+        onChangePlus: function() {
+        	var name = this.$('#changeContentSelect').val();
+        	if(changeRecordConfig[name]){
+        		var info = {
+        			title: changeRecordConfig[name].title,
+        			html: this.buildChangeCell(changeRecordConfig[name])
+        		}
+        		this.$('#changeRecordContainer').append(util.template(itemTpl,{info:info}));
+        		
+        	}
+        },
+        
+        // 变更项删除
+        onChangeMinus: function($div) {
+        	
+        },
+
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+            var that = this;
+            this.$container.on('change','input[name="mChangeFileItem"]',this.onHandleChange.bind(this));
+            // 变更项添加
+            this.$container.on('click','button[data-type="change-plus"]',this.onChangePlus.bind(this));
+            // 变更项删除
+            this.$container.on('click','button[data-type="change-minus"]', function(){
+            	that.onChangeMinus($(this));
+            });
+        },
+        
+        /**
+         * 生成下拉
+         */
+        buildChangeSelect: function(){
+        	var $sel = this.$('#changeContentSelect'), $option;
+        	for(var i in changeRecordConfig){
+        		if(changeRecordConfig.hasOwnProperty(i)){
+        			$option = $('<option>');
+        			$option.val(i);
+        			$option.text(changeRecordConfig[i].title);
+        			$sel.append($option);
+        		}
+        	}
+        },
+        
+        buildChangeCell: function(cfg){
+        	if(cfg.type === 'input'){
+        		return util.template('<div class="col-xs-5"><input class="form-control" value="<%- cfg.value %>" name="<%- cfg.name %>" maxlength="<%- cfg.maxlength %>"></div>', {cfg: cfg});
+        	} else if(cfg.type === 'textarea'){
+        		return util.template('<div class="col-xs-10"><textarea class="form-control" name="<%- cfg.name %>" maxlength="<%- cfg.maxlength %>"><%- cfg.value %></textarea></div>', {cfg: cfg});
+        	} else if(cfg.type === 'radio'){
+        		return '';
+        	} else if(cfg.type === 'checkbox') {
+        		return '';
+        	}
+        },
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+        	this.buildChangeSelect();
+            this.onHandleChange();
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function (container, tpl) {
+            this._super(container, tpl);
+        },
+
+        /**
+         * 渲染页面
+         */
+        render: function () {
+            this._super();
+
+            this.initPageEvent();
+
+            this.initPageData();
+        }
+    });
+
+
+    module.exports = Item;
+
+});

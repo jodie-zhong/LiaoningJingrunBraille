@@ -1,0 +1,159 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+    var util = require('../../../../../common/util.js');
+
+    /**
+     * Workflow Item
+     */
+    var Item = ItemBase.extend({
+        // 保存/提交接口
+        saveAction: 'printing/modifyPrinting.action',
+        // 查询接口
+        detailAction: 'printing/searchPrintingDetail.action',
+
+        /**
+         * 保存或提交工作流
+         * @param isSubmit
+         */
+        getFormData: function() {
+			var $form = this.$('#formEdit');
+			// 先调用父类生成基本的数据结构
+			var params = this._super();
+			// 处理上传部份数据结构
+			params.listClear = []; // 
+			var $lab, index = 0;
+			$form.find('div[data-time = "workTime"]').each(function() {
+				$lab = $(this);
+				params.listClear.push({
+					mWorkloadDatetime: $lab.find('input[name="setmWorkloadDatetime"]').val(),
+					listOne : [] //工作量
+				});
+				var $tr;
+				$form.find('tr[data-type="workload"]').each(function() {
+					$tr = $(this);
+					params.listClear[index].listOne .push({
+						mWorkloadMachineModel: $tr.find('select[name="mWorkloadMachineModel"]').val(),
+						mWorkloadOpenNum: $tr.find('input[name="mWorkloadOpenNum"]').val(),
+						mWorkloadVersionNum: $tr.find('input[name="mWorkloadVersionNum"]').val(),
+						mWorkloadPaperNum: $tr.find('input[name="mWorkloadPaperNum"]').val(),
+						mWorkloadErrorRate: $tr.find('input[name="mWorkloadErrorRate"]').val(),
+						taskId:$tr.find('input[name="taskId"]').val()
+					});
+				});
+				index++;
+			});
+
+			console.log(params);
+			return params;
+		},
+		
+		// 工作天数添加
+		onWorkdayPlus: function(){
+			var workDay = this.$('#workDayTemplate').html();
+			this.$('div[data-area = "resultMap"]').last().after(workDay);
+			this.$('input.date-time').datetimepicker({
+				format: 'YYYY-MM-DD',
+				locale: 'zh-cn',
+				sideBySide: true
+			});
+			this.searchMachine();			
+			this.searchDayButtonNum();
+		},
+		// 工作天数删除
+		onWorkdayMinus: function($twm){
+			$twm.parents('div[data-area="resultMap"]').remove();			
+			this.searchDayButtonNum();
+		},
+		// 添加工作量
+		onWorkContentPlus: function($dwp) {
+			var workRow = this.$('#workRowTemplate').html();
+			$dwp.parents('tbody[data-area="workload"]').append(workRow);
+			this.searchMachine();
+			this.onWorkLoadNum($dwp);
+			this.searchButtonNum($dwp);
+		},
+		// 工作量删除
+		onWorkContentMinus: function ($dwp) {
+			$dwp.parents('tr[data-type="workload"]').remove();
+			this.onWorkLoadNum($dwp);
+			this.searchButtonNum($dwp);
+		},
+		// 工作量序号
+		onWorkLoadNum: function($dwp) {
+			var i = 1;
+			$dwp.parents('tbody[data-area="workload"]').find('tr').each(function () {				
+				$(this).find('td[data-value="number"]').text(i++);
+			});
+		},
+		// 判断有几天工作日期
+		searchDayButtonNum: function(){			
+			var dayLength = this.$('div[data-area="resultMap"]').length;
+			if (dayLength !== 1) {
+				this.$('button[data-type="day-minus"]').show();
+			} else{
+				this.$('button[data-type="day-minus"]').hide();
+			}
+		},
+		// 判断有几条工作量
+		searchButtonNum: function($dwp){
+			var workLength = $dwp.parents('tbody[data-area="workload"]').find('tr').length;
+			console.log(workLength);
+			if (workLength !== 1) {
+				$dwp.parents('tbody[data-area="workload"]').find('tr').each(function () {				
+					this.$('button[data-type="work-minus"]').show();
+				});
+			} else{
+				$dwp.parents('tbody[data-area="workload"]').find('tr').each(function () {				
+					this.$('button[data-type="work-minus"]').hide();
+				});
+			}
+		},
+        
+        
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+            var that = this;
+        },
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+			// 初始化日期组件
+			this.$('input.date-time').datetimepicker({
+				format: 'YYYY-MM-DD',
+				locale: 'zh-cn',
+				sideBySide: true
+			});
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function(container, tpl) {
+			this._super(container, tpl);
+		},
+
+		/**
+		 * 渲染页面
+		 */
+		render: function() {
+			this._super();
+
+			this.initPageEvent();
+
+			this.initPageData();
+		}
+
+    });
+
+
+    module.exports = Item;
+
+});

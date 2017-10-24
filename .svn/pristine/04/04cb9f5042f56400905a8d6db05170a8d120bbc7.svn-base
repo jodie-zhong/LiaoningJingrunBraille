@@ -1,0 +1,126 @@
+<!--资源库-合同模板库-->
+<!---------------------------------------------------------------------------------------------编辑状态--------------------------------------------------------------------------------------------->
+<% if(isEdit) { %>
+<div class="form-horizontal">
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">模板名称<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input class="form-control" name="contractTemplateName" value="<%- info.contractTemplateName %>" maxlength="32" placeholder="模板名称" data-fv-notempty="true" data-fv-notempty-message="请填写模板名称">
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">模板类型</label>
+        <div class="col-xs-8">
+          <select id="contractTemplateType" class="form-control" title="模板类型">
+            <% if(info.contractTemplateType === '1') { %>
+            <option value='1' selected>版权合同</option>
+            <% } else { %>
+            <option value='1'>版权合同</option>
+            <% } %>
+            <% if(info.contractTemplateType === '2') { %>
+            <option value='2' selected>采购合同</option>
+            <% } else { %>
+            <option value='2'>采购合同</option>
+            <% } %>
+            <% if(info.contractTemplateType === '3') { %>
+            <option value='3' selected>销售合同</option>
+            <% } else { %>
+            <option value='3'>销售合同</option>
+            <% } %>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">附件上传</label>
+        <div class="col-xs-8 input-group with-clear" style="padding: 0 4px 0 15px;">
+          <input minlength="1" class="form-control" name="uploadFile" value="<%- info.contractTemplateFileName %>" placeholder="请选择文件" data-value="<%- info.contractTemplatePath %>" readonly>
+          <span class="input-group-btn">
+            <button class="btn btn-clear" type="button" data-action="clear"><i class="fa fa-remove box"></i></button>
+            <button class="btn btn-default" type="button" style="padding-left: 15px;" data-open="public/file/file-upload" data-data="{}"><i class="fa fa-file-o"></i></button>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6" style="padding: 7px 0 0 0;">
+      <% if(info.contractTemplatePath && info.contractTemplatePath !=='') { %>
+      <button class="btn btn-xs btn-default btn-rounded downloadFile" data-download-address="<%- info.contractTemplatePath %>">下载</button>
+      <% } else { %>
+      <button class="btn btn-xs btn-default btn-rounded downloadFile" data-download-address="<%- info.contractTemplatePath %>" disabled>下载</button>
+      <% } %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">备注</label>
+        <div class="col-xs-10">
+          <textarea class="form-control" name="contractTemplateRemark" placeholder="备注（最大1024字）" maxlength="1024"><%- info.contractTemplateRemark %></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="dialog-options">
+    <button class="btn btn-default" id="btnSave">保存</button>
+  </div>
+</div>
+<!---------------------------------------------------------------------------------------------查看状态--------------------------------------------------------------------------------------------->
+<% } else { %>
+<div class="form-horizontal">
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">模板名称</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.contractTemplateName %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">模板类型</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.contractTemplateType === '1' ? '版权合同' : (info.contractTemplateType === '2' ? '采购合同' : (info.contractTemplateType === '3' ? '销售合同' : ''))
+            %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">附件上传</label>
+        <div class="col-xs-10">
+          <p class="form-control-static">
+            <%- info.contractTemplateFileName %>
+            <% if(info.contractTemplatePath && info.contractTemplatePath !=='') { %>
+            <button style="margin: -3px 0 0 5px;" class="btn btn-xs btn-default btn-rounded downloadFile" data-download-address="<%- info.contractTemplatePath %>">下载</button>
+            <% } else { %>
+            <button style="margin: -3px 0 0 5px;" class="btn btn-xs btn-default btn-rounded downloadFile" data-download-address="<%- info.contractTemplatePath %>" disabled>下载</button>
+            <% } %>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">备注</label>
+        <div class="col-xs-10">
+          <p class="form-control-static"><%- info.contractTemplateRemark %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="dialog-options">
+  </div>
+</div>
+<% } %>

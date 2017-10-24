@@ -1,0 +1,51 @@
+{
+  "code" : 0,
+  "message" : "查询列表成功",
+  "data" : {
+    "records" : [ {
+      "topicMeetingId" : "1",
+      "topicMeetingName" : "测试会议名称1",
+      " reportTopicIds " : "1",
+      "topicMeetingAddress" : "测试会议地址1",
+      "topicMeetingDatetime" : "2017-05-24 15:33:44",
+      "createUserId" : "1",
+      "createUserName" : "管理员1",
+      "topicMeetingNum" : "0",
+      "topicMeetingState" : "1"
+    } ,
+      {
+        "topicMeetingId" : "2",
+        "topicMeetingName" : "测试会议名称2",
+        " reportTopicIds " : "1",
+        "topicMeetingAddress" : "测试会议地址2",
+        "topicMeetingDatetime" : "2017-05-24 15:33:44",
+        "createUserId" : "1",
+        "createUserName" : "管理员2",
+        "topicMeetingNum" : "0",
+        "topicMeetingState" : "2"
+      } ,
+      {
+        "topicMeetingId" : "3",
+        "topicMeetingName" : "测试会议名称3",
+        " reportTopicIds " : "1",
+        "topicMeetingAddress" : "测试会议地址3",
+        "topicMeetingDatetime" : "2017-05-24 15:33:44",
+        "createUserId" : "1",
+        "createUserName" : "管理员3",
+        "topicMeetingNum" : "0",
+        "topicMeetingState" : "1"
+      }
+    ],
+    "pageindex" : {
+      "startindex" : 1,
+      "endindex" : 1
+    },
+    "pageCount" : 1,
+    "pageSize" : 10,
+    "pageNow" : 1,
+    "rowCount" : 1,
+    "startPage" : 0,
+    "pagecode" : 5,
+    "firstResult" : 0
+  }
+}

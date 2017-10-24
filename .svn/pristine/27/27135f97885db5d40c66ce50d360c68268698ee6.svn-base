@@ -1,0 +1,182 @@
+<!-- 盲文图书编辑译校统计 -->
+<div class="row">
+  <div class="col-xs-3">
+    <!-- 左侧树 -->
+    <div class="panel panel-tree-1">
+      <div class="panel-header custom-panel-header">
+        <h3 class="modules-name" title="盲文读物管理 - 盲文图书编辑译校统计"><i class="fa fa-braille"></i> 盲文读物管理 - 盲文图书编辑译校统计</h3>
+      </div>
+      <div class="panel-content">
+        <div id="monthTree">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-9">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="panel panel-book-1">
+          <div class="panel-header custom-panel-header">
+            <h3>图书基本信息</h3>
+            <div class="control-btn">
+              <button class="btn btn-xs btn-success" data-auth="03e11" id="btnAdd" disabled>添加</button>
+              <button class="btn btn-xs btn-danger" data-auth="03e12" id="btnDel" disabled>删除</button>
+              <button class="btn btn-xs btn-blue" data-auth="03e13" id="btnSubmit" disabled>提交</button>
+              <button class="btn btn-xs btn-primary" data-auth="03e14" id="btnSingle" disabled>审核</button>
+            </div>
+          </div>
+          <div class="panel-content border-bottom">
+            <div class="form-horizontal" id="formSearchWork">
+              <div class="row">
+                <div class="col-xs-5">
+                  <div class="form-group">
+                    <label class="col-xs-4 control-label">图书类别</label>
+                    <div class="col-xs-8">
+                      <select class="form-control" data-search = "searchBookOneKind" data-type="machineBook">
+                        <option value="">全部</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-5"></div>
+                <div class="col-xs-2">
+                  <button class="btn btn-primary" id="btnSearchWork">查询</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel-content">
+            <div class="table-10 table-scroll">
+              <table class="table table-hover table-nowrap table-top" data-multi="true"
+                     id="workListTable">
+                <thead>
+                  <tr>
+                    <th rowspan="2" class="w-table">序号</th>
+                    <th rowspan="2" class="w-table"><i class="fa fa-square-o" data-action="check"></i></th>
+                    <th rowspan="2" class="text-center" style="width: 250px">类型</th>
+                    <th rowspan="2" class="text-center" style="width: 200px">书名</th>
+                    <th rowspan="2" class="text-center" style="width: 80px">书号</th>
+                    <th rowspan="2" class="text-center" style="width: 150px">作者</th>
+                    <th rowspan="2" class="text-center" style="width: 100px">内容简介</th>
+                    <th rowspan="2" class="text-center" style="width: 100px">原出版者</th>
+                    <th rowspan="2" class="text-center" style="width: 150px">原书出版时间版次</th>
+                    <th rowspan="2" class="text-center" style="width: 100px">盲文书版次</th>
+                    <th rowspan="2" class="text-center" style="width: 150px">图书类别</th>
+                    <th rowspan="2" class="text-center" style="width: 150px">主题词</th>
+                    <th rowspan="2" class="text-center" style="width: 100px">分类号</th>
+                    <th rowspan="2" class="text-center" style="width: 150px">盲文种别</th>
+
+                    <th class="text-center" colspan="5" style="width: 600px;">一审</th>
+                    <th class="text-center" style="width: 150px;">二审</th>
+                    <th class="text-center" style="width: 150px;">三审</th>
+
+                    <th class="text-center" colspan="4" style="width: 480px;">录入</th>
+                    <th class="text-center" colspan="4" style="width: 480px;">一校</th>
+                    <th class="text-center" colspan="4" style="width: 480px;">二校</th>
+                    <th class="text-center" colspan="4" style="width: 480px;">末校一次</th>
+
+                    <th class="text-center" colspan="4" style="width: 480px;">末校二次</th>
+                    <th class="text-center" colspan="2" style="width: 240px;">通读</th>
+                    <th class="text-center" colspan="4" style="width: 480px;">印前质检</th>
+                    <th class="text-center" rowspan="2" style="width: 150px">最终盲文版数</th>
+                    <th class="text-center" rowspan="2" style="width: 100px">正误表</th>
+                    <th rowspan="2" class="text-center" style="width: 100px">定价</th>
+                    <th rowspan="2" class="text-center" style="width: 200px">图书馆需要套数</th>
+                    <th rowspan="2" class="text-center" style="width: 200px">读者服务部需要套数</th>
+                    <th rowspan="2" class="text-center" style="width: 150px">总印制套数</th>
+                    <th rowspan="2" class="text-center" style="width: 100px">总印张数</th>
+                    <th rowspan="2" class="text-center" style="width: 80px">开本</th>
+                    <th rowspan="2" class="text-center" style="width: 80px">用纸</th>
+                    <th rowspan="2" class="text-center" style="width: 150px">出书时间</th>
+                    <th rowspan="2" class="text-center" style="width: 150px">印制完成时间</th>
+                    <th rowspan="2" class="text-center" style="width: 150px">入库时间</th>
+                  </tr>
+                  <tr>
+                    <th class="text-center border-left">责编</th>
+                    <th class="text-center">字数(千)</th>
+                    <th class="text-center">发稿时间</th>
+                    <th class="text-center">差错率‰</th>
+                    <th class="text-center border-right">差错结算</th>
+
+                    <th class="text-center border-right">姓名</th>
+
+                    <th class="text-center border-right">姓名</th>
+
+                    <th class="text-center">姓名</th>
+                    <th class="text-center">版数</th>
+                    <th class="text-center">差错率‰</th>
+                    <th class="text-center border-right">差错结算</th>
+
+                    <th class="text-center">姓名</th>
+                    <th class="text-center">版数</th>
+                    <th class="text-center">差错率‰</th>
+                    <th class="text-center border-right">差错结算</th>
+
+                    <th class="text-center">姓名</th>
+                    <th class="text-center">版数</th>
+                    <th class="text-center">差错率‰</th>
+                    <th class="text-center border-right">差错结算</th>
+
+                    <th class="text-center">姓名</th>
+                    <th class="text-center">版数</th>
+                    <th class="text-center">差错率‰</th>
+                    <th class="text-center border-right">差错结算</th>
+                    <th class="text-center">姓名</th>
+                    <th class="text-center">版数</th>
+                    <th class="text-center">差错率‰</th>
+                    <th class="text-center border-right">差错结算</th>
+
+                    <th class="text-center">姓名</th>
+                    <th class="text-center border-right">版数</th>
+                    <th class="text-center">姓名</th>
+                    <th class="text-center">版数</th>
+                    <th class="text-center">抽验页</th>
+                    <th class="text-center border-right">差错率‰</th>
+                  </tr>
+                </thead>
+              </table>
+              <div style="height: 358px;width: 7416px;overflow-y: auto" id="workListTBodyFirst">
+                <table class="table table-striped table-nowrap">
+                  <tbody id="workListTBody"></tbody>
+                </table>
+              </div>
+
+            </div>
+            <div class="pagination-container" id="workListPaging">
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="panel panel-flow">
+          <div class="panel-header custom-panel-header">
+            <h3>流程查看</h3>
+          </div>
+          <div class="panel-content">
+            <table class="table table-striped table-nowrap table-top">
+              <thead>
+              <tr>
+                <th style="width: 50px">序号</th>
+                <th style="width: 20%">状态</th>
+                <th style="width: 20%">处理人</th>
+                <th style="width: 20%">起始时间</th>
+                <th style="width: 20%">完成时间</th>
+                <th style="width: 20%">审核结果</th>
+                <th style="width: 100px">详细信息</th>
+              </tr>
+              </thead>
+            </table>
+            <div class="tbody-5-static">
+              <table class="table table-striped table-nowrap">
+                <tbody id="taskWorkflowTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,74 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+    var util = require('../../../../../common/util.js');
+
+    /**
+     * Workflow Item
+     */
+    var Item = ItemBase.extend({
+//		saveAction: '',
+        // 保存/提交接口
+        saveAction: 'CNchangeRecord/cnSaveOrUpdateChangeRecord.action',
+        // 查询接口
+        detailAction: 'CNchangeRecord/cnSearchChangeRecordDetail.action',
+
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+            var that = this;
+            // cip信息上传
+            that.$container.on('click','button[data-name="bookCipSynopsis"]',function () {
+                var oneInfo={};
+                oneInfo.type="*.txt";
+                oneInfo.ids=$(this).attr('data-bookId');
+                oneInfo.urlDate='cipEditionApply/uploadTXTFile.action';
+                util.openPage('public/file/cip-file-upload', oneInfo);
+            });
+            // cip信息下载
+            that.$container.on('click','button[data-type="down"]',function () {
+                if($(this).attr('data-bookId')){
+                    window.open(util.getServerBase() + 'CNchangeRecord/downloadCipInfoChange.action?bookId=' + encodeURIComponent($(this).attr('data-bookId')), '_blank');
+                }
+            });
+        },
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function (container, tpl) {
+            this._super(container, tpl);
+
+            this.initPageEvent();
+
+            this.initPageData();
+        },
+        
+        back: function (data) {
+        	// 将获取到的数据与原表格进行匹配
+        	if(data && data.length > 0){
+        		for(var i=0;i<data.length;i++){
+        			this.$('input[name="bookCipSynopsis"]').val(data[i].bookCipSynopsis);
+        			this.$('input[name="bookCipSynopsis"]').attr('title',data[i].bookCipSynopsis);
+        			this.$('button[data-type = "down"]').removeAttr('disabled');
+                }
+            }
+        }
+
+    });
+
+
+    module.exports = Item;
+
+});

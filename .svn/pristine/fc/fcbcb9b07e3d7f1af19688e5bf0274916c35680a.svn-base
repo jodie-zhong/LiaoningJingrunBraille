@@ -1,0 +1,305 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util.js');
+    // 工作流类窗口继承自工作流Base
+    var Base = require('../../other/base/book-base');
+
+    var topicManageListTpl = require('./reprint-list.tpl');
+
+    var FLOW_ADD = 'rpt_addReprint';                                      // 新增再版/重印
+    var FLOW_REPRINT = 'rpt_reprintToExamine';                            // 再版重印审核
+    var FLOW_DEPART = 'rpt_departmentHeadAudit';	                      // 部门负责人审核
+    var FLOW_COVER = 'rpt_coverDesignAssignment';	                      // 封面设计任务分配
+    var FLOW_TOPIC = 'rpt_topicDeclaration';	                          // 选题申报
+    var FLOW_REVIEW = 'rpt_reviewersTaskAllocation';	                  // 审稿任务分配
+    var FLOW_FIRST = 'rpt_firstTaskAllocation';	                          // 一校任务分配
+    var FLOW_BOOK = 'rpt_bookPrintingTaskAllocation';	                  // 图书印制任务分配
+    var FLOW_FILL_NOTICE = 'rpt_fillPrintNotice';	                      // 快印通知单填写
+    var FLOW_PR_NOTICE = 'rpt_printedNotice';	                          // 图书印制通知单
+
+    var Module = Base.extend(new function () {
+        var that;
+
+        // 查询任务树中未完成任务数的接口
+        // this.untreatedTaskAction = 'topic/unreadTopicCount.action';
+
+        this.deployKey = 'ReprintCN';
+
+        // 与我相关
+        this.searchTaskAbout = '1';
+        // 其他搜索选项
+        this.searchParams = {};
+
+
+        this.flowInfoAction='common/searchBookFlowList.action';
+
+        /**
+         * 搜索任务列表的接口(覆盖父级)
+         */
+        // this.taskListAction= 'cipApply/searchBookList.action';
+
+        this.treeName='重印图书';
+        /**
+         * 树节点变更事件
+         */
+        this.onTreeNodeChanged = function () {
+            var date = new Date();
+            this.$('#btnTopicAdd').attr('disabled', 'disabled');
+            if (this.currentYear === date.getFullYear()) {
+                if (!this.currentMonth || this.currentMonth === (date.getMonth() + 1)) {
+                    this.$('#btnTopicAdd').removeAttr('disabled');
+                }
+            }
+        };
+
+        /**
+         * 选择行变更事件回调
+         */
+        this.onSelectRowChanged = function(){
+            // params[this.searchFlowListKey] = this.currentId;
+        };
+
+        this.onCheckRowChanged = function () {
+            // 默认全部禁用
+
+            this.$('#btnTopicView').attr('disabled', 'disabled');// 查看
+            this.$('#btnTopicHandle').attr('disabled', 'disabled');// 处理
+            // this.$('#btnBach').attr('disabled', 'disabled');// 批量查看
+            var count = 0, flowId = null, users = null, bookIds = [],taskIds=[],flowIds=[];
+            var add = true,reprint=true,depart=true, cover=true,topic=true,review=true,first=true,book=true,fill=true,notice=true,allMe = true, allUnfinished = true;
+            var userId = util.getUserInfo().userId;
+            that.$('#workListTBody').find('tr[checked]').each(function () {
+                flowId = $(this).attr('data-flowId');
+                users = $(this).attr('data-users') || '';
+                users = users? users.split(','): [];
+                // 包含非新增再版/重印
+                if(flowId !== FLOW_ADD ){
+                    add=false;
+                }
+                // 包含非再版重印审核
+                if(flowId !==FLOW_REPRINT ){
+                    reprint=false;
+                }
+                // 包含非部门负责人审核
+                if(flowId !== FLOW_DEPART){
+                    depart=false;
+                }
+                // 包含非封面设计任务分配
+                if(flowId !== FLOW_COVER ){
+                    cover=false;
+                }
+                // 包含非选题申报
+                if(flowId !== FLOW_TOPIC ){
+                    topic=false;
+                }
+                // 包含非审稿任务分配
+                if(flowId !== FLOW_REVIEW){
+                    review=false;
+                }
+                // 包含非一校任务分配
+                if(flowId !== FLOW_FIRST){
+                    first=false;
+                }
+                // 包含非图书印制任务分配
+                if(flowId !== FLOW_BOOK){
+                    book=false;
+                }
+                // 包含非快印通知单填写
+                if(flowId !== FLOW_FILL_NOTICE){
+                    fill=false;
+                }
+                // 包含非图书印制通知单
+                if(flowId !== FLOW_PR_NOTICE){
+                    notice=false;
+                }
+
+                // 待我处理
+                if(users.indexOf(userId) <0){
+                    allMe = false;
+                }
+                // 任务状态未完成
+                if($(this).attr('data-taskState') === '2'){
+                    allUnfinished = false;
+                }
+                bookIds.push($(this).attr('data-bookId'));
+                taskIds.push($(this).attr('data-taskId'));
+                flowIds.push($(this).attr('data-flowId'));
+                count++;
+            });
+            this.currentFlowId=flowIds.join(',');
+            this.currentBookId = bookIds.join(',');
+            this.currentTaskId = taskIds.join(',');
+
+            // 只选择了一条，处理（对应该模块所有的flowid状态）可用
+            if(count === 1 ) {
+                if((reprint || depart || cover || topic || review || first|| book|| fill|| notice ) && allUnfinished && allMe){
+                    this.$('#btnTopicHandle').removeAttr('disabled');
+                }
+                // 查看可用
+                if(  reprint|| depart|| cover|| topic || review || first||book||fill||notice ){
+                    this.$('#btnTopicView').removeAttr('disabled');
+                }
+            }
+        };
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+            // that.openPage('public/workflow/workflow-dialog', {
+            //     debug: true,
+            //     flowTemplate: 'cn-cip-apply/cip-apply-issuance',
+            //     isEdit: true
+            // });
+
+            // 新增
+            that.$container.on('click','#btnTopicAdd',function () {
+                util.showLoading();
+                util.sendRequest({
+                    data: {
+                        currentFlowId:'rpt_addReprint'
+                    },
+                    action: 'cnReprint/searchCNReprintDetail.action',
+                    success: function (resp) {
+                        util.hideLoading();
+                        if (resp.code === 0) {
+                            that.openPage('chinese/reprint/reprint-add', {info: resp.data});
+                        } else {
+                            console.log(resp);
+                            util.showAlert(resp.message || '出错，请稍后重试！');
+                        }
+                    },
+                    error: function (xhr) {
+                        // XHR错误
+                        util.hideLoading();
+                        console.log(xhr);
+                        util.showAlert('出错，请稍后重试！');
+                    }
+                });
+            });
+            // 再版重印批量审核
+            that.$container.on('click','#btnBach',function () {
+                util.showLoading();
+                util.sendRequest({
+                    data: {
+                        currentFlowId:'rpt_reprintToExamine',
+                        reprintFlag:"2"
+                    },
+                    action: 'cnReprint/searchCNReprintDetail.action',
+                    success: function (resp) {
+                        util.hideLoading();
+                        if (resp.code === 0) {
+                            that.openPage('chinese/reprint/reprint-audit-add', {info: resp.data});
+                        } else {
+                            console.log(resp);
+                            util.showAlert(resp.message || '出错，请稍后重试！');
+                        }
+                    },
+                    error: function (xhr) {
+                        // XHR错误
+                        util.hideLoading();
+                        console.log(xhr);
+                        util.showAlert('出错，请稍后重试！');
+                    }
+                });
+            });
+            // 处理
+            that.$container.on('click', '#btnTopicHandle', function () {
+                var btnText=$(this).text();
+                if(that.currentFlowId===FLOW_REPRINT){// 针对再版重印审核单个的
+                    that.openPage('public/workflow/workflow-dialog', {
+                        flowInfoAction: that.flowInfoAction,
+                        bookId: that.currentBookId,
+                        taskId: that.currentTaskId,
+                        deployId: that.deployKey,
+                        reprintFlag:'1',
+                        btnText:btnText
+                    });
+                }else{
+                    that.openPage('public/workflow/workflow-dialog', {
+                        flowInfoAction: that.flowInfoAction,
+                        bookId: that.currentBookId,
+                        taskId: that.currentTaskId,
+                        deployId: that.deployKey,
+                        btnText:btnText
+                    });
+                }
+            });
+
+            // 查看
+            that.$container.on('click', '#btnCipSearch', function () {
+                that.openPage('public/workflow/workflow-dialog', {
+                    flowInfoAction: that.flowInfoAction,
+                    bookId: that.currentBookId,
+                    taskId: that.currentTaskId,
+                    deployId: that.deployKey,
+                    isView: true
+                });
+            });
+
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+
+
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            // that.initTemplate(tpl, {});
+
+            // 初始化数据前需要设置列表模板
+            this.baseTpl = topicManageListTpl;
+
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+
+            // TODO: 测试
+            // that.openPage('public/workflow/workflow-dialog', {});
+            // that.openPage('public/file/file-upload', {});
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+            if(data && data.refresh===true){
+                this.$('#btnCipSingle').attr('disabled', 'disabled');        // 处理
+                this.$('#btnCipBatch').attr('disabled', 'disabled');         // 批量处理
+                this.$('#btnCipSearch').attr('disabled', 'disabled');        // 查看
+
+            }
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function () {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+
+    module.exports = Module;
+});

@@ -1,0 +1,32 @@
+{
+  "code" : 0,
+  "message" : "查询列表成功",
+  "data" : {
+    "records" : [ {
+      "reportTopicId" : "1",
+      "topicReportName" : "测试测试测试1",
+      "topicReportDepartmentName" : "副总编辑1",
+      "reportTopicNum" : "0",
+      "topicReportDatetime" : "2017-05-23 16:17:59"
+    },
+      {
+        "reportTopicId" : "2",
+        "topicReportName" : "测试测试测试2",
+        "topicReportDepartmentName" : "副总编辑2",
+        "reportTopicNum" : "0",
+        "topicReportDatetime" : "2017-05-23 16:17:59"
+      }
+    ],
+    "pageindex" : {
+      "startindex" : 1,
+      "endindex" : 1
+    },
+    "pageCount" : 1,
+    "pageSize" : 10,
+    "pageNow" : 1,
+    "rowCount" : 1,
+    "startPage" : 0,
+    "pagecode" : 5,
+    "firstResult" : 0
+  }
+}

@@ -1,0 +1,79 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+    var util = require('../../../../../common/util.js');
+    var that;
+
+    /**
+     * Workflow Item
+     */
+    module.exports = ItemBase.extend({
+        // 保存/提交接口
+        saveAction: 'tpr/saveOrSubmitTrpTask.action',
+        // 批量保存/提交接口
+        batchSaveAction: 'tpr/batchSaveOrSubmitTrpTask.action',
+        // 查询接口
+        detailAction: 'tpr/searchTrpDetail.action',
+
+        /**
+         * 生成参数
+         */
+        getFormData: function () {
+            var params = {bookFascicleEntities: []};
+            // table数据
+            that.$('#dataTBody').children().each(function () {
+                params.bookFascicleEntities.push({
+                    bookFascicleId: that.$(this).attr('data-fascicule-id'),
+                    bookFascicleVersionNum: that.$(this).find("input[name='bookFascicleVersionNum']").val(),
+                    bookFileName: that.$(this).find("input[name='uploadFile']").val(),
+                    bookFileAddress: that.$(this).find("input[name='uploadFile']").attr('data-value')
+                });
+            });
+            params.tprQualityWordNum = that.$("input[name='tprQualityWordNum']").val();
+            params.taskUsers = that.$("input[name='taskUsers']").attr('data-value');
+            params.flowId = that.$("input[name='flowId']").val();
+            params.flowName = that.$("input[name='flowName']").val();
+            return params;
+        },
+
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+            // 下载汉文文稿
+            this.$container.on('click', "a[name='downloadCnManuscript']", function () {
+                window.open(util.getServerBase() + 'common/downloadFile.action?path=' + encodeURIComponent(that.$(this).attr('data-download-address')), '_blank');
+            });
+            // 下载盲文文稿分册
+            this.$container.on('click', '.downloadSeparated', function () {
+                window.open(util.getServerBase() + 'common/downloadFile.action?path=' + encodeURIComponent(that.$(this).attr('data-download-address')), '_blank');
+            });
+        },
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function (container, tpl) {
+            this._super(container, tpl);
+        },
+
+        /**
+         * 渲染页面
+         */
+        render: function () {
+            this._super();
+            that = this;
+            this.initPageEvent();
+            this.initPageData();
+        }
+    });
+});

@@ -1,0 +1,54 @@
+<!--清样稿管理-发送书稿-->
+<!---------------------------------------------------------------------------------------------编辑状态--------------------------------------------------------------------------------------------->
+<% if(isEdit) { %>
+<div class="form-horizontal">
+  <% if(info.printResult || info.printState) { %>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">打印结果</label>
+        <div class="col-xs-10">
+          <p class="form-control-static"><%- info.printResult %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">当前打印状态</label>
+        <div class="col-xs-10">
+          <p class="form-control-static"><%- info.printState %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% } %>
+</div>
+<!---------------------------------------------------------------------------------------------查看状态--------------------------------------------------------------------------------------------->
+<% } else { %>
+<div class="form-horizontal">
+  <% if(info.printResult || info.printState) { %>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">打印结果</label>
+        <div class="col-xs-10">
+          <p class="form-control-static"><%- info.printResult %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">当前打印状态</label>
+        <div class="col-xs-10">
+          <p class="form-control-static"><%- info.printState %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% } %>
+</div>
+<% } %>

@@ -1,0 +1,138 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+    var util = require('../../../../../common/util.js');
+    var printDialogTpl = require('./print-dialog.tpl');
+    /**
+     * Workflow Item
+     */
+    var Item = ItemBase.extend({
+        // 保存/提交接口
+        saveAction: 'registration/saveOrSubmitRegistration.action',
+
+        // 查询接口
+        detailAction: 'registration/searchRegistrationDetail.action',
+
+        /**
+         * 打印发稿单
+         */
+        printInfo: function () {
+            var that = this;
+            util.showLoading('正在查询信息……');
+            util.sendRequest({
+                data: {bookId: that.data.info.bookId},
+                action: 'clearManage/searchBill.action',
+                success: function (resp) {
+                    console.log(resp);
+                    if (resp.code === 0) {
+                        setTimeout(function () {
+                            util.hideLoading();
+                            util.openPage('public/print/print-preview', {
+                                content: util.template(printDialogTpl, {info: resp.data}),
+                                title: '打印发稿单'
+                            });
+                        }, 500);
+                    } else {
+                        util.hideLoading();
+                        util.showAlert(resp.message || '信息出错，请稍后重试！');
+                    }
+                },
+                error: function (xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('信息出错，请稍后重试！');
+                }
+            });
+        },
+
+        getFormData:function () {
+            var $form = this.$('#formEdit');
+            // 先调用父类生成基本的数据结构
+//      	var params = {};
+            var params = this._super();
+            // 处理上传部份数据结构
+            var arrId=[],arrName=[],arrAddress=[];
+            $form.find('tr[data-type="ebook"]').each(function(){
+                var $el=$(this);
+                arrId.push($el.attr('data-bookFileId'));
+                arrName.push($el.find('.bookName').html());
+                arrAddress.push($el.find('input.bookAddress').attr('data-value'));
+            });
+            console.log(arrId,arrName,arrAddress);
+            params.bookFileIds=arrId.join(',');
+            params.bookFileNames=arrName.join(',');
+            params.bookFileAddresss=arrAddress.join(',');
+            console.log(params);
+
+            return params;
+        },
+        onHandleChange: function () {
+
+        },
+
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+            var that = this;
+            // 打印发稿单
+            this.$container.on('click', '.printManuscript', this.printInfo.bind(this));
+            // // 下载分册
+            // this.$container.on('click', '.downloadSeparated', function () {
+            //     window.open(util.getServerBase() + 'common/downloadFile.action?path=' + encodeURIComponent($(this).attr('data-download-address')), '_blank');
+            // });
+
+            // 下载发稿单
+            this.$container.on('click', '.downloadManuscript', function () {
+                window.open(util.getServerBase() + 'clearManage/buildWord.action?bookId=' + that.data.info.bookId, '_blank');
+            });
+
+            this.$container.on('click','.btn-download',function () {
+                var $el=$(this);
+                window.open(util.getServerBase() + 'common/downloadFile.action?path=' + encodeURIComponent($el.attr('data-download')), '_blank');
+            });
+
+            this.$container.on('change', 'input.bookAddress', function(){
+              var $el=$(this);
+              var $parent=$el.parents('tr');
+               $parent.find('.bookName').html($el.val().split('.')[0])
+
+            })
+
+        },
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function (container, tpl) {
+            this._super(container, tpl);
+
+        },
+        /**
+         * 渲染页面
+         */
+        render: function () {
+            this._super();
+
+            this.initPageEvent();
+
+            this.initPageData();
+        }
+
+    });
+
+
+    module.exports = Item;
+
+});
+

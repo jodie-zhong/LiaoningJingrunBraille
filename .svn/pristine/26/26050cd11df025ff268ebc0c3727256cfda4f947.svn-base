@@ -1,0 +1,243 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    var DialogBase = require('../../../common/base-dialog');
+    var SUBMIT_ACTION = 'tpr/saveOrSubmitTaskLead.action';
+
+    module.exports = DialogBase.extend(new function () {
+        var that;
+        var info;
+
+        /**
+         * 保存数据
+         */
+        function saveData() {
+            // 没有错误开始处理
+            if (that.validate(that.$('#formDiv'))) {
+                // TODO
+                var params = [];
+                that.$("#dataTBody").children().each(function () {
+                    var row = $(this);
+                    params.push({
+                        pm1: row.find("input[name='pm1']").val(),
+                        pm2: row.find("input[name='pm2']").val(),
+                        pm3: row.find("input[name='pm3']").val(),
+                        pm4: row.find("input[name='pm4']").val(),
+                        pm5: row.find("input[name='pm5']").val(),
+                        pm6: row.find("input[name='pm6']").val(),
+                        pm7: row.find("input[name='pm7']").val(),
+                        pm8: row.find("input[name='pm8']").val(),
+                        pm9: row.find("input[name='pm9']").val(),
+                        pm10: row.find("input[name='pm10']").val(),
+                        pm11: row.find("input[name='pm11']").val(),
+                        pm12: row.find("input[name='pm12']").val(),
+                        pm13: row.find("input[name='pm13']").val(),
+                        pm14: row.find("input[name='pm14']").val(),
+                        pm15: row.find("input[name='pm15']").val()
+                    });
+                });
+                console.log(params);
+            }
+        }
+
+        /**
+         * 添加行
+         */
+        function addTableRow() {
+            // 添加行
+            var tb = that.$("#dataTBody");
+            tb.append(
+                "<tr>" +
+                "   <td data-name='orderNo'>" + (tb.children().length + 1) + "</td>" +
+                "   <td>" +
+                "     <div class='form-group'>" +
+                "       <div class='col-xs-12'>" +
+                "         <input class='form-control' name='pm1' placeholder='档位名称' maxlength='32' data-fv-notempty='true' data-fv-notempty-message='请填写档位名称'/>" +
+                "       </div>" +
+                "     </div>" +
+                "   </td>" +
+                "   <td>" +
+                "     <div class='form-group'>" +
+                "       <div class='col-xs-12'>" +
+                "         <input class='form-control' name='pm2' placeholder='社组选' maxlength='3' data-fv-notempty='true' data-fv-notempty-message='请填写预算' pattern='^(([0-9]*\\.[0-9]{1,2})|([0-9]*[1-9][0-9]*\\.[0-9]{1,2})|([0-9]*[1-9][0-9]*))$' data-fv-regexp-message='请输入大于0的数字'/>" +
+                "       </div>" +
+                "     </div>" +
+                "   </td>" +
+                "   <td>" +
+                "     <div class='form-group'>" +
+                "       <div class='col-xs-12'>" +
+                "         <input class='form-control' name='pm3' placeholder='市场书' maxlength='3' data-fv-notempty='true' data-fv-notempty-message='请填写预算' pattern='^(([0-9]*\\.[0-9]{1,2})|([0-9]*[1-9][0-9]*\\.[0-9]{1,2})|([0-9]*[1-9][0-9]*))$' data-fv-regexp-message='请输入大于0的数字'/>" +
+                "       </div>" +
+                "     </div>" +
+                "   </td>" +
+                "   <td>" +
+                "     <div class='form-group'>" +
+                "       <div class='col-xs-12'>" +
+                "         <input class='form-control' name='pm4' placeholder='大字本' maxlength='3' data-fv-notempty='true' data-fv-notempty-message='请填写预算' pattern='^(([0-9]*\\.[0-9]{1,2})|([0-9]*[1-9][0-9]*\\.[0-9]{1,2})|([0-9]*[1-9][0-9]*))$' data-fv-regexp-message='请输入大于0的数字'/>" +
+                "       </div>" +
+                "     </div>" +
+                "   </td>" +
+                "   <td>" +
+                "     <div class='form-group'>" +
+                "       <div class='col-xs-12'>" +
+                "         <input class='form-control' name='pm5' placeholder='甲' maxlength='3' data-fv-notempty='true' data-fv-notempty-message='请填写预算' pattern='^(([0-9]*\\.[0-9]{1,2})|([0-9]*[1-9][0-9]*\\.[0-9]{1,2})|([0-9]*[1-9][0-9]*))$' data-fv-regexp-message='请输入大于0的数字'/>" +
+                "       </div>" +
+                "     </div>" +
+                "   </td>" +
+                "   <td>" +
+                "     <div class='form-group'>" +
+                "       <div class='col-xs-12'>" +
+                "         <input class='form-control' name='pm6' placeholder='乙' maxlength='3' data-fv-notempty='true' data-fv-notempty-message='请填写预算' pattern='^(([0-9]*\\.[0-9]{1,2})|([0-9]*[1-9][0-9]*\\.[0-9]{1,2})|([0-9]*[1-9][0-9]*))$' data-fv-regexp-message='请输入大于0的数字'/>" +
+                "       </div>" +
+                "     </div>" +
+                "   </td>" +
+                "   <td>" +
+                "     <div class='form-group'>" +
+                "       <div class='col-xs-12'>" +
+                "         <input class='form-control' name='pm7' placeholder='丙' maxlength='3' data-fv-notempty='true' data-fv-notempty-message='请填写预算' pattern='^(([0-9]*\\.[0-9]{1,2})|([0-9]*[1-9][0-9]*\\.[0-9]{1,2})|([0-9]*[1-9][0-9]*))$' data-fv-regexp-message='请输入大于0的数字'/>" +
+                "       </div>" +
+                "     </div>" +
+                "   </td>" +
+                "   <td>" +
+                "     <div class='form-group'>" +
+                "       <div class='col-xs-12'>" +
+                "         <input class='form-control' name='pm8' placeholder='甲' maxlength='3' data-fv-notempty='true' data-fv-notempty-message='请填写预算' pattern='^(([0-9]*\\.[0-9]{1,2})|([0-9]*[1-9][0-9]*\\.[0-9]{1,2})|([0-9]*[1-9][0-9]*))$' data-fv-regexp-message='请输入大于0的数字'/>" +
+                "       </div>" +
+                "     </div>" +
+                "   </td>" +
+                "   <td>" +
+                "     <div class='form-group'>" +
+                "       <div class='col-xs-12'>" +
+                "         <input class='form-control' name='pm9' placeholder='乙' maxlength='3' data-fv-notempty='true' data-fv-notempty-message='请填写预算' pattern='^(([0-9]*\\.[0-9]{1,2})|([0-9]*[1-9][0-9]*\\.[0-9]{1,2})|([0-9]*[1-9][0-9]*))$' data-fv-regexp-message='请输入大于0的数字'/>" +
+                "       </div>" +
+                "     </div>" +
+                "   </td>" +
+                "   <td>" +
+                "     <div class='form-group'>" +
+                "       <div class='col-xs-12'>" +
+                "         <input class='form-control' name='pm10' placeholder='丙' maxlength='3' data-fv-notempty='true' data-fv-notempty-message='请填写预算' pattern='^(([0-9]*\\.[0-9]{1,2})|([0-9]*[1-9][0-9]*\\.[0-9]{1,2})|([0-9]*[1-9][0-9]*))$' data-fv-regexp-message='请输入大于0的数字'/>" +
+                "       </div>" +
+                "     </div>" +
+                "   </td>" +
+                "   <td>" +
+                "     <div class='form-group'>" +
+                "       <div class='col-xs-12'>" +
+                "         <input class='form-control' name='pm11' placeholder='三审(元/千字)' maxlength='3' data-fv-notempty='true' data-fv-notempty-message='请填写预算' pattern='^(([0-9]*\\.[0-9]{1,2})|([0-9]*[1-9][0-9]*\\.[0-9]{1,2})|([0-9]*[1-9][0-9]*))$' data-fv-regexp-message='请输入大于0的数字'/>" +
+                "       </div>" +
+                "     </div>" +
+                "   </td>" +
+                "   <td>" +
+                "     <div class='form-group'>" +
+                "       <div class='col-xs-12'>" +
+                "         <input class='form-control' name='pm12' placeholder='质检(元/千字)' maxlength='3' data-fv-notempty='true' data-fv-notempty-message='请填写预算' pattern='^(([0-9]*\\.[0-9]{1,2})|([0-9]*[1-9][0-9]*\\.[0-9]{1,2})|([0-9]*[1-9][0-9]*))$' data-fv-regexp-message='请输入大于0的数字'/>" +
+                "       </div>" +
+                "     </div>" +
+                "   </td>" +
+                "   <td>" +
+                "     <div class='form-group'>" +
+                "       <div class='col-xs-12'>" +
+                "         <input class='form-control' name='pm13' placeholder='封面设计(元/种)' maxlength='3' data-fv-notempty='true' data-fv-notempty-message='请填写预算' pattern='^(([0-9]*\\.[0-9]{1,2})|([0-9]*[1-9][0-9]*\\.[0-9]{1,2})|([0-9]*[1-9][0-9]*))$' data-fv-regexp-message='请输入大于0的数字'/>" +
+                "       </div>" +
+                "     </div>" +
+                "   </td>" +
+                "   <td>" +
+                "     <div class='form-group'>" +
+                "       <div class='col-xs-12'>" +
+                "         <input class='form-control' name='pm14' placeholder='作者稿酬' maxlength='3' data-fv-notempty='true' data-fv-notempty-message='请填写预算' pattern='^(([0-9]*\\.[0-9]{1,2})|([0-9]*[1-9][0-9]*\\.[0-9]{1,2})|([0-9]*[1-9][0-9]*))$' data-fv-regexp-message='请输入大于0的数字'/>" +
+                "       </div>" +
+                "     </div>" +
+                "   </td>" +
+                "   <td>" +
+                "     <div class='form-group'>" +
+                "       <div class='col-xs-12'>" +
+                "         <input class='form-control' name='pm15' placeholder='编务费(元/种)' maxlength='3' data-fv-notempty='true' data-fv-notempty-message='请填写预算' pattern='^(([0-9]*\\.[0-9]{1,2})|([0-9]*[1-9][0-9]*\\.[0-9]{1,2})|([0-9]*[1-9][0-9]*))$' data-fv-regexp-message='请输入大于0的数字'/>" +
+                "       </div>" +
+                "     </div>" +
+                "   </td>" +
+                "   <td><button class='removeTableRow btn btn-xs btn-danger'><i class='fa fa-minus box'></i></button></td>" +
+                "</tr>"
+            );
+            var lastRow = tb.find("tr:last-child");
+            var form = that.$('#formDiv');
+            that.addValidateField(form, lastRow.find("input[name='pm1']"));
+            that.addValidateField(form, lastRow.find("input[name='pm2']"));
+            that.addValidateField(form, lastRow.find("input[name='pm3']"));
+            that.addValidateField(form, lastRow.find("input[name='pm4']"));
+            that.addValidateField(form, lastRow.find("input[name='pm5']"));
+            that.addValidateField(form, lastRow.find("input[name='pm6']"));
+            that.addValidateField(form, lastRow.find("input[name='pm7']"));
+            that.addValidateField(form, lastRow.find("input[name='pm8']"));
+            that.addValidateField(form, lastRow.find("input[name='pm9']"));
+            that.addValidateField(form, lastRow.find("input[name='pm10']"));
+            that.addValidateField(form, lastRow.find("input[name='pm11']"));
+            that.addValidateField(form, lastRow.find("input[name='pm12']"));
+            that.addValidateField(form, lastRow.find("input[name='pm13']"));
+            that.addValidateField(form, lastRow.find("input[name='pm14']"));
+            that.addValidateField(form, lastRow.find("input[name='pm15']"));
+        }
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+            // 保存
+            that.$container.on('click', '#btnSave', saveData);
+            // 添加行
+            that.$container.on('click', '.addTableRow', addTableRow);
+            // 删除行
+            that.$container.on('click', '.removeTableRow', function () {
+                $(this).parents('tr').remove();
+                // 重新显示序号
+                var orderNo = 1;
+                that.$("#dataTBody").find("td[data-name='orderNo']").each(function () {
+                    $(this).html(orderNo);
+                    orderNo += 1;
+                });
+            });
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+            that.initValidate(that.$('#formDiv'));
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            info = data;
+            that.initTemplate(tpl, {info: data});
+            // 初始化页面数据
+            initPageData();
+            // 初始化页面事件
+            initPageEvent();
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function () {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+    }());
+});

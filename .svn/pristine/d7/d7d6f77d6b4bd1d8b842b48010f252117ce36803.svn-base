@@ -1,0 +1,74 @@
+<!--译校通读-任务分配-->
+<% if(isEdit) { %>
+<div class="form-horizontal">
+    <div class="row">
+        <div class="col-xs-6 form-group">
+            <label class="col-xs-4 control-label">接收书稿确认</label>
+            <div class="col-xs-8">
+                <label class="radio-inline">
+                    <% if(!info.bookTopicRecommendType || info.bookTopicRecommendType === '2') { %>
+                    <input type="radio" name="bookTopicRecommendType" value="2" data-fv-notempty="true"
+                           data-fv-notempty-message="请选择是否接收" checked/>接收
+                    <% } else { %>
+                    <input type="radio" name="bookTopicRecommendType" value="2" data-fv-notempty="true"
+                           data-fv-notempty-message="请选择是否接收"/>未接收
+                    <% } %>
+                </label>
+                <label class="radio-inline">
+                    <% if(info.bookTopicRecommendType && info.bookTopicRecommendType === '1') { %>
+                    <input type="radio" name="bookTopicRecommendType" value="1" data-fv-notempty="true"
+                           data-fv-notempty-message="请选择是否接收" checked/>接收
+                    <% } else { %>
+                    <input type="radio" name="bookTopicRecommendType" value="1" data-fv-notempty="true"
+                           data-fv-notempty-message="请选择是否接收"/>未接收
+                    <% } %>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6 form-group">
+            <label class="col-xs-4 control-label">下一流程</label>
+            <div class="col-xs-8">
+                <p class="form-control-static">下一流程，待修改</p>
+            </div>
+        </div>
+        <div class="col-xs-6 form-group">
+            <label class="col-xs-5 control-label">下一流程任务人</label>
+            <div class="col-xs-7">
+                <select name="taskStep" class="form-control" id="taskStep" data-fv-notempty="true"
+                        data-fv-field="taskStep">
+                    <option value="1">张三，待删除</option>
+                    <option value="2">李四，待删除</option>
+                    <option value="3">王二麻子，待删除</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<% } else { %>
+<div class="form-horizontal">
+    <div class="row">
+        <div class="col-xs-6 form-group">
+            <label class="col-xs-4 control-label">接收书稿确认</label>
+            <div class="col-xs-8">
+                <p class="form-control-static">是否接收，待修改</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6 form-group">
+            <label class="col-xs-4 control-label">下一流程</label>
+            <div class="col-xs-8">
+                <p class="form-control-static">下一流程，待修改</p>
+            </div>
+        </div>
+        <div class="col-xs-6 form-group">
+            <label class="col-xs-5 control-label">下一流程任务人</label>
+            <div class="col-xs-7">
+                <p class="form-control-static">麻子，待修改</p>
+            </div>
+        </div>
+    </div>
+</div>
+<% } %>

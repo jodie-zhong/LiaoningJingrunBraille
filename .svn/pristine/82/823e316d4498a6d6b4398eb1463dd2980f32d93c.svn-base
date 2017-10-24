@@ -1,0 +1,94 @@
+<!--译校通读-接收书稿-->
+<!---------------------------------------------------------------------------------------------编辑状态--------------------------------------------------------------------------------------------->
+<% if(isEdit) { %>
+<div class="form-horizontal">
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">接收书稿确认</label>
+        <div class="col-xs-8">
+          <label class="radio-inline">
+            <% if(!info.bookTopicRecommendType || info.bookTopicRecommendType === '2') { %>
+            <input type="radio" name="bookTopicRecommendType" value="2" data-fv-notempty="true" data-fv-notempty-message="请选择是否接收" checked/>接收
+            <input type="radio" name="bookTopicRecommendType" value="1" data-fv-notempty="true" data-fv-notempty-message="请选择是否接收"/>未接收
+            <% } else { %>
+            <input type="radio" name="bookTopicRecommendType" value="2" data-fv-notempty="true" data-fv-notempty-message="请选择是否接收"/>未接收
+            <input type="radio" name="bookTopicRecommendType" value="1" data-fv-notempty="true" data-fv-notempty-message="请选择是否接收" checked/>接收
+            <% } %>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% if(info.userTaskEntities) { %>
+  <% for(var i = 0; i < info.userTaskEntities.length; i++) { %>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">下一流程</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.userTaskEntities[i].flowName %></p>
+          <input type="hidden" name="flowId" value="<%- info.userTaskEntities[i].flowId %>">
+          <input type="hidden" name="flowName" value="<%- info.userTaskEntities[i].flowName %>">
+          <input type="hidden" name="nextCategory" value="<%- info.userTaskEntities[i].category %>">
+          <input type="hidden" name="deptIds" value="<%- info.userTaskEntities[i].deptIds %>">
+          <input type="hidden" name="roleIds" value="<%- info.userTaskEntities[i].roleIds %>">
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <% if(info.userTaskEntities[i].roleIds) { %>
+      <div class="form-group">
+        <label class="col-xs-4 control-label">任务人<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <div class="input-group">
+            <input type="text" class="form-control" name="taskUsers" value="<%- info.userTaskEntities[i].nextFlowTaskUserNames %>" data-value="<%- info.userTaskEntities[i].nextFlowTaskUserIds %>"
+                   placeholder="任务人" data-fv-notempty="true" data-fv-notempty-message="请选择下一任务人" readonly>
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button" data-data='{"roleIds": "<%- info.userTaskEntities[i].roleIds %>", "deptIds": "<%- info.userTaskEntities[i].deptIds %>"}'
+                      data-open="public/user/select-users">
+                <i class="fa fa-user-o"></i></button>
+            </span>
+          </div>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+      <% } %>
+    </div>
+  </div>
+  <% } %>
+  <% } %>
+</div>
+<!---------------------------------------------------------------------------------------------查看状态--------------------------------------------------------------------------------------------->
+<% } else { %>
+<div class="form-horizontal">
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">接收书稿确认</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookName %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">提交人</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitUserName %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">提交时间</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitDatetime %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>

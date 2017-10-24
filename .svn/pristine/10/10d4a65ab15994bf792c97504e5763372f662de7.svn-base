@@ -1,0 +1,253 @@
+define(function(require, exports, module) {
+	"use strict";
+
+	var util = require('../../../common/util');
+	var PageBase = require('../../../common/base-dialog');
+	var FileUpload = require('./upload');
+
+	var Module = PageBase.extend(new function() {
+		var that;
+		// 限制文件类型
+        var fileType = '';
+        // 从页面传的参数
+        var fileParam = {};
+        // 上传路径
+        var fileUrl = '';
+        // 限制文件大小
+        var fileSize = 10 * 1024 * 1024;
+        // 停止查询进度
+        var stop = false;
+        // 查询进度间隔
+        var queryInterval = 1000;
+
+		/**
+		 * 开始文件上传
+		 */
+		function doFileUpload() {
+			// 禁用界面文件和按钮
+			// that.$('#inputFileUpload').attr('disabled', 'disabled');
+			that.$('#btnFileUpload').attr('disabled', 'disabled');
+
+			// 象征性的显示一点进度
+			setProgress(0);
+
+			// 准备上传
+			var fileUpload = new FileUpload();
+			fileUpload.setFiles([that.$('#inputFileUpload')[0]]);
+			fileUpload.setParameters(fileParam);
+			fileUpload.upload(util.getServerBase() + fileUrl, function (resp) {
+				stop = true;
+
+				// 从html中解析报文
+				var $resp = $(resp.responseText);
+				resp = $resp.html();
+				try {
+					resp = JSON.parse(resp);
+				} catch(ex) {
+					util.showAlert('文件上传失败！', function() {
+						that.close();
+					});
+					return;
+				}
+
+				if(resp.code === 0) {
+					// 进度更新到100
+					setProgress(100);
+					// 上传成功
+					var data = resp.data;
+					that.close(data);
+				} else {
+					that.close();
+					// 上传失败
+					util.showAlert(resp.message || '文件上传失败！', function() {
+						that.close();
+					});
+				}
+			});
+
+			stop = false;
+//			setTimeout(statrUploadProcess, queryInterval);
+			that.$('#inputFileUpload').attr('disabled', 'disabled');
+		}
+
+		/**
+		 * 文件更改
+		 */
+		function fileChanged() {
+			var $el = $(this);
+			var file = $el[0].files[0];
+			var photo = true;
+
+			if(file) {
+				var suffix = file.name.toLowerCase();
+				suffix = suffix.substr(suffix.lastIndexOf('.'));
+				// 检查文件类型
+				if(fileType) {
+					if(fileType.indexOf(suffix) < 0) {
+						$el.val('');
+						util.showAlert('请选择指定的文件类型：' + fileType);
+						photo = false;
+						return;
+					}
+				}
+				// 生成预览
+				if((suffix === '.png' || suffix === '.jpg' || suffix === '.bmp' || suffix === '.jpg') && photo) {
+					setPreview(file);
+				} else {
+					setPreview('');
+				}
+				// 检查文件大小
+				if(file.size > fileSize) {
+					$el.val('');
+					util.showAlert('文件体积不能大于 ' + (fileSize / (1024 * 1024)) + 'MB！');
+					return;
+				}
+				
+			} else {
+				setPreview('');
+				that.$('input[data-vale = "showFile"]').val('');
+			}
+			
+			that.$('input[data-vale = "showFile"]').val(file.name);
+
+		}
+
+		/**
+		 * 生成图片预览
+		 * @param file
+		 */
+		function setPreview(file) {
+			if(file) {
+				var reader = new FileReader();
+				reader.onloadend = function() {
+					that.$('#uploadPreview').attr('src', reader.result);
+					that.$('#uploadPreview').css('display', 'block');
+				};
+				reader.readAsDataURL(file);
+			} else {
+				that.$('#uploadPreview').attr('src', '');
+				that.$('#uploadPreview').hide();
+			}
+		}
+
+		/**
+		 * 确定上传文件
+		 */
+		function confirmUpload() {
+			var $el = that.$('#inputFileUpload');
+			var files = $el[0].files;
+			if(files.length > 0) {
+				// 进度归零后显示进度条
+				setProgress(0);
+
+				doFileUpload();
+
+				that.$('#progressFileUpload').show();
+			} else {
+				util.showAlert('请选择文件后上传!');
+			}
+		}
+
+		/**
+		 * 设置进度
+		 * @param percent
+		 */
+		function setProgress(percent) {
+			var $bar = that.$('#progressFileUpload');
+			$bar.find('div').width(percent + '%');
+			$bar.find('span').text(percent + '%');
+		}
+
+		/**
+		 * 初始化页面事件
+		 */
+		function initPageEvent() {
+			// 选择文件
+			that.$container.on('change', '#inputFileUpload', fileChanged);
+
+			// 确定上传
+			that.$container.on('click', '#btnFileUpload', confirmUpload);
+		}
+
+		/**
+		 * 初始化页面数据
+		 */
+		function initPageData() {
+
+		}
+
+		/**
+		 * 初始化时被调用
+		 */
+		this.onInit = function($el, tpl, data, indexRef) {
+			this._super($el, tpl, data, indexRef);
+			that = this;
+			that.initTemplate(tpl, {});
+
+			// 指定文件类型
+			if(data && data.type) {
+				fileType = data.type;
+			} else {
+				fileType = '';
+			}
+			// 指定文件大小
+			if(data && data.maxSize) {
+				fileSize = data.maxSize;
+			} else {
+				fileSize = 20 * 1024 * 1024;
+			}
+			// 指定文件参数
+            if (data && data.ids) {
+                if( typeof fileParam.isbncipApplyId !=='undefined' ){
+                    delete fileParam.isbncipApplyId;
+                }
+                fileParam.bookIds= data.ids;
+            } else if(data && data.isbncipApplyId){
+                if( typeof fileParam.bookIds !=='undefined' ){
+                    delete fileParam.bookIds;
+                }
+                fileParam.isbncipApplyId= data.isbncipApplyId;
+            }else{
+                fileParam = {};
+            }
+            // 指定文件上传路径
+            if (data && data.urlDate) {
+                fileUrl= data.urlDate;
+            } else {
+                fileUrl ='' ;
+            }
+
+			// 初始化页面事件
+			initPageEvent();
+
+			// 初始化页面数据
+			initPageData();
+		};
+
+		/**
+		 * 页面返回事件
+		 * @param data
+		 */
+		this.onBack = function(data) {
+			this._super(data);
+
+		};
+
+		/**
+		 * 窗口缩放事件
+		 */
+		this.onResize = function() {
+			this._super();
+		};
+
+		/**
+		 * 页面销毁
+		 */
+		this.onDestroy = function() {
+			this._super();
+		};
+
+	}());
+
+	module.exports = Module;
+});

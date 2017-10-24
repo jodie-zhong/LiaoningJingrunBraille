@@ -1,0 +1,61 @@
+<!--选题大会信息-->
+<div class="form-horizontal">
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">会议名称：</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.topicMeetingName %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">会议地点：</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.topicMeetingAddress %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">会议时间：</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.topicMeetingDatetime %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">选题结果：</label>
+        <div class="col-xs-8">
+          <p class="form-control-static">
+            <%- info.result === '1' ? '通过' : (info.result === '2' ? '不通过' : (info.result === '3' ? '待定确认' : ''))%>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">参会人员：</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.topicMeetingUserNames %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">备注：</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.remark %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

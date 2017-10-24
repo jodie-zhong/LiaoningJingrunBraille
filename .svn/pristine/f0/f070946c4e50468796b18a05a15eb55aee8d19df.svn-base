@@ -1,0 +1,197 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    var PageBase = require('../../../common/base-dialog');
+    var enterListTpl=require('./topic-conference-enter.tpl')
+    var Module = PageBase.extend(new function () {
+        var that;
+        var info=null;
+        var newMeetingData=[];
+        var reportTopicId="";
+        // 这个登记特殊，分录入后保存或提交、直接保存或提交、保存后再进入修改再提交
+
+        /**
+         * 将所得数据处理成一维数组
+         */
+        function enteringDate() {
+            // 将获取的数据生成一维数组,（因提交给后台的时候要一维数组）
+            for(var i=0;i<info.reportMeetingList.length;i++){
+                for(var j=0;j<info.reportMeetingList[i].registerTopicList.length;j++){
+                    newMeetingData.push(info.reportMeetingList[i].registerTopicList[j])
+                }
+            }
+
+            // 处理页面直接点保存或提交按钮
+            $.each(newMeetingData,function (i) {
+                if( !newMeetingData[i].result){
+                    newMeetingData[i].result='1' // 默认为通过
+                }
+            });
+
+        }
+
+        /**
+         * 保存与提交事件
+         */
+        function saveReg(isSubmit) {
+            var params={};
+            params.operationType= isSubmit ? '2' : '1';
+            params.registerTopicEntities=newMeetingData;
+            params.topicMeetingContent=that.$('#topicMeetingContent').val();
+            params.topicMeetingId=info.topicMeetingId;
+            util.sendRequest({
+                data:params,
+                action:'meeting/registerMeeting.action',
+                success:function (resp) {
+                    util.hideLoading();
+                    if(resp.code===0){
+                        util.showAlert(resp.message || '提交会议成功，请稍后重试！',function () {
+                            newMeetingData=[];
+                            that.close({refresh:true})
+                        });
+                    }else{
+                        util.showAlert(resp.message || '提交会议出错，请稍后重试！');
+                    }
+                },
+                error:function (xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    util.showAlert('初始化会议列表出错，请稍后重试！');
+                }
+            });
+        }
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+            // 页面一加载进来时，一旦数据的result存在值，就表示为所有的数据为已录入(即为已保存状态)
+            for(var i=0;i<info.reportMeetingList.length;i++){
+                for(var j=0;j<info.reportMeetingList[i].registerTopicList.length;j++){
+                    if(info.reportMeetingList[i].registerTopicList[j].result){
+                        that.$("#conRegListTable .no-enter").html("已录入");
+                    }else{
+                        that.$("#conRegListTable .no-enter").html("未录入");
+                    }
+                }
+            }
+
+            // 初始化将数据存起来（默认全为通过）
+            enteringDate();
+            // 点击录入按钮
+            that.$container.on('click', '.enteringMeeting', function(){
+                var $el=$(this);
+                var $parent=$el.parent().parent();
+                var num=$el.attr('data-index');
+                reportTopicId=$parent.attr('data-id');
+                that.$("#enteringInfo").show();
+                // 渲染对应的录入信息
+                that.$("#enteringInfoList").html(util.template(enterListTpl,{list: info.reportMeetingList[num].registerTopicList}));
+                // 对于没有走接口只是单存的走录入的保存，再次点录入时要把已录入的数据渲染出来（用bookTopicId来匹配数据）
+                // that.$("#enteringInfo .row").each(function () {
+                //     var $el2=$(this);
+                //     var bookId=$el2.find(".enter-book").attr("data-id");
+                //     $.each(newMeetingData,function (i) {
+                //         if(newMeetingData[i].bookTopicId===bookId){
+                //             $("input[value='" + newMeetingData[i].result + "']").prop("checked", "checked");
+                //             $el2.find("textarea").val(newMeetingData[i].remark);
+                //         }
+                //     });
+                // })
+                // 点击录入的保存按钮
+                that.$("#btnTopicSave").on("click",function () {
+                    $parent.find(".no-enter").html('已录入');
+                    // 点击录入时就将reportTopicId设置；
+                    // 录入保存时存数据并匹配newMeetingData数据
+                    // 写each函数，在每个each里就直接匹配 (遇到radio要考虑多条数据，name不要叫一样的)
+                    if( that.$("#enteringInfo .row").length > 0 ){
+                        var arrSave=[];
+                        that.$("#enteringInfo .row").each(function () {
+                            var obj={};
+                            var $el1=$(this);
+                            obj.result=$el1.find('input[type="radio"]:checked').val();
+                            obj.remark=$el1.find('textarea').val();
+                            obj.bookTopicId=$el1.find('.enter-book').attr('data-id');
+                            obj.bookTopicName=$el1.find('.enter-book').attr('data-name');
+                            obj.reportTopicId=reportTopicId;
+                            arrSave.push(obj);
+                        });
+                        // 将arrSave与newMeetingData进行匹配,匹配到的数据保存结果，匹配不到给默认值
+                        for(var i=0;i<arrSave.length;i++){
+                            for(var j=0;j<newMeetingData.length;j++){
+                                if(arrSave[i].bookTopicId===newMeetingData[j].bookTopicId){
+                                    newMeetingData[j].result=arrSave[i].result;
+                                    newMeetingData[j].remark=arrSave[i].remark;
+                                }
+                            }
+                        }
+                    }
+                    $("#enteringInfo").hide();
+                });
+
+            });
+            // 点击保存按钮
+            that.$container.on('click', '#btnConRegSave', function(){
+                saveReg(false);
+            });
+            // 点击提交按钮
+            that.$container.on('click', '#btnConRegSubmit', function(){
+                saveReg(true);
+            });
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            info=null;
+            newMeetingData=[];
+            reportTopicId="";
+            that = this;
+            info=data;
+            that.initTemplate(tpl, {info:info});
+
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function(){
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+
+    module.exports = Module;
+});

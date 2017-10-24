@@ -1,0 +1,42 @@
+{
+  "code": 0,
+  "message": "查询流程阶段集合成功",
+  "data": {
+    "lastFlowId": null,
+    "lastFlowName": null,
+    "currentFlowId": "1",
+    "currentFlowName": "选题管理",
+    "nextFlowId": null,
+    "nextFlowName": null,
+    "flowStateEntities": [
+      {
+        "flowId": "2",
+        "flowName": "选题申报"
+      },
+      {
+        "flowId": "3",
+        "flowName": "部门负责人审核"
+      },
+      {
+        "flowId": "4",
+        "flowName": "总编辑/副总编辑审批"
+      },
+      {
+        "flowId": "5",
+        "flowName": "选题大会"
+      },
+      {
+        "flowId": "6",
+        "flowName": "部门负责人下发"
+      },
+      {
+        "flowId": "7",
+        "flowName": "备案确认"
+      },
+      {
+        "flowId": "8",
+        "flowName": "待定确认"
+      }
+    ]
+  }
+}

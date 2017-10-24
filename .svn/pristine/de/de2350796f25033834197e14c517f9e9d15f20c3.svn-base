@@ -1,0 +1,27 @@
+<!--书号和CIP申请信息-->
+<table class="table table-striped table-hover" id="selectTopicContentTable">
+    <thead>
+    <tr>
+        <th>图书名称</th>
+        <th>是否通过</th>
+        <th>未通过原因</th>
+        <th>书号</th>
+        <th>分类号</th>
+        <th>条形码</th>
+    </tr>
+    </thead>
+    <tbody id="selectTopicTable">
+        <tr>
+            <td><%- info.bookName %></td>
+            <% if(info.isPass==='1'){ %>
+            <td>通过</td>
+            <% }else{ %>
+            <td>未通过</td>
+            <% } %>
+            <td><%- info.notPassCause %></td>
+            <td><%- info.bookIsbn %></td>
+            <td><%- info.bookDetailClassNum %></td>
+            <td><%- info.bookFileAddress %></td>
+        </tr>
+    </tbody>
+</table>

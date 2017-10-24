@@ -1,0 +1,32 @@
+[
+  {
+    "name": "source",
+    "type": "select",
+    "label": "数据源",
+    "options": [
+      {
+        "label": "固定内容",
+        "value": "0"
+      },
+      {
+        "label": "页面地址",
+        "value": "1"
+      }
+    ]
+  },
+  {
+    "name": "text",
+    "type": "string",
+    "label": "固定内容"
+  },
+  {
+    "name": "color",
+    "type": "color",
+    "label": "颜色"
+  },
+  {
+    "name": "background",
+    "type": "color",
+    "label": "背景颜色"
+  }
+]

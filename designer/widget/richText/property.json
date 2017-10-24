@@ -1,0 +1,22 @@
+[
+  {
+    "name": "html",
+    "type": "richtext",
+    "label": "文本内容"
+  },
+  {
+    "name": "border",
+    "type": "border",
+    "label": "边框"
+  },
+  {
+    "name": "radius",
+    "type": "radius",
+    "label":"边框弧度"
+  },
+  {
+    "name": "background",
+    "type": "color",
+    "label": "背景色"
+  }
+]

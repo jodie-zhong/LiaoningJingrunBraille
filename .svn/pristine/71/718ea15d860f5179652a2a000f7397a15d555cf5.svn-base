@@ -1,0 +1,276 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    module.exports = {
+    	bookName: {
+    		title: '书名',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	bookSubtitle: {
+    		title:'副书名及说明文字',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	bookTieName:{
+    		title: '并列书名',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	bookDetailAuthor: {
+    		title: '第一作者',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	bookDetailWorkWay: {
+    		title: '第一著作方式',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	bookbookDetailOtherAuthorSubtitle: {
+    		title:'副书名及说明文字',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	bookDetailOtherWorkWay:{
+    		title: '其他著作方式',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	bookTextLanguage: {
+    		title: '正文文种',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	bookTextWords: {
+    		title: '正文文字',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	bindingWay: {
+    		title: '装订形式',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	bookPageNum:{
+    		title: '全书页数',
+    		type:'number',
+    		maxlength: 10,
+    	},
+    	bookDetailWordsNum: {
+    		title:'字数',
+    		type:'number',
+    		maxlength: 10,
+    	},
+    	bookDetailSheetNum: {
+    		title:'图幅数',
+    		type:'number',
+    		maxlength: 10,
+    	},
+    	bookFileNum:{
+    		title: '附件数量',
+    		type:'number',
+    		maxlength: 10,
+    	},
+    	dutyEditor: {
+    		title: '责任编辑',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	phone: {
+    		title: '电话',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	bookDetailSketched: {
+    		title:'内容提要',
+    		type:'textarea',
+    		maxlength: 1000,
+    	},
+    	bookDetailAuthorMsg:{
+    		title: '作者简介',
+    		type:'textarea',
+    		maxlength: 1000,
+    	},
+    	bookSubjectHeadings: {
+    		title: '建议主题词',
+    		type:'textarea',
+    		maxlength: 1000,
+    	},
+    	bookDetailKind: {
+    		title: '图书分类',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	bookDetailGuideKind: {
+    		title:'指导分类',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	bookDetailPublishScope:{
+    		title: '发行范围',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	bookDetailReader: {
+    		title: '读者对象',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	bookDetailEdition: {
+    		title: '版次',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	bookDetailLayoutOrder: {
+    		title: '印次',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	finishedSize: {
+    		title: '成品尺寸',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	printPaperNum: {
+    		title:'印张数',
+    		type:'number',
+    		maxlength: 10,
+    	},
+    	printRuns:{
+    		title: '本次印量',
+    		type:'number',
+    		maxlength: 10,
+    	},
+    	currentlyPrintRuns: {
+    		title: '本次起印量',
+    		type:'number',
+    		maxlength: 10,
+    	},
+    	bookTotalVolume: {
+    		title: '累计印量',
+    		type:'number',
+    		maxlength: 10,
+    	},
+    	bookFasciclePrice: {
+    		title:'定价（本册）',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	priceChangeNum:{
+    		title: '价格变更次数',
+    		type:'number',
+    		maxlength: 10,
+    	},
+    	bookPublishMode: {
+    		title: '出版方式',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	cooperativePublisher: {
+    		title: '合作出版者',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	placePublication: {
+    		title: '出版地',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	printingUnit: {
+    		title: '印刷单位',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	seriesBookName: {
+    		title:'丛书名',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	accessorySeriesBookName:{
+    		title: '附属丛书名',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	paratacticSeriesBookName: {
+    		title: '并列丛书名',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	seriesBookAuthor: {
+    		title: '丛书著作责任者',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	bookFascicleNum: {
+    		title:'分（辑）册号',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	bookPrice:{
+    		title: '定价（本套）',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	counts: {
+    		title: '数量',
+    		type:'number',
+    		maxlength: 10,
+    	},
+    	packageBooksName: {
+    		title: '套书名',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	packageBooksAuthor: {
+    		title: '套书著作责任者',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	bookOriginalName: {
+    		title: '引进版图书原书名',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	author: {
+    		title:'版权合同登记号',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	pristinePlacePublication:{
+    		title: '原出版地',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	bookDetailPublicationDate: {
+    		title: '引进版图书原出版者',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	directoryFileNumber: {
+    		title: '教材目录文件号',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	catalogInformation: {
+    		title:'目录（章节）信息',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	remarks:{
+    		title: '备注',
+    		type:'textarea',
+    		maxlength: 1000,
+    	},
+    	coverDesigner: {
+    		title: '封面设计者',
+    		type:'input',
+    		maxlength: 16,
+    	},
+    	bookPressName: {
+    		title: '出版社名称',
+    		type:'input',
+    		maxlength: 16,
+    	}
+    };	
+});

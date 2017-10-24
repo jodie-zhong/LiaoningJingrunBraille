@@ -1,0 +1,98 @@
+<!--汉文-图书季报-->
+<div class="row">
+  <div class="col-xs-4">
+    <div class="panel">
+      <div class="panel-header custom-panel-header">
+        <h3><i class="fa fa-braille"></i>季报列表</h3>
+        <div class="control-btn">
+          <button class="btn btn-xs btn-blue" id="btnAddReport" data-auth="" disabled>新增</button>
+          <button class="btn btn-xs btn-blue" id="btnModifyReport" data-auth="" disabled>修改</button>
+          <button class="btn btn-xs btn-blue" id="btnDeleteReport" data-auth="" disabled>删除</button>
+        </div>
+      </div>
+      <div class="panel-content">
+        <div class="table-10 table-scroll">
+          <table class="table table-striped table-nowrap table-hover" id="reportTable">
+            <thead>
+            <tr>
+              <th style="width: 50px;">序号</th>
+              <th style="width: 50px;"></th>
+              <th>上报名称</th>
+              <th style="width: 100px;">上报数量</th>
+            </tr>
+            </thead>
+            <tbody id="reportTBody">
+            <tr data-noselect="true">
+              <td colspan="4"><p class="empty-tips">没有符合指定条件的数据</p></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="clearfix" id="reportPaging">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-8">
+    <div class="panel">
+      <div class="panel-header custom-panel-header">
+        <h3>图书列表</h3>
+        <div class="control-btn">
+          <button class="btn btn-xs btn-blue" id="btnAddBook" data-auth="">添加</button>
+          <button class="btn btn-xs btn-blue" id="btnRemoveBook" data-auth="" disabled>移除</button>
+          <button class="btn btn-xs btn-blue" id="btnExportBook" data-auth="">导出</button>
+        </div>
+      </div>
+      <div class="panel-content">
+        <div class="table-10 table-scroll">
+          <table class="table table-striped table-nowrap table-hover" id="bookTable">
+            <thead>
+            <tr>
+              <th rowspan="2" style="width: 50px;">序号</th>
+              <th rowspan="2" style="width: 50px;"></th>
+              <th rowspan="2" style="width: 150px;">图书名称</th>
+              <th rowspan="2" style="width: 130px;">是否中国标准书号</th>
+              <th rowspan="2" style="width: 90px;">CIP分类号</th>
+              <th rowspan="2" style="width: 150px;">ISBN编码</th>
+              <th rowspan="2" style="width: 130px;">新出或重印或租型</th>
+              <th rowspan="2" style="width: 100px;">字数（千字）</th>
+              <th rowspan="2" style="width: 80px;">是否套书</th>
+              <th rowspan="2" style="width: 120px;">本次印数（册）</th>
+              <th rowspan="2" style="width: 150px;">每册、张定价（元）</th>
+              <th rowspan="2" style="width: 160px;">每册、张印张（印张）</th>
+              <th rowspan="2" style="width: 130px;">分装部（卷张册）</th>
+              <th rowspan="2" style="width: 120px;">本次印数（套）</th>
+              <th rowspan="2" style="width: 120px;">每套定价（元）</th>
+              <th rowspan="2" style="width: 130px;">每套印张（印张）</th>
+              <th rowspan="2" style="width: 130px;">定价总金额（元）</th>
+              <th colspan="2" style="width: 250px;">纸张规格</th>
+              <th rowspan="2" style="width: 160px;">本次总印张（千印张）</th>
+              <th rowspan="2" style="width: 80px;">是否课本</th>
+              <th rowspan="2" style="width: 100px;">是否教辅读物</th>
+              <th rowspan="2" style="width: 100px;">是否少儿读物</th>
+              <th rowspan="2" style="width: 130px;">是否古籍整理图书</th>
+              <th rowspan="2" style="width: 100px;">是否翻译图书</th>
+              <th rowspan="2" style="width: 50px;">开本</th>
+              <th rowspan="2" style="width: 90px;">文种（字）</th>
+              <th rowspan="2" style="width: 50px;">页码</th>
+              <th rowspan="2" style="width: 150px;">著（编、绘）译者</th>
+              <th rowspan="2" style="width: 150px;">备注</th>
+            </tr>
+            <tr>
+              <th>常用规格</th>
+              <th>自定义</th>
+            </tr>
+            </thead>
+            <tbody id="bookTBody">
+            <tr data-noselect="true">
+              <td colspan="30"><p class="empty-tips">没有符合指定条件的数据</p></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="clearfix" id="bookPaging">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

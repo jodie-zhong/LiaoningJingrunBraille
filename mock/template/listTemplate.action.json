@@ -1,0 +1,38 @@
+{
+	"message": "查询列表成功",
+	"data": {
+		"records": [
+			{
+				"templateId": "1",
+				"templateName": "系统盲文编辑室保密协议模板",
+				"downNum": "3",
+				"upName": "顾晓峰",
+				"upTime": "2017-1-15 12:14:52",
+				"changeName": "顾晓峰",
+				"changeTime": "2017-1-15 12:14:52",
+				"remark": "顾盲文一类协议签约使用"
+			}, {
+				"templateId": "2",
+				"templateName": "系统盲文编辑室保密协议模板",
+				"downNum": "3",
+				"upName": "顾晓峰",
+				"upTime": "2017-1-15 12:14:52",
+				"changeName": "顾晓峰",
+				"changeTime": "2017-1-15 12:14:52",
+				"remark": "顾盲文一类协议签约使用"
+			}
+		],
+		"pageindex": {
+			"startindex": 1,
+			"endindex": 2
+		},
+		"pageCount": 2,
+		"pageSize": 20,
+		"pageNow": 1,
+		"rowCount": 37,
+		"startPage": 0,
+		"pagecode": 5,
+		"firstResult": 0
+	},
+	"code": "0"
+}

@@ -1,0 +1,509 @@
+define(function(require, exports, module) {
+	"use strict";
+
+	var util = require('../../../common/util');
+	// var PageBase = require('../../../common/base-page');
+	var tree = require('../../other/base/tree-base');
+	var listTpl = require('./topic-report-list.tpl');
+	var infoTpl = require('./topic-report-info.tpl');
+	require('../../../assets/plugins/jstree/jstree.min');
+	require('../../../assets/plugins/jstree/src/themes/default/style.min.css');
+
+	var Module = tree.extend(new function() {
+		var that;
+
+		// var treeObj;
+		// var yearMonth;
+
+		//当前选中的月份
+		var currentMonth='';
+		//当前选中的年份
+		var currentYear='';
+
+		var currentReportId = '';
+		var currentReportName='';
+		var currentReportState='';
+		var currentPage = '1';
+		var allUnReportInfo=null;
+		// 当前选中的上报详情
+		var currentReportInfo = null;
+		//设置上边check选中的数据
+		var checkData=null;
+		//设置下边check选中的数据
+		var checkBottomData=null;
+
+		/**
+		 * 查询上报列表
+		 */
+		function searchReportList() {
+			//状态重置
+			that.$('#btnReportModify,#btnReportDel,#btnReportSubmit').attr('disabled', 'disabled');
+			that.$('#searchReportName').val('');
+			// that.$('#selectState').val('');
+			checkData={};
+			currentReportId = '';
+			currentReportName='';
+			allUnReportInfo=null;
+			// 清空选题列表
+			searchReportInfo('');
+			var params = {
+				searchReportTopicName:that.$('#searchReportName').val(),
+				searchRopicState:that.$('#selectState').val(),
+				searchYear:currentYear,
+				searchMonth:currentMonth,
+				page: currentPage
+			};
+			util.showLoading();
+			util.sendRequest({
+				data: params,
+				action: 'report/listReport.action',
+				success: function(resp) {
+					util.hideLoading();
+					console.log(resp);
+					if (resp.code === 0) {
+						that.$('#reportListTable').html(util.template(listTpl, {
+							list: resp.data.records
+						}));
+						// 分页数据
+        				that.$('#reportListPaging').html(that.buildPagination(resp.data.pageNow, resp.data.pageCount)); 
+					} else{
+						util.showAlert(resp.message || '查询上报列表出错，请稍后重试！');
+					}
+				},
+				error: function(xhr) {
+					// XHR错误
+					util.hideLoading();
+					console.log(xhr);
+					util.showAlert('查询上报列表出错，请稍后重试！');
+				}
+			});
+		}
+		/**
+		 * 查询选题列表
+		 */
+		function searchReportInfo(id) {
+			that.$('#btnBookAdd,#btnBookRemove').attr('disabled','disabled');
+			//清空选题列表的thead选中事件
+			$('#reportBottomContentTable thead').find('i[data-action="check"]').removeClass('fa-check-square-o').addClass('fa-square-o');
+			if (id) {
+				var params = {
+					reportTopicId: id
+				};
+				// util.showLoading();
+				util.sendRequest({
+					data: params,
+					action: 'report/listBookTopicReport.action',
+					success: function(resp) {
+						util.hideLoading();
+						console.log(resp);
+						if (resp.code === 0) {
+							that.$('#reportContentListTable').html(util.template(infoTpl,{
+								info: resp.data.records
+							}));
+							if(currentReportState==='1'){
+								$('#btnBookAdd').removeAttr('disabled');
+							}else {
+								$('#btnBookAdd').attr('disabled','disabled');
+								$('#btnBookRemove').attr('disabled','disabled');
+							}
+						}
+					}, 
+					error: function(xhr) {
+						// XHR错误
+						util.hideLoading();
+						console.log(xhr);
+						util.showAlert('查询选题列表出错，请稍后重试！');
+					}
+				});
+			}else{
+				that.$('#reportContentListTable').html("");
+			}
+		}
+		/**
+		 * 查询上报详情
+		 */
+		function searchReportDetail(id) {
+			if (id) {
+				currentReportId = id;
+				var params = {
+					reportTopicId: id
+				};
+				// util.showLoading();
+				util.sendRequest({
+					data: params,
+					action: 'report/detailReport.action',
+					success: function(resp) {
+						// util.hideLoading();
+						console.log(resp);
+						if (resp.code === 0) {
+        					currentReportInfo = resp.data;
+        				} else{
+        					util.showAlert(resp.message || '查询上报信息出错，请稍后重试！');
+        				}
+					},
+					error: function(xhr) {
+						// XHR错误
+        				util.hideLoading();
+        				console.log(xhr);
+        				util.showAlert('查询上报信息出错，请稍后重试！');
+					}
+				});
+			}
+		}
+		/**
+		 * 删除上报列表
+		 */
+		function setRemoveReport() {
+			util.showConfirm('确定要将“' + checkData.names + '”删除吗？', function(){
+				var params = {
+					reportTopicIds: checkData.ids
+				};
+				util.showLoading();
+				util.sendRequest({
+					data: params,
+					action: 'report/removeReport.action',
+					success: function(resp) {
+						util.hideLoading();
+						console.log(resp);
+						if (resp.code === 0) {
+							util.showAlert(resp.message || '上报删除成功，请稍后重试！',function () {
+								currentPage = 1;
+								searchReportList();
+							});
+							// checkData={};
+							// currentReportId = '';
+							// currentReportName='';
+							// allUnReportInfo=null;
+
+						} else{
+							util.showAlert(resp.message || '上报删除出错，请稍后重试！');
+						}
+					},
+					error: function(xhr) {
+						// XHR错误
+						util.hideLoading();
+						console.log(xhr);
+						util.showAlert('上报删除出错，请稍后重试！');
+					}
+				});
+			});
+		}
+
+		/**
+		 * 上报提交
+		 * */
+		function setReportSubmit() {
+			util.showConfirm('确定要将“' + checkData.names + '”提交吗？', function() {
+				var params = {
+					reportTopicIds: checkData.ids
+				};
+				util.showLoading();
+				util.sendRequest({
+					data: params,
+					action: 'report/submitReport.action',
+					success: function(resp) {
+						util.hideLoading();
+						console.log(resp);
+						if (resp.code === 0) {
+							util.showAlert(resp.message || '上报提交成功，请稍后重试！',function () {
+								currentPage = 1;
+								searchReportList();
+							});
+						} else{
+							util.showAlert(resp.message || '上报提交出错，请稍后重试！');
+						}
+					},
+					error: function(xhr) {
+						// XHR错误
+						util.hideLoading();
+						console.log(xhr);
+						util.showAlert('上报提交出错，请稍后重试！');
+					}
+				});
+			});
+		}
+		/**
+		 * 获取无分页添加选题接口
+		 */
+		function searchTopicSelection(){
+			util.showLoading();
+			util.sendRequest({
+				data: {},
+				action: 'report/searchBookTopicListNoPage.action',
+				success: function(resp) {
+					util.hideLoading();
+					console.log(resp);
+					if (resp.code === 0) {
+						allUnReportInfo=resp;
+						allUnReportInfo.reportTopicId=currentReportId;
+						allUnReportInfo.reportTopicName=currentReportName;
+						that.openPage('topic/topic-report/select-topic', allUnReportInfo);
+					} else{
+						util.showAlert(resp.message || '上报提交出错，请稍后重试！');
+					}
+				},
+				error: function(xhr) {
+					// XHR错误
+					util.hideLoading();
+					console.log(xhr);
+					util.showAlert('上报提交出错，请稍后重试！');
+				}
+			});
+		}
+		/**
+		 * 删除选题列表事件（底下删除事件）
+		 */
+		function searchTopicDel() {
+			util.showLoading();
+			var ids=[];
+			var params={};
+			var number=0;
+			$('#reportContentListTable').find('.fa-check-square-o').each(function () {
+				var $el=$(this);
+				var $parent=$el.parent().parent();
+				ids.push($parent.attr("data-id"));
+			});
+			number=ids.length;
+			params={
+				reportTopicId:currentReportId,
+			    reportTopicName:currentReportName,
+			 	bookTopicIds:ids.join(","),
+				operationBookTopicNum:number
+			};
+			util.sendRequest({
+				data: params,
+				action: 'report/removeBookReport.action',
+				success: function(resp) {
+					util.hideLoading();
+					console.log(resp);
+					if (resp.code === 0) {
+						util.showAlert(resp.message || '删除成功！',function () {
+							currentPage = 1;
+							searchReportList();
+							searchReportInfo('');
+						});
+					} else{
+						util.showAlert(resp.message || '删除出错，请稍后重试！');
+					}
+				},
+				error: function(xhr) {
+					// XHR错误
+					util.hideLoading();
+					console.log(xhr);
+					util.showAlert('删除出错，请稍后重试！');
+				}
+			});
+		}
+		/**
+         * 跳转页面
+         */
+        function jumpPage() {
+        	var $el = $(this);
+        	var page = $el.attr('data-page');
+        	if(page) {
+        		// 修改页面后重新刷新页面数据
+        		currentPage = page;
+				// checkData={};
+				// currentReportId = '';
+				// currentReportName='';
+				// allUnReportInfo=null;
+        		searchReportList();
+        	}
+        }
+        function selectFn() {
+        	currentReportState=$('#reportListTable').find('tr.info').attr('data-state');
+			currentReportId=$('#reportListTable').find('tr.info').attr('data-id');
+			currentReportName=$('#reportListTable').find('tr.info').attr('data-name');
+			searchReportInfo(currentReportId);
+		}
+		//上边选中事件
+		function checkFn() {
+			var names = [], ids = [], state = [], number = [];
+			$("#reportListTable").find(".fa-check-square-o").each(function () {
+				var $el = $(this);
+				var $parent = $el.parent().parent();
+				names.push($parent.attr("data-name"));
+				ids.push($parent.attr("data-id"));
+				state.push($parent.attr("data-state"));
+				number.push($parent.attr("data-number"));
+			});
+			//按钮状态设置
+			if((state.indexOf("1")!==-1 && state.indexOf("2")===-1)){
+				// console.log(state.indexOf("1")!=="-1" && state.indexOf("2")!=="-1");
+				// console.log(state.indexOf("1")!==-1);
+				// console.log(state.indexOf("2")!==-1);
+				// console.log(state);
+				that.$('#btnReportModify,#btnReportDel').removeAttr('disabled');
+				if(ids.length!==1){
+					that.$('#btnReportModify').attr('disabled','disabled');
+				}
+				if(number.indexOf("0")!==-1){
+					that.$('#btnReportSubmit').attr('disabled', 'disabled');
+				}else{
+					that.$('#btnReportSubmit').removeAttr('disabled');
+				}
+			}else{
+				that.$('#btnReportModify,#btnReportDel,#btnReportSubmit').attr('disabled','disabled');
+			}
+			if(ids.length===1){
+				searchReportDetail(ids[0]);
+			}
+			checkData={
+				names:names.join(","),
+				ids:ids.join(",")
+			};
+		}
+		//下边选中事件
+		function checkBottomFn() {
+			var names=[],ids=[];
+			$("#reportContentListTable").find(".fa-check-square-o").each(function () {
+				var $el=$(this);
+				var $parent=$el.parent().parent();
+				ids.push($parent.attr("data-id"));
+			});
+			//选题列表没有数据，则不能提交
+			if(ids.length>0 && currentReportState==='1'){
+				$('#btnBookRemove').removeAttr('disabled');
+			}else {
+				$('#btnBookRemove').attr('disabled', 'disabled');
+			}
+			checkBottomData={
+				names:names.join(","),
+				ids:ids.join(",")
+			};
+		}
+		//上边查询条件
+		function searchTopReportList() {
+			//需要将已有状态重置
+			that.$('#btnReportModify,#btnReportDel,#btnReportSubmit').attr('disabled', 'disabled');
+			searchReportInfo('');
+			var params = {
+				searchReportTopicName:that.$('#searchReportName').val(),
+				searchRopicState:that.$('#selectState').val(),
+				searchYear:currentYear,
+				searchMonth:currentMonth
+			};
+			console.log(params);
+			util.showLoading();
+			util.sendRequest({
+				data: params,
+				action: 'report/listReport.action',
+				success: function(resp) {
+					util.hideLoading();
+					console.log(resp);
+					if (resp.code === 0) {
+						that.$('#reportListTable').html(util.template(listTpl, {
+							list: resp.data.records
+						}));
+						// 分页数据
+						that.$('#reportListPaging').html(that.buildPagination(resp.data.pageNow, resp.data.pageCount));
+					} else{
+						util.showAlert(resp.message || '查询上报列表出错，请稍后重试！');
+					}
+				},
+				error: function(xhr) {
+					// XHR错误
+					util.hideLoading();
+					console.log(xhr);
+					util.showAlert('查询上报列表出错，请稍后重试！');
+				}
+			});
+		}
+		/**
+		 * 初始化页面事件
+		 */
+		function initPageEvent() {
+			//上报选题查询查询
+			that.$container.on('click','#btnSearchWork',searchTopReportList);
+			//上报列表选中事件
+			that.makeSelectableTable("#reportContentTable",selectFn,checkFn);
+			//选题列表选中事件
+			that.makeSelectableTable("#reportBottomContentTable",null,checkBottomFn);
+			// 新增
+			that.$container.on('click','#btnReportAdd', function() {
+				that.openPage('topic/topic-report/topic-report-edit',{});
+			});
+			// 修改（选超过一个修改禁掉）
+			that.$container.on('click','#btnReportModify',function() {
+				that.openPage('topic/topic-report/topic-report-edit',currentReportInfo);
+			});
+			// 删除
+			that.$container.on('click','#btnReportDel',setRemoveReport);
+			// 提交
+			that.$container.on('click','#btnReportSubmit', setReportSubmit);
+			// 分页
+			that.$container.on('click', '#reportListPaging a', jumpPage);
+			// 添加选题（底下添加按钮）
+			that.$container.on('click','#btnBookAdd', searchTopicSelection);
+
+			//  删除选题（底下删除按钮）
+			 that.$container.on('click','#btnBookRemove', searchTopicDel);
+		}
+		//树选择后回调函数
+		function selectTree(a,b) {
+			currentYear=a;
+			currentMonth=b;
+			searchReportList();
+		}
+		
+		/**
+		 * 初始化页面数据
+		 */
+		function initPageData() {
+			// // 初始化年月树
+			that.initMonthTree("#monthTree","上报选题",null,selectTree);
+			// 右上上报列表
+			searchReportList();
+		}
+
+		/**
+		 * 初始化时被调用
+		 */
+		this.onInit = function($el, tpl, data, indexRef) {
+			this._super($el, tpl, data, indexRef);
+			that = this;
+			that.initTemplate(tpl, {});
+
+			// 初始化页面事件
+			initPageEvent();
+
+			// 初始化页面数据
+			initPageData();
+
+			// TODO: 测试
+			// that.openPage('public/workflow/workflow-dialog', {});
+			// that.openPage('public/file/file-upload', {});
+		};
+		/**
+		 * 页面返回事件
+		 * @param data
+		 */
+		this.onBack = function(data) {
+			this._super(data);
+			console.log(data);
+			if(data && data.refresh === true) {
+				//数据重置
+				currentPage = 1;
+				searchReportList();
+			}
+
+		};
+
+		/**
+		 * 窗口缩放事件
+		 */
+		this.onResize = function() {
+			this._super();
+		};
+
+		/**
+		 * 页面销毁
+		 */
+		this.onDestroy = function() {
+			this._super();
+		};
+
+	}());
+
+	module.exports = Module;
+});

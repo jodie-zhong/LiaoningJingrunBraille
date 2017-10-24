@@ -1,0 +1,88 @@
+<!--会议提交-->
+<div class="modal-dialog dialog-container">
+  <div class="modal-content">
+    <div class="panel">
+      <div class="panel-header border-bottom">
+        <h3><i class="fa fa-user-o"></i>会议提交</h3>
+        <div class="control-btn">
+          <a class="panel-close btn-close"><i class="fa fa-close"></i></a>
+        </div>
+      </div>
+      <div class="panel-content">
+        <div class="form-horizontal" id="formMeetingCreateEdit">
+          <div class="row">
+            <div class="table-10-static">
+              <table class="table table-striped">
+                <thead>
+                <tr>
+                  <th>参会选题名称</th>
+                  <th>讨论结果</th>
+                  <th>选题类型</th>
+                  <th>下一流程</th>
+                  <th>下一流程任务人</th>
+                </tr>
+                </thead>
+                <tbody id="conSubListTable">
+                <% for(var i = 0; i < list.length; i++) { %>
+                <% var topic = list[i]; %>
+                <% for(var j = 0; j < topic.meetingBookEntities.length; j++) { %>
+                <% var topicType = topic.meetingBookEntities[j] %>
+                <tr class="book-topic" data-id="<%- topic.bookTopicId %>" data-name="<%- topic.bookTopicName %>">
+                  <% if(j === 0) { %>
+                  <td rowspan="<%- topic.meetingBookEntities.length %>"><%- topic.bookTopicName %></td>
+                  <td rowspan="<%- topic.meetingBookEntities.length %>">通过</td>
+                  <% } %>
+                  <td data-bookId="<%- topicType.bookId %>"><%- topicType.bookTypeName %></td>
+                  <% if(topicType.userTaskEntities) { %>
+                  <td>
+                    <select class="form-control" name="deptIds" >
+                      <% for(var z= 0; z < topicType.userTaskEntities.length; z++) { %>
+                      <option value="<%- topicType.userTaskEntities[z].deptIds %>"><%-
+                        topicType.userTaskEntities[z].flowName %>
+                      </option>
+                      <% } %>
+                    </select>
+                  </td>
+                  <td>
+                    <% for(var w= 0; w < topicType.userTaskEntities.length; w++) { %>
+                    <div data-flow="<%- topicType.userTaskEntities[w].deptIds %>" data-area="nextFlow"
+                         style="display: none;">
+                      <% if(topicType.userTaskEntities[w].roleIds) { %>
+                      <div class="input-group">
+                        <input name="roleIds" type="text" class="form-control" name="taskUsers"
+
+                               data-value="<%- topicType.userTaskEntities[w].roleIds %>" placeholder="任务人"
+                               data-roleIds="<%- topicType.userTaskEntities[w].roleIds %>"
+                               readonly
+                               data-flowId="<%- topicType.userTaskEntities[w].flowId %>"
+                               data-flowName="<%- topicType.userTaskEntities[w].flowName %>"
+                               data-data="{searchRoleId: '', searchDepartmentId: ''}" data-fv-notempty="true"
+                               data-fv-notempty-message="请选择下一任务人">
+                        <span class="input-group-btn">
+                          <button class="btn btn-default" type="button" data-open="public/user/select-users" data-data="{}"><i
+                                  class="fa fa-user-o"></i>
+                          </button>
+                        </span>
+                      </div>
+
+                      <% } %>
+                    </div>
+                    <% } %>
+                  </td>
+
+                  <% } %>
+                </tr>
+                <% } %>
+                <% } %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="dialog-options">
+            <button class="btn btn-primary" id="btnConRegSubmit">提交</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

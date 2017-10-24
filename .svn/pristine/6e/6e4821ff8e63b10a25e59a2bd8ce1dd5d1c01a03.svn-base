@@ -1,0 +1,251 @@
+define(function(require, exports, module) {
+	"use strict";
+
+	var util = require('../../../common/util');
+	var PageBase = require('../../../common/base-dialog');
+	var listTpl = require('./select-departments-list.tpl');
+
+	var Module = PageBase.extend(new function() {
+		var that;
+		var currentPage = '1';
+		var ids = [],names = [];
+
+		/**
+		 * 显示部门列表
+		 */
+		function searchDepartList() {
+			var params = {
+				page: currentPage
+			};
+			util.showLoading('');
+			util.sendRequest({
+				type: 'POST',
+				data: params,
+				action: 'department/listDepartment.action',
+				success: function(resp) {
+					util.hideLoading();
+					if(resp.code === 0) {
+						that.$('#selectDepartmentsTable').html(util.template(listTpl, {
+							list: resp.data.records,
+							ids: ids
+						}));
+						// 判断全选状态
+						if(that.$('tbody').find('i[data-action="check"]:not(.fa-check-square-o)').length === 0) {
+							that.$('table').find('thead i[data-action="check"]').removeClass('fa-square-o').addClass('fa-check-square-o');
+						} else {
+							that.$('table').find('thead i[data-action="check"]').removeClass('fa-check-square-o').addClass('fa-square-o');
+						}
+						// 分页数据
+						that.$('#deptManagePaging').html(that.buildPagination(resp.data.pageNow, resp.data.pageCount));
+						// 查看是否为全选
+						searchCheck();
+					} else {
+						util.showAlert(resp.message || '查询部门列表出错，请稍后重试！');
+					}
+				},
+				error: function(xhr) {
+					// XHR错误
+					util.hideLoading();
+					console.log(xhr);
+					util.showAlert('查询部门列表出错，请稍后重试！');
+				}
+			});
+		}
+
+		/**
+		 * 查看是否为全选
+		 * */
+		function searchCheck() {
+			var trL;
+			trL = that.$('#selectDepartmentsTable').find('i[data-action="check"]:not(.fa-check-square-o)').length;
+			if(trL === 0) {
+				that.$('th[data-type="check"]').find('i[data-action="check"]').removeClass('fa-square-o').addClass('fa-check-square-o');
+			}
+		}
+
+		/**
+		 * 跳转页面
+		 */
+		function jumpPage() {
+			var $el = $(this);
+			var page = $el.attr('data-page');
+			if(page) {
+				// 修改页面后重新刷新页面数据
+				currentPage = page;
+				searchDepartList();
+			}
+		}
+
+		/**
+		 * 从勾选列表中删除部门
+		 */
+		function delDepartsCheck($ids) {
+			var delid = [],
+				delname = [];
+			delid.push($ids.attr('data-id'));
+			delname.push($ids.attr('data-name'));
+			ids = ids.filter(function(e) {return delid.indexOf(e) < 0;});
+			names = names.filter(function(e) {return delname.indexOf(e) < 0;});
+			console.log(ids);
+		}
+
+		/**
+		 * 添加部门id到勾选列表中
+		 */
+		function addDepartsCheck($ids) {
+			ids.push($ids.attr('data-id'));
+			names.push($ids.attr('data-name'));
+			console.log(ids);
+		}
+
+		/**
+		 * 全部添加
+		 */
+		function allAddCheck() {
+			var $row;
+			that.$('#selectDepartmentsTable tr').each(function() {
+				$row = $(this);
+				if($row.find('i[data-action="check"]').hasClass('fa-check-square-o')) {
+					ids.push($row.attr('data-id'));
+					names.push($row.attr('data-name'));
+				}
+			});
+			console.log(ids);
+		}
+
+		/**
+		 * 全部删除
+		 */
+		function allDelCheck() {
+			var $row;
+			var delid = [],
+				delname = [];
+			that.$('#selectDepartmentsTable tr').each(function() {
+				$row = $(this);
+				if($row.find('i[data-action="check"]').hasClass('fa-square-o')) {
+					delid.push($row.attr('data-id'));
+					delname.push($row.attr('data-name'));
+				}
+			});
+			ids = ids.filter(function(e) {
+				return delid.indexOf(e) < 0;
+			});
+			names = names.filter(function(e) {
+				return delname.indexOf(e) < 0;
+			});
+			console.log(delid);
+			console.log(ids);
+		}
+
+		/**
+		 * 确定选择部门
+		 */
+		function selectDepartsCheck() {
+			// 返回给前一个页面
+			var data = {
+				id: ids.join(','),
+				name: names.join(',')
+			};
+			that.close(data);
+		}
+
+		/**
+		 * 初始化页面事件
+		 */
+		function initPageEvent() {
+			// 分页
+			that.$container.on('click', '#deptManagePaging a', jumpPage);
+			// 确定部门
+			that.$container.on('click', '#btnDeptsSelect', selectDepartsCheck);
+			// 列头全选按钮
+			that.$container.on('click', '#selectDepartsTableContainer thead i[data-action="check"]', function() {
+				var $el = $(this);
+				if($el.hasClass('fa-check-square-o')) {
+					// 取消全选
+					$el.removeClass('fa-check-square-o').addClass('fa-square-o');
+					$el.parents('table').find('tbody tr i[data-action="check"]').removeClass('fa-check-square-o').addClass('fa-square-o');
+					allDelCheck();
+				} else {
+					// 全选
+					$el.removeClass('fa-square-o').addClass('fa-check-square-o');
+					$el.parents('table').find('tbody tr i[data-action="check"]').removeClass('fa-square-o').addClass('fa-check-square-o');
+					allAddCheck();
+				}
+			});
+
+			// 勾选行
+			that.$container.on('click', '#selectDepartsTableContainer tbody tr', function() {
+				var $el = $(this);
+				// 设置选择状态
+				if($el.find('i[data-action="check"]').hasClass('fa-check-square-o')) {
+					$el.find('i[data-action="check"]').removeClass('fa-check-square-o').addClass('fa-square-o');
+					// 从勾选列表中删除部门id
+					delDepartsCheck($(this));
+				} else {
+					$el.find('i[data-action="check"]').removeClass('fa-square-o').addClass('fa-check-square-o');
+					// 添加部门id到勾选列表中
+					addDepartsCheck($(this));
+				}
+
+				// 判断全选状态
+				if($el.parents('tbody').find('i[data-action="check"]:not(.fa-check-square-o)').length === 0) {
+					$el.parents('table').find('thead i[data-action="check"]').removeClass('fa-square-o').addClass('fa-check-square-o');
+				} else {
+					$el.parents('table').find('thead i[data-action="check"]').removeClass('fa-check-square-o').addClass('fa-square-o');
+				}
+			});
+		}
+
+		/**
+		 * 初始化页面数据
+		 */
+		function initPageData() {
+			searchDepartList();
+		}
+
+		/**
+		 * 初始化时被调用
+		 */
+		this.onInit = function($el, tpl, data, indexRef) {
+			this._super($el, tpl, data, indexRef);
+			that = this;
+			that.initTemplate(tpl, {});
+			currentPage = '1';
+
+			// 获取已经选择的ID
+			ids = data.id ? data.id.split(',') : [];
+			names = data.name ? data.name.split(',') : [];
+
+			// 初始化页面事件
+			initPageEvent();
+
+			// 初始化页面数据
+			initPageData();
+		};
+
+		/**
+		 * 页面返回事件
+		 * @param data
+		 */
+		this.onBack = function(data) {
+			this._super(data);
+
+		};
+
+		/**
+		 * 窗口缩放事件
+		 */
+		this.onResize = function() {
+			this._super();
+		};
+
+		/**
+		 * 页面销毁
+		 */
+		this.onDestroy = function() {
+			this._super();
+		};
+
+	}());
+	module.exports = Module;
+})

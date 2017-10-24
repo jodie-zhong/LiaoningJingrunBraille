@@ -1,0 +1,135 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+    var util = require('../../../../../common/util.js');
+
+    /**
+     * Workflow Item
+     */
+    module.exports = ItemBase.extend({
+        // 保存/提交接口
+        saveAction: 'CNQuality/saveOrSubmitCNQuality.action',
+        // 批量保存/提交接口
+        batchSaveAction: '',
+        // 查询接口
+        detailAction: 'CNQuality/searchCNQualityDetail.action',
+
+        /**
+         * 生成参数
+         */
+        getFormData: function () {
+            var params = this._super();
+            // 勘误表数据
+            this.$("tbody[data-name='trueOrFalseTb']").children().each(function () {
+                params.rightWrongList.push({
+                    page: $(this).find("input[name='pageNum']").val(),
+                    line: $(this).find("input[name='rowNum']").val(),
+                    wrong: $(this).find("input[name='wrong']").val(),
+                    right: $(this).find("input[name='right']").val(),
+                    remark: $(this).find("input[name='remark']").val()
+                });
+            });
+            return params;
+        },
+
+        /**
+         * 添加行
+         */
+        addTableRow: function () {
+            var tb = this.$("#dataTBody");
+            // 添加行
+            tb.append(
+                "<tr>" +
+                "   <td data-name='orderNo'>" + (tb.children().length + 1) + "</td>" +
+                "   <td>" +
+                "       <div class='form-group'>" +
+                "           <div class='col-xs-12'>" +
+                "               <input class='form-control page' name='pageNum' placeholder='页码'  maxlength='4' pattern='^[1-9][0-9]*$' data-fv-regexp-message='请输入大于0的整数' data-fv-notempty='true' data-fv-notempty-message='请填写页码'/>" +
+                "           </div>" +
+                "       </div>" +
+                "   </td>" +
+                "   <td>" +
+                "       <div class='form-group'>" +
+                "           <div class='col-xs-12'>" +
+                "               <input class='form-control row' name='rowNum' placeholder='行'  maxlength='3' pattern='^[1-9][0-9]*$' data-fv-regexp-message='请输入大于0的整数' data-fv-notempty='true' data-fv-notempty-message='请填写行'/>" +
+                "           </div>" +
+                "       </div>" +
+                "   </td>" +
+                "   <td>" +
+                "       <div class='form-group'>" +
+                "           <div class='col-xs-12'>" +
+                "               <input class='form-control info' name='wrong' placeholder='误' maxlength='128' data-fv-notempty='true' data-fv-notempty-message='请填写错误内容'/>" +
+                "           </div>" +
+                "       </div>" +
+                "   </td>" +
+                "   <td>" +
+                "       <div class='form-group'>" +
+                "           <div class='col-xs-12'>" +
+                "               <input class='form-control info' name='right' placeholder='正' maxlength='128' data-fv-notempty='true' data-fv-notempty-message='请填写正确内容'/>" +
+                "           </div>" +
+                "       </div>" +
+                "   </td>" +
+                "   <td>" +
+                "       <div class='form-group'>" +
+                "           <div class='col-xs-12'>" +
+                "               <input class='form-control info' name='remark' placeholder='备注' maxlength='128'/>" +
+                "           </div>" +
+                "       </div>" +
+                "   </td>" +
+                "   <td><button class='removeTableRow btn btn-xs btn-danger'><i class='fa fa-minus box'></i></button></td>" +
+                "</tr>"
+            );
+            this.addValidateField(tb.find("input[name='page']:last-child"));
+            this.addValidateField(tb.find("input[name='row']:last-child"));
+            this.addValidateField(tb.find("input[name='info']:last-child"));
+        },
+
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+            var that = this;
+            // 添加行
+            this.$container.on('click', '.addTableRow', this.addTableRow.bind(this));
+            // 删除行
+            this.$container.on('click', '.removeTableRow', function () {
+                $(this).parents('tr').remove();
+                // 重新显示序号
+                var orderNo = 1;
+                that.$("#dataTBody").find("td[data-name='orderNo']").each(function () {
+                    $(this).html(orderNo);
+                    orderNo += 1;
+                });
+            });
+            // 下载发文稿
+            this.$container.on('click', "button[name='downloadFile']", function () {
+                window.open(util.getServerBase() + 'common/downloadFile.action?path=' + encodeURIComponent($(this).attr('data-download-address')), '_blank');
+            });
+        },
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function (container, tpl) {
+            this._super(container, tpl);
+        },
+
+        /**
+         * 渲染页面
+         */
+        render: function () {
+            this._super();
+            this.initPageEvent();
+            this.initPageData();
+        }
+    });
+});

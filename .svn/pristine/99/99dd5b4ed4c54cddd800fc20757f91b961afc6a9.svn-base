@@ -1,0 +1,119 @@
+<!--劳务录入-->
+<div class="modal-dialog dialog-container" style="width: 600px;">
+  <div class="modal-content">
+    <div class="panel">
+      <div class="panel-header border-bottom">
+        <h3><i class="fa fa-user-o"></i>录入人员</h3>
+        <div class="control-btn">
+          <a class="panel-close btn-close"><i class="fa fa-close"></i></a>
+        </div>
+      </div>
+      <div class="panel-content">
+        <div class="form-horizontal" id="formJob">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="form-group">
+                <label class="col-xs-2 control-label">姓名<span class="must">*</span></label>
+                <div class="col-xs-5">
+                  <div class="input-group with-clear">
+                    <input type="text" class="form-control" name=""
+                           value=""
+                           data-value="" readonly data-fv-notempty="true"
+                           data-fv-notempty-message="请填写姓名"/>
+                    <span class="input-group-btn">
+                      <button class="btn btn-clear" type="button" data-action="clear"><i class="fa fa-remove box"></i></button>
+                      <button class="btn btn-default" type="button" data-open="public/user/select-users" data-data="{}"><i
+                              class="fa fa-user-o"></i></button>
+                  </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-12">
+              <div class="form-group">
+                <label class="col-xs-2 control-label">出勤天数<span class="must">*</span></label>
+                <div class="col-xs-5">
+                  <input type="text" name="jobInsideDays"
+                         class="form-control" placeholder="出勤天数(最多64个字)"
+                         data-fv-notempty="true" data-fv-notempty-message="请填写出勤天数" maxlength="64"/>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-12">
+              <div class="form-group">
+                <label class="col-xs-2 control-label">全勤奖<span class="must">*</span></label>
+                <div class="col-xs-5">
+                  <input type="text" name="jobInsideReward"
+                         class="form-control" placeholder="全勤奖(最多64个字)"
+                         data-fv-notempty="true" data-fv-notempty-message="请填写全勤奖"/>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-12">
+              <div class="form-group">
+                <label class="col-xs-2 control-label">加班费<span class="must">*</span></label>
+                <div class="col-xs-5">
+                  <input type="text" name="overtimePay" class="form-control"
+                         placeholder="加班费(最多64个字)" data-fv-notempty="true" data-fv-notempty-message="请填写加班费"
+                         maxlength="64"/>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-12">
+              <div class="form-group">
+                <label class="col-xs-2 control-label">劳务费<span class="must">*</span></label>
+                <div class="col-xs-5">
+                  <input type="text" name="serviceFee"
+                         class="form-control" placeholder="劳务费(最多64个字)"
+                         data-fv-notempty="true" data-fv-notempty-message="请填写劳务费" maxlength="64"/>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-12">
+              <div class="form-group">
+                <label class="col-xs-2 control-label">效益津贴<span class="must">*</span></label>
+                <div class="col-xs-5">
+                  <input type="text" name="benefitAllowance"
+                         class="form-control" placeholder="效益津贴(最多64个字)"
+                         data-fv-notempty="true" data-fv-notempty-message="请填写效益津贴"/>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-12">
+              <div class="form-group">
+                <label class="col-xs-2 control-label">伙食补贴<span class="must">*</span></label>
+                <div class="col-xs-5">
+                  <input type="text" name="foodAllowance" class="form-control"
+                         placeholder="伙食补贴(最多64个字)" data-fv-notempty="true" data-fv-notempty-message="请填写伙食补贴"
+                         maxlength="64"/>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-12">
+              <div class="form-group">
+                <label class="col-xs-2 control-label">郊区补贴<span class="must">*</span></label>
+                <div class="col-xs-5">
+                  <input type="text" name="suburbAllowance"
+                         class="form-control" placeholder="郊区补贴(最多64个字)"
+                         data-fv-notempty="true" data-fv-notempty-message="请填写郊区补贴" maxlength="64"/>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-12">
+              <div class="form-group">
+                <label class="col-xs-2 control-label">合计</label>
+                <div class="col-xs-5">
+                  <input type="text" name="total"
+                         class="form-control"/>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="dialog-options">
+            <button class="btn btn-primary" id="btnSave">保存</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

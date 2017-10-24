@@ -1,0 +1,528 @@
+<% if(isEdit) { %>
+<div class="form-horizontal">
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">选题名称<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <div class="input-group">
+            <input type="text" class="form-control" name="bookTopicName" value="<%- info.bookTopicName %>"
+                   maxlength="100" placeholder="选题名称" data-fv-notempty="true" data-fv-notempty-message="请填写选题名称"/>
+            <span class="input-group-btn">
+              <button style="width: 45px;" class="btn btn-default" type="button" id="btnTopicSimilar">查重</button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">丛书名称</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.bookSeriesName %>" name="bookSeriesName"
+                 placeholder="丛书名称" maxlength="128"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">选题类型<span class="must">*</span></label>
+        <div class="col-xs-10">
+          <label class="checkbox-inline">
+            <% if(info.bookTopicType && info.bookTopicType.indexOf('1') >= 0) { %>
+            <input type="checkbox" name="bookTopicType" value="1" data-fv-choice="true" data-fv-choice-min="1"
+                   data-fv-choice-max="3" data-fv-choice-message="请选择1~3个类型" checked/>盲文读物
+            <% } else { %>
+            <input type="checkbox" name="bookTopicType" value="1"/>盲文读物
+            <% } %>
+          </label>
+          <label class="checkbox-inline">
+            <% if(info.bookTopicType && info.bookTopicType.indexOf('2') >= 0) { %>
+            <input type="checkbox" name="bookTopicType" value="2" checked/>大字本读物
+            <% } else { %>
+            <input type="checkbox" name="bookTopicType" value="2"/>大字本读物
+            <% } %>
+          </label>
+          <label class="checkbox-inline">
+            <% if(info.bookTopicType && info.bookTopicType.indexOf('3') >= 0) { %>
+            <input type="checkbox" name="bookTopicType" value="3" checked/>普通读物
+            <% } else { %>
+            <input type="checkbox" name="bookTopicType" value="3" data-fv-choice="true" data-fv-choice-min="1"
+                   data-fv-choice-max="3" data-fv-choice-message="请选择1~3个类型"/>普通读物
+            <% } %>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group ">
+        <label class="col-xs-2 control-label">推荐类型<span class="must">*</span></label>
+        <div class="col-xs-10">
+          <label class="radio-inline">
+            <% if(!info.bookTopicRecommendType || info.bookTopicRecommendType === '1') { %>
+            <input type="radio" name="bookTopicRecommendType" value="1" data-fv-notempty="true"
+                   data-fv-notempty-message="请选择推荐类型" checked/>非社推荐选题
+            <% } else { %>
+            <input type="radio" name="bookTopicRecommendType" value="1" data-fv-notempty="true"
+                   data-fv-notempty-message="请选择推荐类型"/>非社推荐选题
+            <% } %>
+          </label>
+          <label class="radio-inline">
+            <% if(info.bookTopicRecommendType && info.bookTopicRecommendType === '2') { %>
+            <input type="radio" name="bookTopicRecommendType" value="2" data-fv-notempty="true"
+                   data-fv-notempty-message="请选择推荐类型" checked/>社推荐选题
+            <% } else { %>
+            <input type="radio" name="bookTopicRecommendType" value="2" data-fv-notempty="true"
+                   data-fv-notempty-message="请选择推荐类型"/>社推荐选题
+            <% } %>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group ">
+        <label class="col-xs-2 control-label">图书类别</label>
+        <div class="col-xs-3">
+          <select name="bookTopicOneKind" class="form-control" id="bookTopicOne" data-fv-notempty="true">
+          </select>
+        </div>
+        <div class="col-xs-3">
+          <select name="bookTopicTwoKind" class="form-control" id="bookTopicTwo" data-fv-notempty="true">
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">原作者</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.bookDetailAuthor %>" name="bookDetailAuthor"
+                 placeholder="原作者" maxlength="32"/>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">著作方式</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.bookDetailWorkWay %>" name="bookDetailWorkWay"
+                 placeholder="著作方式" maxlength="64"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">学历</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.bookDetailAuthorEducation %>"
+                 name="bookDetailAuthorEducation" placeholder="学历" maxlength="32"/>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group ">
+        <label class="col-xs-4 control-label">预计字数</label>
+        <div class="col-xs-8">
+          <input type="number" class="form-control" value="<%- info.bookDetailWords %>" name="bookDetailWords"
+                 placeholder="预计字数" max="999999999"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">职称</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.bookDetailAuthorTitles %>"
+                 name="bookDetailAuthorTitles" placeholder="职称" maxlength="32"/>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group ">
+        <label class="col-xs-4 control-label">交稿时间</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control date-time" maxlength="20" value="<%- info.bookDetailSubmitDatetime %>"
+                 name="bookDetailSubmitDatetime" placeholder="交稿时间"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group ">
+        <label class="col-xs-2 control-label">专长</label>
+        <div class="col-xs-10">
+          <input class="form-control" value="<%- info.bookDetailAuthorSpeciality %>" name="bookDetailAuthorSpeciality"
+                 placeholder="专长" maxlength="32">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">有何著作及科研成果</label>
+        <div class="col-xs-10">
+          <textarea class="form-control" name="bookDetailAuthorResult" placeholder="有何著作及科研成果（最大256字）" maxlength="256"><%- info.bookDetailAuthorResult %></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">工作单位及联系方式</label>
+        <div class="col-xs-10">
+        <textarea class="form-control"
+                  name="bookDetailAuthorContactWay" placeholder="工作单位及联系方式（最大128字）" maxlength="128"><%- info.bookDetailAuthorContactWay %></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">原书名称<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.bookDetailName %>" name="bookDetailName"
+                 placeholder="原书名称" data-fv-notempty="true" data-fv-notempty-message="请填写原书名称" maxlength="128"/>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">原书版次<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="number" class="form-control" value="<%- info.bookDetailEdition %>" name="bookDetailEdition"
+                 placeholder="原书版次" data-fv-notempty="true" data-fv-notempty-message="请填写原书版次" max="99999"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">原出版社<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.bookDetailPublishingHouse %>"
+                 name="bookDetailPublishingHouse" placeholder="原出版社" data-fv-notempty="true"
+                 data-fv-notempty-message="请填写原出版社" maxlength="128"/>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">原书出版时间<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control date-time" value="<%- info.bookDetailPublicationDate %>"
+                 name="bookDetailPublicationDate" placeholder="原书出版时间" data-fv-notempty="true"
+                 data-fv-notempty-message="请填写原出版时间"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">内容简述及特色</label>
+        <div class="col-xs-10">
+          <textarea class="form-control" name="bookDetailSketched" placeholder="内容简述及特色（最大1024字）" maxlength="1024"><%- info.bookDetailSketched %></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">市场调研情况</label>
+        <div class="col-xs-10">
+          <textarea class="form-control" name="bookDetailMarketMsg" placeholder="市场调研情况（最大1024字）" maxlength="1024"><%- info.bookDetailMarketMsg %></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  <input type="hidden" name="handleStateName" value="无"/>
+  <% if(info.userTaskEntities) { %>
+  <% for(var i = 0; i < info.userTaskEntities.length; i++) { %>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">下一流程</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.userTaskEntities[i].flowName %></p>
+          <input type="hidden" name="flowId" value="<%- info.userTaskEntities[i].flowId %>">
+          <input type="hidden" name="flowName" value="<%- info.userTaskEntities[i].flowName %>">
+          <input type="hidden" name="nextCategory" value="<%- info.userTaskEntities[i].category %>">
+          <input type="hidden" name="deptIds" value="<%- info.userTaskEntities[i].deptIds %>">
+          <input type="hidden" name="roleIds" value="<%- info.userTaskEntities[i].roleIds %>">
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <% if(info.userTaskEntities[i].roleIds) { %>
+      <div class="form-group">
+        <label class="col-xs-4 control-label">任务人<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <div class="input-group with-clear">
+            <input type="text" class="form-control" name="taskUsers"
+                   value="<%- info.userTaskEntities[i].nextFlowTaskUserNames %>"
+                   data-value="<%- info.userTaskEntities[i].nextFlowTaskUserIds %>" placeholder="任务人" readonly
+                   data-fv-notempty="true" data-fv-notempty-message="请选择下一任务人">
+            <span class="input-group-btn">
+              <button class="btn btn-clear" type="button" data-action="clear"><i class="fa fa-remove box"></i></button>
+              <button class="btn btn-default" type="button" data-open="public/user/select-users"
+                      data-data='{"roleIds": "<%- info.userTaskEntities[i].roleIds %>", "deptIds": "<%- info.userTaskEntities[i].deptIds %>"}'><i
+                  class="fa fa-user-o"></i></button>
+            </span>
+          </div>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+      <% } %>
+    </div>
+  </div>
+  <% } %>
+  <% } %>
+</div>
+<% } else { %>
+<div class="form-horizontal">
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">选题名称</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookTopicName %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">丛书名称</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookSeriesName %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">选题类型</label>
+        <div class="col-xs-10">
+          <p class="form-control-static">
+            <% if(info.bookTopicType && info.bookTopicType.indexOf('1') >= 0) { %>
+            盲文读物
+            <% } %>
+            <% if(info.bookTopicType && info.bookTopicType.indexOf('2') >= 0) { %>
+            大字本读物
+            <% } %>
+            <% if(info.bookTopicType && info.bookTopicType.indexOf('3') >= 0) { %>
+            普通读物
+            <% } %>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group ">
+        <label class="col-xs-2 control-label">推荐类型</label>
+        <div class="col-xs-8">
+          <p class="form-control-static">
+            <% if(!info.bookTopicRecommendType || info.bookTopicRecommendType === '2') { %>
+            非社推荐选题
+            <% } %>
+            <% if(info.bookTopicRecommendType && info.bookTopicRecommendType === '1') { %>
+            社推荐选题
+            <% } %>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group ">
+        <label class="col-xs-2 control-label">图书类别</label>
+        <div class="col-xs-3">
+          <p><%- info.bookTopicOneKindName %> <%- info.bookTopicTwoKindName %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">原作者</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookDetailAuthor %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">著作方式</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookDetailWorkWay %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">学历</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookDetailAuthorEducation %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group ">
+        <label class="col-xs-4 control-label">预计字数</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookDetailWords %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">职称</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookDetailAuthorTitles %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group ">
+        <label class="col-xs-4 control-label">交稿时间</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookDetailSubmitDatetime %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group ">
+        <label class="col-xs-2 control-label">专长</label>
+        <div class="col-xs-10">
+          <p class="form-control-static"><%- info.bookDetailAuthorSpeciality %></p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">有何著作及科研成果</label>
+        <div class="col-xs-10">
+          <pre class="form-control-static"><%- info.bookDetailAuthorResult %></pre>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">工作单位及联系方式</label>
+        <div class="col-xs-10">
+          <pre class="form-control-static"><%- info.bookDetailAuthorContactWay %></pre>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">原书名称</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookDetailName %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">原书版次</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookDetailEdition %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">原出版社</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookDetailPublishingHouse %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">原书出版时间</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookDetailPublicationDate %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">内容简述及特色</label>
+        <div class="col-xs-10">
+          <pre class="form-control-static"><%- info.bookDetailSketched %></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">市场调研情况</label>
+        <div class="col-xs-10">
+          <pre class="form-control-static"><%- info.bookDetailMarketMsg %></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">提交人</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitUserName %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">提交时间</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitDatetime %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>

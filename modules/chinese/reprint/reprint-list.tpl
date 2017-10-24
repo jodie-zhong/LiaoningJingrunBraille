@@ -1,0 +1,23 @@
+<% if(list.length > 0) { %>
+<% for(var i = 0; i < list.length; i++) { %>
+<tr data-bookId="<%- list[i].bookId %>" data-deploy="<%- list[i].bookDeploymentKey %>"
+    data-bookTopicId="<%- list[i].bookTopicId %>"
+    data-taskState="<%- list[i].taskState %>"
+    data-flowId="<%- list[i].flowId %>" data-hReprintBookAnditId="<%- list[i].hReprintBookAnditId %>" data-taskId="<%- list[i].taskId %>" data-users="<%-
+  list[i].taskUsers %>">
+  <td><%- (i + 1) %></td>
+  <td data-check="true"><i class="fa fa-square-o" data-action="check"></i></td>
+  <td title="<%- list[i].bookName %>"><%- list[i].bookName %></td>
+  <td title="<%-  {2:'大字本', 3:'普通'}[list[i].bookType] %>"><%-  {2:'大字本', 3:'普通'}[list[i].bookType] %></td>
+  <td title="<%- list[i].bookDetailDutyEditor %>"><%- list[i].bookDetailDutyEditor %></td>
+  <td title="<%- list[i].bookIsbn %>"><%- list[i].bookIsbn %></td>
+  <td title="<%- list[i].createUserId  %>"><%- list[i].createUserId %></td>
+  <td title="<%- list[i].createDatetime  %>"><%- list[i].createDatetime %></td>
+  <td title="<%- list[i].bookStateName  %>"><%- list[i].bookStateName %></td>
+</tr>
+<% } %>
+<% } else { %>
+<tr data-noselect="true">
+  <td colspan="9"><p class="empty-tips">没有符合指定条件的数据</p></td>
+</tr>
+<% } %>

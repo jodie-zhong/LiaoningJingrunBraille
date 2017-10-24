@@ -1,0 +1,65 @@
+<!--译校通读-校对和通读的发送书稿-->
+<div class="form-horizontal">
+  <% if(info.downloadAddress && info.mangwenbanshu){ %>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">汉文文稿</label>
+        <div class="col-xs-8">
+          <p class="form-control-static">
+            <a href="javascript:void(0);" name="downloadCnManuscript" data-download-address="<%- info.downloadAddress %>"><%- info.bookName %>.doc</a>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">盲文文稿</label>
+        <div class="col-xs-8">
+          <p class="form-control-static">
+            <a href="javascript:void(0);" name="downloadBrailleManuscript" data-download-address="<%- info.downloadAddress %>"><%- info.bookName %>.doc</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">盲文版数</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookName %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">任务要求</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookName %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% } %>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">下一流程</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.nextFlowName %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-5 control-label">下一流程任务人</label>
+        <div class="col-xs-7">
+          <p class="form-control-static"><%- info.nextFlowTaskUserNames %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

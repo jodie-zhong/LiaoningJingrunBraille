@@ -1,0 +1,113 @@
+<!-- 图书印制单审核管理 -->
+<div class="row">
+  <div class="col-xs-3">
+    <!-- 左侧树 -->
+    <div class="panel">
+      <div class="panel-header custom-panel-header">
+        <h3><i class="fa fa-braille"></i> 图书印制单审核管理</h3>
+      </div>
+      <!--<div class="panel-content border-bottom">-->
+      <!--<div class="search-header" id="taskTreeSearchHeader">-->
+      <!--<div class="search-inputs">-->
+      <!--<select class="form-control form-white">-->
+      <!--<option>全部</option>-->
+      <!--<option>非社推荐选题</option>-->
+      <!--<option>社推荐选题</option>-->
+      <!--</select>-->
+      <!--</div>-->
+      <!--<div class="search-buttons">-->
+      <!--<button class="btn btn-default btn-icon" type="button" id="btnTaskTreeSearch"><i class="fa fa-search"></i>-->
+      <!--</button>-->
+      <!--</div>-->
+      <!--</div>-->
+      <!--</div>-->
+      <div class="panel-content panel-height-1">
+        <div id="monthTree">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-9">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="panel" style="overflow-x: auto;">
+          <div class="panel-header custom-panel-header">
+            <h3>图书印制信息<span class="icheck-inline task-about" id="taskAboutArea"></span>
+            </h3>
+            <div class="control-btn">
+              <button class="btn btn-xs btn-primary" data-auth="0391" id="btnPrintedAdd" disabled>添加</button>
+              <button class="btn btn-xs btn-danger" data-auth="0392" id="btnPrintedDel" disabled>删除</button>
+              <button class="btn btn-xs btn-default" data-auth="0393" id="btnPrintedSubmit" disabled>提交</button>
+              <button class="btn btn-xs btn-default" data-auth="0394" id="btnPrintedSingle" disabled>处理</button>
+              <button class="btn btn-xs btn-default" data-auth="0396" id="btnPrintedExport" disabled>导出</button>
+              <button class="btn btn-xs btn-default" data-auth="0397" id="btnPrintedSearch" disabled>查看</button>
+            </div>
+          </div>
+          <div class="panel-content">
+            <div class="table-10">
+              <table class="table table-striped table-hover table-nowrap" data-multi="true" id="workListTable">
+                <thead>
+                <tr>
+                  <th class="w-table">序号</th>
+                  <th class="w-table"><i class="fa fa-square-o" data-action="check"></i></th>
+                  <th style="width: 200px">种类</th>
+                  <th style="width: 200px">书名</th>
+                  <th style="width: 200px">书号</th>
+                  <th style="width: 200px">作者</th>
+                  <th style="width: 100px">盲文书版次</th>
+                  <th style="width: 100px">责任编辑</th>
+                  <th style="width: 100px">最终盲文版数</th>
+                  <th style="width: 100px">定价</th>
+                  <th style="width: 150px">图书馆需要套数</th>
+                  <th style="width: 150px">读者服务部需要套数</th>
+                  <th style="width: 150px">总印制套数</th>
+                  <th style="width: 150px">总印张数</th>
+                  <th style="width: 150px">开本</th>
+                  <th style="width: 150px">用纸</th>
+                  <th style="width: 150px">出书时间</th>
+                  <th style="width: 150px">状态</th>
+                </tr>
+                </thead>
+                <tbody id="workListTBody">
+
+                </tbody>
+              </table>
+            </div>
+            <div class="pagination-container" id="workListPaging">
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="panel">
+          <div class="panel-header custom-panel-header">
+            <h3>流程查看</h3>
+          </div>
+          <div class="panel-content">
+            <div class="table-5-static">
+              <table class="table table-striped table-nowrap table-hover">
+                <thead>
+                <tr>
+                  <th class="w-table">序号</th>
+                  <th>状态</th>
+                  <th>负责人</th>
+                  <th>起始时间</th>
+                  <th>完成时间</th>
+                  <th>审核结果</th>
+                  <th>详细信息</th>
+                </tr>
+                </thead>
+                <tbody id="taskWorkflowTable">
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

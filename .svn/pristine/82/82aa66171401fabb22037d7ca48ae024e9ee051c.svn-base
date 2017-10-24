@@ -1,0 +1,249 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    module.exports = {
+        /* 选题申报 */
+        // 选题申报
+        'brailleTopicDeclare': 'topic-manage/topic-manage-create',
+        // 部门负责人审核
+        'brailleEditorialTrial': 'topic-manage/topic-manage-principal',
+        // 总编辑/副总编辑审批意见
+        'brailleChiefEditorTrial': 'topic-manage/topic-manage-chief',
+        // 选题上报信息
+        'brailleTopicReport': 'topic-manage/topic-manage-report',
+        // 选题大会信息
+        'brailleTopicConference': 'topic-manage/topic-manage-conference',
+        // 待定确认
+        'braillePend': 'topic-manage/topic-manage-hold',
+
+
+        /* 选题备案 */
+        // 选题备案新增
+        'topicRecordCreate': 'topic-record/topic-record-create',
+        // 重大选题备案登记表
+        'bigTopicRecordRegister': 'topic-record/import-topic-register',
+        // 重大部门负责人审核意见
+        'bigBrailleEditorialTrial': 'topic-record/topic-record-principal',
+        // 重大总编辑/副总编辑审核
+        'bigBrailleChiefEditorTrial': 'topic-record/topic-record-chief',
+        // 重大上报版署
+        'bigReportBureauPublication': 'topic-record/topic-record-report',
+        // 重大备案登记
+        'bigRecordRegister': 'topic-record/topic-record-copy',
+        // 引进选题备案登记表
+        'importTopicRecordRegister': 'topic-record/cite-topic-register',
+        // 引进部门负责人审核意见
+        'importBrailleEditorialTrial': 'topic-record/topic-record-principal',
+        // 引进总编辑/副总编辑审核
+        'importBrailleChiefEditorTrial': 'topic-record/topic-record-chief',
+        // 引进备案登记
+        'importRecordRegister': 'topic-record/topic-record-copy',
+
+
+        /******************************************************清样稿管理******************************************************/
+        // 确认书稿
+        'confirm': 'original-copy/confirmation',
+        // 图书印制单
+        'printClear': 'original-copy/print-list',
+        // 发送书稿
+        'sendArtwork': 'original-copy/sending',
+        // 收集书稿
+        'collectClear': 'original-copy/collecting',
+        // 审核
+        'check': 'original-copy/checking',
+        // 审核结果
+        'readerServiceDepartmentHeadAudit': 'original-copy/check-result',
+        // 审核结果
+        'readerServicesCommunityLeaderAudit': 'original-copy/check-result',
+        // 审核结果
+        'libraryServiceDepartmentHeadAudit': 'original-copy/check-result',
+        // 审核结果
+        'librarySectionCommunityLeaderAudit': 'original-copy/check-result',
+        // 审核结果
+        'editorOfficeDepartmentHeadAudit': 'original-copy/check-result',
+        // 审核结果
+        'editorOfficeDepartmentLeaderAudit': 'original-copy/check-result',
+        // 审核结果
+        'braillePrintDepartmentHeadAudit': 'original-copy/check-result',
+        // 审核结果
+        'braillePrintDepartmentLeaderAudit': 'original-copy/check-result',
+
+
+        /******************************************************译校通读******************************************************/
+        // 发送书稿
+        'translationSendBook': 'translation-proofreading/tprt-manuscript-sending',
+        // 接收书稿
+        'translationAcceptBook': 'translation-proofreading/tprt-manuscript-acception',
+        // 译录
+        'translationTranslation': 'translation-proofreading/tprt-translation-entering',
+        // 书稿归还确认
+        'translationReturnBook': 'translation-proofreading/tprt-manuscript-returning',
+        // 一校
+        '7': 'translation-proofreading/tprt-deal',
+        // 二校
+        '8': 'translation-proofreading/tprt-deal',
+        // 三校
+        '9': 'translation-proofreading/tprt-deal',
+        // 二次三校
+        '10': 'translation-proofreading/tprt-deal',
+        // 通读
+        '11': 'translation-proofreading/tprt-deal',
+        // 一校正误表确认
+        '12': 'translation-proofreading/tprt-deal-confirmation',
+        // 二校正误表确认
+        '13': 'translation-proofreading/tprt-deal-confirmation',
+        // 三校正误表确认
+        '14': 'translation-proofreading/tprt-deal-confirmation',
+        // 二次三校正误表确认
+        '15': 'translation-proofreading/tprt-deal-confirmation',
+        // 通读正误表确认
+        '16': 'translation-proofreading/tprt-deal-confirmation',
+        // 一校正误表审核
+        '17': 'translation-proofreading/tprt-deal-checking',
+        // 二校正误表审核
+        '18': 'translation-proofreading/tprt-deal-checking',
+        // 三校正误表审核
+        '19': 'translation-proofreading/tprt-deal-checking',
+        // 二次三校正误表审核
+        '20': 'translation-proofreading/tprt-deal-checking',
+        // 通读正误表审核
+        '21': 'translation-proofreading/tprt-deal-checking',
+        // 一校修改
+        '22': 'translation-proofreading/tprt-deal-modification',
+        // 二校修改
+        '23': 'translation-proofreading/tprt-deal-modification',
+        // 三校修改
+        '24': 'translation-proofreading/tprt-deal-modification',
+        // 二次三校修改
+        '25': 'translation-proofreading/tprt-deal-modification',
+        // 通读修改
+        '26': 'translation-proofreading/tprt-deal-modification',
+
+
+        /******************************************************印前质检******************************************************/
+        // 收集书稿
+        '111': 'pre-press-qc/collection',
+        // 质检派发
+        '112': 'pre-press-qc/sending',
+        // 接收书稿
+        '113': 'pre-press-qc/manuscript-acception',
+        // 质检
+        '114': 'pre-press-qc/qc',
+        // 质检正误表确认
+        '115': 'pre-press-qc/tf-confirmation',
+        // 质检正误表审核
+        '116': 'pre-press-qc/tf-checking',
+        // 质检修改
+        '117': 'pre-press-qc/qc-modification',
+        // 文稿归还确认
+        '118': 'pre-press-qc/manuscript-returning',
+        // 质检审核
+        '110': 'pre-press-qc/qc-checking',
+
+
+        /* 书号和CIP号申请 */
+        // 提交申请
+        'applyISDNCIP': 'cip-apply/cip-apply-create',
+        // 审核
+        'applyAudit': 'cip-apply/cip-apple-review',
+        // 版署申请
+        'versionApply': 'cip-apply/cip-apple-information',
+        // 下发
+        'issued': 'cip-apply/cip-apply-issued',
+        //未通过处理
+        'failureApply': 'cip-apply/cip-apply-failure',
+        //补全图书信息
+        'completionBook': 'cip-apply/complete-book-information',
+        //盲文封面信息补全
+        'completionCoverBook': 'cip-apply/complete-book-cover',
+        //备案登记确认
+        'registrationConfirmation': 'cip-apply/cip-apply-sure',
+
+
+        /* 审稿 */
+        // 部门负责人下发
+        'deptIssued': 'review/review-principal',
+        // 初审
+        'firstAudit': 'review/review-first',
+        // 复审
+        'secondAudit': 'review/review-second',
+        // 终审
+        'finalAudit': 'review/review-final',
+        // 上传电子书稿
+        'uploadEbook': 'review/review-ebook',
+
+
+        /* 备案登记 */
+        // 收集文件
+        'collectFiles': 'registration-records/registration-records-collect',
+        // 审核
+        'recordAudit': 'registration-records/registration-records-review',
+        // 备案登记
+        'registration': 'registration-records/registration-records-information',
+        
+        
+        /* 清样稿印制 */
+        // 下发
+        'BrailleIssued': 'sample-print/sample-print-issued',
+        // 刻印
+        'BrailleEngraving': 'sample-print/sample-print-carve',
+        // 裁边
+        'BrailleCuttingEdge': 'sample-print/sample-print-tailor',
+        // 折页
+        'BrailleFolding': 'sample-print/sample-print-foldout',
+        // 抓页
+        'BrailleGrabPage': 'sample-print/sample-print-grab',
+        // 索线
+        'BrailleCableLine': 'sample-print/sample-print-wire',
+        // 查页
+        'BrailleCheckPage': 'sample-print/sample-print-check',
+        // 装订
+        'BrailleBinding': 'sample-print/sample-print-bind',
+        // 捆书配套
+        'BrailleBundleOfBooks': 'sample-print/sample-print-assort',
+        // 交付
+        'BrailleDeliver': 'sample-print/sample-print-deliver',
+        
+        
+        /* 印刷管理 */
+       // 下发
+       'printIssued': 'print-manage/print-manage-issued',
+       // 另件付印单录入
+       'otherPieceSinglePress': 'print-manage/print-manage-enter',
+       // 刻印
+       'engraving': 'print-manage/print-manage-carve',
+       // 制版
+       'plate': 'print-manage/print-manage-plate',
+       // 裁边
+       'cuttingEdge': 'print-manage/print-manage-tailor',
+       // 平印
+       'flatPrint': 'print-manage/print-manage-lithoprint',
+       // 轮转
+       'roundRobin': 'print-manage/print-manage-lithoprint',
+       // 折页
+       'folding': 'print-manage/print-manage-foldout',
+       // 抓页
+       'grabPage': 'print-manage/print-manage-grab',
+       // 索线
+       'cableLine': 'print-manage/print-manage-wire',
+       // 查页
+       'checkThePage': 'print-manage/print-manage-check',
+       // 装订
+       'binding': 'print-manage/print-manage-bind',
+       // 捆书配套
+       'bundleOfBooks': 'print-manage/print-manage-assort',
+       
+       
+       /* 变更备案 */
+      // 变更备案申请表
+      'changeTheRecordsApplication': 'change-record/change-record-apply',
+      // 部门负责人审核
+      'toExamine': 'change-record/change-record-principal',
+      // 总编辑/副总编辑签署
+      'sign':'change-record/change-record-chief',
+      // 备案登记
+      'registrationRecord':'change-record/change-record-register',
+      // 告知责编
+      'informDutyEditor': 'change-record/change-record-inform'
+    };
+});

@@ -1,0 +1,112 @@
+<!-- 清样稿印制 -->
+<div class="row">
+	<div class="col-xs-3">
+		<!-- 左侧树 -->
+		<div class="panel">
+			<div class="panel-header custom-panel-header">
+				<h3><i class="fa fa-book"></i> 清样稿印制</h3>
+			</div>
+			<div class="panel-content panel-height-1" style="height: 953px; overflow-y: auto; margin-bottom: 20px;">
+				<div id="monthTree">
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-xs-9">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="panel">
+					<div class="panel-header custom-panel-header">
+						<h3>选题列表</h3>
+						<div class="control-btn">
+							<button class="btn btn-xs btn-success" id="btnTopicCreate">处理</button>
+							<button class="btn btn-xs btn-blue" id="btnTopicModify" disabled>修改</button>
+							<button class="btn btn-xs btn-danger" id="btnTopicDel" disabled>删除</button>
+							<button class="btn btn-xs btn-primary" id="btnTopicDepart" disabled>部门负责人审核</button>
+							<button class="btn btn-xs btn-primary" id="btnTopicChief" disabled>总编/副总编审批</button>
+							<button class="btn btn-xs btn-primary" id="btnTopicReport" disabled>上报版署</button>
+							<button class="btn btn-xs btn-primary" id="btnTopicRecord" disabled>备案登记</button>
+						</div>
+					</div>
+					<div class="panel-content border-bottom">
+						<div class="form-horizontal" id="formSearchWork">
+							<div class="row">
+								<div class="col-xs-5">
+									<div class="form-group">
+										<label class="col-xs-4 control-label">筛选</label>
+										<div class="col-sm-8">
+											<select class="form-control" name="searchTaskAbout" data-search="searchTaskAbout">
+												<option value="1">待我处理</option>
+												<option value="2">与我相关</option>
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="col-xs-5">
+								</div>
+								<div class="col-xs-2">
+									<button class="btn btn-primary" id="btnSearchWork">搜索</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="panel-content">
+						<div class="table-10">
+							<table class="table table-striped table-hover" data-multi="true" id="workListTable">
+								<thead>
+									<tr>
+										<th>序号</th>
+										<th><i class="fa fa-square-o" data-action="check"></i></th>
+										<th>选题名称</th>
+										<th>选题类别</th>
+										<th>选题来源</th>
+										<th>选题类型</th>
+										<th>是否加急</th>
+										<th>处理人</th>
+										<th>备案状态</th>
+									</tr>
+								</thead>
+								<tbody id="workListTBody">
+
+								</tbody>
+							</table>
+						</div>
+						<div class="pagination-container" id="workListPaging">
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="panel">
+					<div class="panel-header custom-panel-header">
+						<h3>流程查看</h3>
+					</div>
+					<div class="panel-content">
+						<div class="table-5-static">
+							<table class="table table-striped table-hover">
+								<thead>
+									<tr>
+										<th>序号</th>
+										<th>状态</th>
+										<th>负责人</th>
+										<th>起始时间</th>
+										<th>完成时间</th>
+										<th>审核结果</th>
+										<th>详细信息</th>
+									</tr>
+								</thead>
+								<tbody id="taskWorkflowTable">
+
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

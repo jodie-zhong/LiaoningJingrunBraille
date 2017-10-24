@@ -1,0 +1,90 @@
+<!--审核书号申请-->
+<div class="modal-dialog dialog-container">
+  <div class="modal-content">
+    <div class="panel">
+      <div class="panel-header border-bottom">
+        <h3><i class="fa fa-user-o"></i>审核书号申请</h3>
+        <div class="control-btn">
+          <a class="panel-close btn-close"><i class="fa fa-close"></i></a>
+        </div>
+      </div>
+      <div class="panel-content">
+        <div class="form-horizontal" id="formConferenceCreateEdit">
+          <div class="row">
+            <div class="form-group col-xs-12">
+              <h4 class="col-xs-4">图书列表:</h4>
+            </div>
+            <div class="form-group col-xs-12">
+              <div class="col-xs-8 col-xs-offset-4">
+                <table class="table table-striped table-hover">
+                  <thead>
+                  <tr>
+                    <th>序号</th>
+                    <th>图书名称</th>
+                    <th>是否通过</th>
+                    <th>未通过原因</th>
+                    <th>书号</th>
+                    <th>分类号</th>
+                    <th>条形码</th>
+                  </tr>
+                  </thead>
+                  <tbody id="selectTopicTable">
+                  <% for(var i = 0; i < list.length; i++) { %>
+                  <tr data-id="<%- list[i].bookTopicId %>" data-name="<%- list[i].bookTopicName %>">
+                    <td><%- (i + 1) %></td>
+                    <td><input type="text"></td>
+                    <td>是否通过</td>
+                    <td><input type="text"></td>
+                    <td><input type="text"></td>
+                    <td><input type="text"></td>
+                    <td>
+                      <button data-taskid="" data-flowid="" class="btn btn-xs btn-rounded">上传</button>
+                    </td>
+                  </tr>
+                  <% } %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <% if(info.nextFlowInfoEntities) { %>
+            <% for(var i = 0; i < info.nextFlowInfoEntities.length; i++) { %>
+            <div class="row" data-flow="<%- info.nextFlowInfoEntities[i].nextFlowId %>" data-area="nextFlow" style="display: none;">
+              <div class="col-xs-6">
+                <div class="form-group">
+                  <label class="col-xs-4 control-label">下一流程<span class="must">*</span></label>
+                  <div class="col-xs-8">
+                    <p class="form-control-static"><%- info.nextFlowInfoEntities[i].nextFlowName %></p>
+                    <input type="hidden" name="nextFlowId" value="<%- info.nextFlowInfoEntities[i].nextFlowId %>">
+                  </div>
+                </div>
+              </div>
+              <div class="col-xs-6">
+                <div class="form-group">
+                  <label class="col-xs-4 control-label">任务人</label>
+                  <div class="col-xs-8">
+                    <div class="input-group">
+                      <input type="text" class="form-control" name="taskUsers"
+                             value="<%- info.nextFlowInfoEntities[i].nextFlowTaskUserNames %>"
+                             data-value="<%- info.nextFlowInfoEntities[i].nextFlowTaskUserIds %>" placeholder="任务人" readonly
+                             data-data="{searchRoleId: '', searchDepartmentId: ''}">
+                      <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" data-open="public/user/select-user-check" data-data="{}"><i
+                                class="fa fa-user-o"></i></button>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% } %>
+            <% } %>
+          </div>
+          <div class="dialog-options">
+            <button class="btn btn-primary" id="btnConferenceSave">保存</button>
+            <button class="btn btn-primary" id="btnConferenceSubmit">提交</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

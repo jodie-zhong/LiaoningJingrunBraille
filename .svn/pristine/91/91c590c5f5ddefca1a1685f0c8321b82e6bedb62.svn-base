@@ -1,0 +1,98 @@
+<!-- 选题征集 -->
+<div class="row">
+    <div class="col-xs-3">
+        <!-- 左侧树 -->
+        <div class="panel">
+            <div class="panel-header custom-panel-header">
+                <h3><i class="fa fa-braille"></i>书号和CIP号申请</h3>
+            </div>
+            <div class="panel-content panel-height-1">
+                <div id="monthTree">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-9">
+        <div class="row">
+            <div class="col-xs-12 col-xlg-6">
+                <div class="panel">
+                    <div class="panel-header custom-panel-header">
+                        <h3>申请列表
+                            <span class="icheck-inline task-about" id="taskAboutArea"></span>
+                        </h3>
+                        <div class="control-btn">
+                            <button class="btn btn-xs btn-primary" data-auth="0351" id="btnCipSingle" disabled>处理</button>
+                            <button class="btn btn-xs btn-primary" data-auth="0352" id="btnCipBatch" disabled>批量处理</button>
+                            <button class="btn btn-xs btn-default" data-auth="0353" id="btnCipSearch" disabled>查看</button>
+                        </div>
+                    </div>
+                    <div class="panel-content">
+                        <div class="table-10">
+                            <table class="table table-striped table-nowrap table-hover" data-multi="true" id="workListTable">
+                                <thead id="workListTHeader">
+                                <tr>
+                                    <th style="width: 50px">序号</th>
+                                    <th style="width: 50px">
+                                        <i class="fa fa-square-o" data-action="check"></i>
+                                    </th>
+                                    <th style="width: 25%">图书名称</th>
+                                    <th style="width: 25%">责任编辑</th>
+                                    <th style="width: 25%">CIP号</th>
+                                    <th style="width: 25%">申请状态</th>
+                                </tr>
+                                </thead>
+                                <tbody id="workListTBody">
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="pagination-container" id="workListPaging">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xlg-6 hidden-xs hidden-sm hidden-md hidden-lg">
+                <div class="panel">
+                    <div class="panel-header custom-panel-header">
+                        <h3>图书基本信息</h3>
+                    </div>
+                    <div class="panel-content">
+                        <div class="form-horizontal" id="bookDetailPanel">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="panel">
+                    <div class="panel-header custom-panel-header">
+                        <h3>流程查看</h3>
+                    </div>
+                    <div class="panel-content">
+                        <div class="table-5-static">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                <tr>
+                                    <th style="width: 50px">序号</th>
+                                    <th style="width: 20%">状态</th>
+                                    <th style="width: 20%">负责人</th>
+                                    <th style="width: 20%">起始时间</th>
+                                    <th style="width: 20%">完成时间</th>
+                                    <th style="width: 20%">审核结果</th>
+                                    <th style="width: 100px">详细信息</th>
+                                </tr>
+                                </thead>
+                                <tbody id="taskWorkflowTable">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

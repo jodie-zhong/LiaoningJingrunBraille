@@ -1,0 +1,207 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    // 工作流类窗口继承自工作流Base
+    var Base = require('../../other/base/book-base');
+    var flowListTpl = require('./cover-design-bookList.tpl');
+
+    var FLOW_ISSUED = 'braillePrintDeptDesignLeaderIssued';                   // 盲文印制部下发
+    var FLOW_PUBLIC = 'publicationDeptDesignHeadIssued';                      // 出版部下发
+    var FLOW_PRINT = 'printNoticeOfEntry';	                                  // 快印通知单录入
+    var FLOW_DEVISE = 'devise';	                                              // 设计
+    var FLOW_AUDIT = 'responsibleEditorAudit';	                              // 责任编辑审核
+    var FLOW_COVER = 'coverPrinting';	                                      // 封面印刷
+
+
+    var Module = Base.extend(new function () {
+        var that;
+
+        this.deployKey = 'BraillePrintingIssued';
+
+        // 与我相关
+        this.searchTaskAbout = '1';
+        // 其他搜索选项
+        this.searchParams = {};
+
+
+        this.flowInfoAction='common/searchBookFlowList.action';
+
+        this.staticParams={
+            searchFlowId:'cover'
+        };
+
+        this.unreadSearchFlowId='cover';
+
+        // this.searchFlowId='cover';
+
+
+
+        /**
+         * 搜索任务列表的接口(覆盖父级)
+         */
+
+        // 查询任务树中未完成任务数的接口
+        // this.untreatedTaskAction = 'topic/unreadTopicCount.action';
+        // // 选题任务列表接口
+        // this.taskListActoin = 'topic/topicList.action';
+
+        this.bookDate=null;
+
+        /**
+         * 选择行变更事件回调
+         */
+        this.onSelectRowChanged = function () {
+            // 暂时啥也不做
+        };
+
+        this.onCheckRowChanged = function () {
+            this.$('#btnCoverSingle').attr('disabled', 'disabled');       // 处理
+            this.$('#btnCoverSearch').attr('disabled', 'disabled');       // 查看
+
+            var count = 0, flowId = null, users = null, bookIds = [],taskIds=[],deploys=[];
+            var issued = true, publication = true, print=true,devise=true,editor=true,cover=true,allMe = true,allUnfinished = true;
+            var userId = util.getUserInfo().userId;
+            that.$('#workListTBody').find('tr[checked]').each(function () {
+                flowId = $(this).attr('data-flowId');
+                users = $(this).attr('data-users') || '';
+                users = users? users.split(','): [];
+                // 包含非盲文印制部下发
+                if(flowId !== FLOW_ISSUED){
+                    issued = false;
+                }
+                // 包含非出版部下发
+                if(flowId !== FLOW_PUBLIC){
+                    publication = false;
+                }
+                // 包含非快印通知单录入
+                if(flowId !== FLOW_PRINT){
+                    print = false;
+                }
+                // 包含非设计
+                if(flowId !== FLOW_DEVISE){
+                    devise = false;
+                }
+
+                // 包含非责任编辑审核
+                if(flowId !== FLOW_AUDIT){
+                    editor = false;
+                }
+                // 包含非封面印刷
+                if( flowId !== FLOW_COVER ){
+                    cover = false;
+                }
+                // 待我处理
+                if(users.indexOf(userId) <0){
+                    allMe = false;
+                }
+
+                // 任务状态未完成
+                if($(this).attr('data-taskState') === '2'){
+                    allUnfinished = false;
+                }
+                bookIds.push($(this).attr('data-bookId'));
+                taskIds.push($(this).attr('data-taskId'));
+                deploys.push($(this).attr('data-deploy'));
+                count++;
+            });
+
+            this.currentBookId = bookIds.join(',');
+            this.currentTaskId = taskIds.join(',');
+            this.deploy = deploys.join(',');
+            // 只选择了一条，处理和查看可用（）
+            if(count === 1) {
+                if( (issued || publication || print || devise || editor || cover) && allUnfinished && allMe ){
+                    this.$('#btnCoverSingle').removeAttr('disabled');
+                }
+                if( print || devise || editor || cover ){
+                    this.$('#btnCoverSearch').removeAttr('disabled');
+                }
+            }
+        };
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+            // that.openPage('public/workflow/workflow-dialog', {
+            //     debug: true,
+            //     flowTemplate: 'cover-design/cover-publications',
+            //     isEdit: true
+            // });
+
+            // 处理
+            that.$container.on('click', '#btnCoverSingle', function() {
+                that.openPage('public/workflow/workflow-dialog', {
+                    flowInfoAction: that.flowInfoAction,
+                    bookId: that.currentBookId,
+                    taskId: that.currentTaskId,
+                    deployId: that.deploy,
+                });
+            });
+
+            // 查看
+            that.$container.on('click', '#btnCoverSearch', function() {
+                that.openPage('public/workflow/workflow-dialog', {
+                    flowInfoAction: that.flowInfoAction,
+                    bookId: that.currentBookId,
+                    taskId: that.currentTaskId,
+                    deployId: that.deploy,
+                    isView: true
+                });
+            });
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            // that.initTemplate(tpl, {});
+
+            // 初始化数据前需要设置列表模板
+            this.baseTpl = flowListTpl;
+
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function () {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+
+    module.exports = Module;
+});

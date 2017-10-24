@@ -1,0 +1,350 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    var PageBase = require('../../../common/base-page');
+    // 合同列表界面模板
+    var listTpl = require('./copyright-contract-list.tpl');
+    // 首次合同详情界面模板
+    var infoTpl = require('./copyright-contract-info.tpl');
+    // 合同续约列表界面模板
+    var renewTpl = require('./copyright-contract-renew.tpl');
+
+    var Module = PageBase.extend(new function () {
+        var that;
+        // 当前选中的合同ID
+        var currentContractId = '';
+        // 当前选中的合同签约ID
+        var currentContractSignId = '';
+        // 当前选中的合同截至时间
+        var currentPage = '1';
+        var searchParams = {};
+        // 合同状态
+        var type = '';
+        // 合同截至日期
+        var endData = '';
+
+        /**
+         * 查询合同列表
+         */
+        function searchContractList() {
+            // 查询列表时当前选中的图书ID清空
+            currentContractId = '';
+            searchContractInfo('0');
+            searchRenewList('0');
+            // 查询合同列表
+            var params = $.extend({},searchParams);
+            params.page = currentPage;
+            util.showLoading();
+            util.sendRequest({
+                data: params,
+                action: 'copyright/searchContractList.action',
+                success: function (resp) {
+                    util.hideLoading();
+                    if (resp.code === 0) {
+                        // 填充列表
+                        that.$('#contractListTable').html(util.template(listTpl, {list: resp.data.records}));
+                        // 分页数据
+                        that.$('#contractManagePaging').html(that.buildPagination(resp.data.pageNow, resp.data.pageCount));
+                    } else {
+                        console.log(resp);
+                        util.showAlert(resp.message || '查询合同列表出错，请稍后重试！');
+                    }
+                },
+                error: function (xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('查询合同列表出错，请稍后重试！');
+                }
+            });
+        }
+        
+        /**
+         * 首次合同详情
+         */
+        function searchContractInfo(id) {
+        	var params = {
+        		contractId : id
+        	};
+        	util.showLoading('');
+			util.sendRequest({
+				type: 'POST',
+				data: params,
+				action: 'copyright/searchFirstWriteDetail.action',
+				success: function(resp) {
+					util.hideLoading();
+					if(resp.code === 0) {
+						that.$('#departmentEditPanel').html(util.template(infoTpl, {info: resp.data}));
+					} else {
+						util.showAlert(resp.message || '查询续约列表出错，请稍后重试！');
+					}
+				},
+				error: function(xhr) {
+					// XHR错误
+					util.hideLoading();
+					console.log(xhr);
+					util.showAlert('查询续约列表出错，请稍后重试！');
+				}
+			});
+        }
+        
+        /**
+         * 续约列表
+         */
+        function searchRenewList(id) {
+        	that.$('#btnChange').attr('disabled', 'disabled');
+			that.$('#btnDelete').attr('disabled', 'disabled');
+        	var params = {
+        		contractId : id
+        	};
+        	util.showLoading('');
+			util.sendRequest({
+				type: 'POST',
+				data: params,
+				action: 'copyright/searchRenewList.action',
+				success: function(resp) {
+					util.hideLoading();
+					if(resp.code === 0) {
+						that.$('#renewListTable').html(util.template(renewTpl, {list: resp.data}));
+					} else {
+						util.showAlert(resp.message || '查询续约列表出错，请稍后重试！');
+					}
+				},
+				error: function(xhr) {
+					// XHR错误
+					util.hideLoading();
+					console.log(xhr);
+					util.showAlert('查询续约列表出错，请稍后重试！');
+				}
+			});        	
+        }
+        
+        /**
+         * 合同查看
+         */
+        function searchContractSign(sign) {
+        	var params = {
+        		contractSignId : sign
+        	};
+        	util.showLoading('');
+			util.sendRequest({
+				type: 'POST',
+				data: params,
+				action: 'copyright/searchContractFileList.action',
+				success: function(resp) {
+					util.hideLoading();
+					if(resp.code === 0) {
+						var list = resp.data;
+						that.openPage('resource/copyright-contract/copyright-contract-check', list);
+					} else {
+						util.showAlert(resp.message || '查询续约列表出错，请稍后重试！');
+					}
+				},
+				error: function(xhr) {
+					// XHR错误
+					util.hideLoading();
+					console.log(xhr);
+					util.showAlert('查询续约列表出错，请稍后重试！');
+				}
+			});    
+        }
+        
+        /**
+		 * 查询续约详情
+		 */
+		function searchRenewInfo() {
+			var params = {
+				contractId: currentContractId,
+				contractSignId: currentContractSignId,
+				contractEndDate: endData
+			}
+			util.showLoading('');
+			util.sendRequest({
+				type: 'POST',
+				data: params,
+				action: 'copyright/searchRenewDetail.action',
+				success: function(resp) {
+					util.hideLoading();
+					if(resp.code === 0) {
+						that.openPage('resource/copyright-contract/copyright-contract-edit', resp.data);
+					} else {
+						util.showAlert(resp.message || '查询续约列表出错，请稍后重试！');
+					}
+				},
+				error: function(xhr) {
+					// XHR错误
+					util.hideLoading();
+					console.log(xhr);
+					util.showAlert('查询续约列表出错，请稍后重试！');
+				}
+			});    
+		}
+        
+        /**
+		 * 跳转页面
+		 */
+		function jumpPage(){
+			var $el = $(this);
+			var page = $el.attr('data-page');
+			if(page){
+				// 修改页面后重新刷新页面数据
+				currentPage = page;
+				searchContractList();
+			}
+		}
+		
+		/**
+		 * 续约删除
+		 */
+		function setContractDel() {
+			util.showConfirm('确定要将此条信息删除吗？', function() {
+				util.showLoading();
+				util.sendRequest({
+					type: 'POST',
+					data: {contractSignId: currentContractSignId},
+					action: 'copyright/removeContractSign.action',
+					success: function(resp) {
+						util.hideLoading();
+						if(resp.code === 0) {
+							// 成功之后直接刷新列表
+							searchRenewList(currentContractId);
+						} else {
+                            console.log(resp);
+							util.showAlert(resp.message || '人员离职出错，请稍后重试！');
+						}
+					},
+					error: function(xhr) {
+						// XHR错误
+                        console.log(xhr);
+						util.hideLoading();
+						util.showAlert('人员离职出错，请稍后重试！');
+					}
+				});
+			})
+		}
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+        	// 默认先禁用所有按钮
+        	that.$('#btnRenew').attr('disabled', 'disabled');
+        	that.$('#btnChange').attr('disabled', 'disabled');
+			that.$('#btnDelete').attr('disabled', 'disabled');
+        	// 查询
+			that.$container.on('click', '#btnSearchContract', function(){
+            	searchParams = that.buildSearchParams(that.$('#formSearchContract input[data-search],select[data-search]'));
+				currentPage = 1;
+				searchContractList();
+			});
+        	// 分页
+			that.$container.on('click', '#contractManagePaging a', jumpPage);
+        	// 合同列表选中
+        	that.$container.on('click', '#contractListTable tr', function() {
+        		// 选中状态
+        		that.$('#btnRenew').removeAttr('disabled');
+        		that.$('#contractListTable').find('tr').removeClass('info');
+        		$(this).addClass('info');
+        		var id = $(this).attr('data-contractId');
+        		endData = $(this).attr('data-endData');
+        		if (id) {
+        			searchRenewList(id);
+        			searchContractInfo(id);
+        			currentContractId = id;
+        			currentContractSignId = '';
+        		}        		
+        	});
+        	// 续约列表选中
+        	that.$container.on('click', '#renewListTable tr', function() {
+        		// 选中状态
+        		that.$('#renewListTable').find('tr').removeClass('info');
+        		$(this).addClass('info');
+        		var id = $(this).attr('data-contractId');
+        		var isUse = $(this).attr('data-isUse');
+        		if (isUse === '1') {
+        			that.$('#btnChange').removeAttr('disabled');
+        			that.$('#btnDelete').removeAttr('disabled');
+        		} else{
+        			that.$('#btnChange').attr('disabled', 'disabled');
+					that.$('#btnDelete').attr('disabled', 'disabled');
+        		}
+        		if (id) {
+        			currentContractSignId = id;
+        		}        		
+        	});
+        	// 续约、修改
+        	that.$container.on('click', '#btnRenew, #btnChange', function() {
+        		searchRenewInfo();
+        	});
+			// 删除
+			that.$container.on('click','#btnDelete', setContractDel);
+			// 查看
+			that.$container.on('click','button[data-type = "check"]', function() {
+				var sign = $(this).attr('data-id');
+				if (sign) {
+					searchContractSign(sign);
+				}
+			});
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+			
+            // 查询合同列表
+            searchContractList();
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            that.initTemplate(tpl, {});
+            // 重新初始化数据
+            currentPage = '1';
+            endData = '';
+            currentContractId = '';
+            currentContractSignId = '';
+        	searchParams = {};
+        	type = '';
+            // 初始化页面事件
+            initPageEvent();
+            // 初始化页面数据
+            initPageData();
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+            if(data && data.refresh === true) {
+				searchRenewList(currentContractId);
+			}
+
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function () {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+
+    module.exports = Module;
+});

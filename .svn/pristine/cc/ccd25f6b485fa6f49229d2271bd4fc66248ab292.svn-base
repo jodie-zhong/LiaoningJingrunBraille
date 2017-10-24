@@ -1,0 +1,394 @@
+<!--快印通知单录入-->
+<% if(isEdit) { %>
+<div class="form-horizontal">
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">图书全名<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="bookTopicType" value="<%-info.bookTopicType %>"
+                 maxlength="128" placeholder="图书全名"  data-required-error="请填写图书全名"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group ">
+        <label class="col-xs-2 control-label">类型<span class="must">*</span></label>
+        <div class="col-xs-10">
+          <label class="radio-inline">
+            <% if(!info.bookTopicRecommendType || info.bookTopicRecommendType === '1') { %>
+            <input type="radio" name="bookTopicRecommendType" value="1" data-fv-notempty="true"
+                   data-fv-notempty-message="请选择新书" checked/>新书
+            <% } else { %>
+            <input type="radio" name="bookTopicRecommendType" value="1" data-fv-notempty="true"
+                   data-fv-notempty-message="请选择新书"/>新书
+            <% } %>
+          </label>
+          <label class="radio-inline">
+            <% if(info.bookTopicRecommendType && info.bookTopicRecommendType === '2') { %>
+            <input type="radio" name="bookTopicRecommendType" value="2" data-fv-notempty="true"
+                   data-fv-notempty-message="请选择重印" checked/>重印
+            <% } else { %>
+            <input type="radio" name="bookTopicRecommendType" value="2" data-fv-notempty="true"
+                   data-fv-notempty-message="请选择重印"/>重印
+            <% } %>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group ">
+        <label class="col-xs-2 control-label">出版单位<span class="must">*</span></label>
+        <div class="col-xs-10">
+          <label class="radio-inline">
+            <% if(!info.bookTopicRecommendType || info.bookTopicRecommendType === '1') { %>
+            <input type="radio" name="bookTopicRecommendType" value="1" data-fv-notempty="true"
+                   data-fv-notempty-message="请选择求真" checked/>求真
+            <% } else { %>
+            <input type="radio" name="bookTopicRecommendType" value="1" data-fv-notempty="true"
+                   data-fv-notempty-message="请选择求真"/>求真
+            <% } %>
+          </label>
+          <label class="radio-inline">
+            <% if(info.bookTopicRecommendType && info.bookTopicRecommendType === '2') { %>
+            <input type="radio" name="bookTopicRecommendType" value="2" data-fv-notempty="true"
+                   data-fv-notempty-message="请选择盲文" checked/>盲文
+            <% } else { %>
+            <input type="radio" name="bookTopicRecommendType" value="2" data-fv-notempty="true"
+                   data-fv-notempty-message="请选择盲文"/>盲文
+            <% } %>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">图书种类</label>
+        <div class="col-xs-8">
+          <select name="bookTopicOneKind" class="form-control" id="bookTopicOne" data-fv-notempty="true">
+          </select>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">封面排版人<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="importantTopicCode" value="<%-info.importantTopicCode%>"
+                 maxlength="128" placeholder="封面排版人"  data-required-error="请填写封面排版人"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">正文排版人</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.firstInstanceOfficer %>" name="firstInstanceOfficer"
+                 placeholder="正文排版人" maxlength="32"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">图书定价<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="secondInstanceOfficer" value="<%-info.secondInstanceOfficer%>"
+                 maxlength="32" placeholder="图书定价"  data-required-error="请填写图书定价"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">成品尺寸</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.lastInstanceOfficer %>" name="lastInstanceOfficer"
+                 placeholder="成品尺寸" maxlength="32"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">开本<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="bookIsbn" value="<%-info.bookIsbn%>"
+                 maxlength="32" placeholder="开本"  data-required-error="请填写开本"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">印数</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.bookName %>" name="bookName"
+                 placeholder="印数" maxlength="64"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">印张/页码<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="bookSubtitle" value="<%-info.bookSubtitle%>"
+                 maxlength="128" placeholder="印张/页码"  data-required-error="请填写印张/页码"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group ">
+        <label class="col-xs-2 control-label">封面工艺</label>
+        <div class="col-xs-3">
+          <select name="bookTopicOneKind" class="form-control" id="bookTopicOne" data-fv-notempty="true">
+          </select>
+        </div>
+        <div class="col-xs-3">
+          <select name="bookTopicTwoKind" class="form-control" id="bookTopicTwo" data-fv-notempty="true">
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group ">
+        <label class="col-xs-2 control-label">勒口<span class="must">*</span></label>
+        <div class="col-xs-10">
+          <label class="radio-inline">
+            <% if(!info.bookTopicRecommendType || info.bookTopicRecommendType === '1') { %>
+            <input type="radio" name="bookTopicRecommendType" value="1" data-fv-notempty="true"
+                   data-fv-notempty-message="请选择勒口" checked/>有
+            <% } else { %>
+            <input type="radio" name="bookTopicRecommendType" value="1" data-fv-notempty="true"
+                   data-fv-notempty-message="请选择勒口"/>有
+            <% } %>
+          </label>
+          <label class="radio-inline">
+            <% if(info.bookTopicRecommendType && info.bookTopicRecommendType === '2') { %>
+            <input type="radio" name="bookTopicRecommendType" value="2" data-fv-notempty="true"
+                   data-fv-notempty-message="请选择勒口" checked/>无
+            <% } else { %>
+            <input type="radio" name="bookTopicRecommendType" value="2" data-fv-notempty="true"
+                   data-fv-notempty-message="请选择勒口"/>无
+            <% } %>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">勒口尺寸cm</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.bookDetailWorkWay %>" name="bookDetailWorkWay"
+                 placeholder="勒口尺寸cm" maxlength="64"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group ">
+        <label class="col-xs-2 control-label">环衬<span class="must">*</span></label>
+        <div class="col-xs-10">
+          <label class="radio-inline">
+            <% if(!info.bookTopicRecommendType || info.bookTopicRecommendType === '1') { %>
+            <input type="radio" name="bookTopicRecommendType" value="1" data-fv-notempty="true"
+                   data-fv-notempty-message="请选择环衬" checked/>前
+            <% } else { %>
+            <input type="radio" name="bookTopicRecommendType" value="1" data-fv-notempty="true"
+                   data-fv-notempty-message="请选择环衬"/>前
+            <% } %>
+          </label>
+          <label class="radio-inline">
+            <% if(info.bookTopicRecommendType && info.bookTopicRecommendType === '2') { %>
+            <input type="radio" name="bookTopicRecommendType" value="2" data-fv-notempty="true"
+                   data-fv-notempty-message="请选择环衬" checked/>后
+            <% } else { %>
+            <input type="radio" name="bookTopicRecommendType" value="2" data-fv-notempty="true"
+                   data-fv-notempty-message="请选择环衬"/>后
+            <% } %>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">封面用纸（克）<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="bookTextLanguage" value="<%-info.bookTextLanguage%>"
+                 maxlength="32" placeholder="封面用纸（克）"  data-required-error="请填写封面用纸（克）"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">封面用纸种类</label>
+        <div class="col-xs-8">
+          <select name="bookTopicOneKind" class="form-control" id="bookTopicOne" data-fv-notempty="true">
+          </select>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">正文用纸（克）<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="bookTextLanguage" value="<%-info.bookTextLanguage%>"
+                 maxlength="32" placeholder="正文用纸（克）"  data-required-error="请填写正文用纸（克）"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">正文用纸种类</label>
+        <div class="col-xs-8">
+          <select name="bookTopicOneKind" class="form-control" id="bookTopicOne" data-fv-notempty="true">
+          </select>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">环衬用纸<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="bookFileType" value="<%-info.bookFileType%>"
+                 maxlength="11" placeholder="环衬用纸" data-required-error="请填写环衬用纸"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">彩插</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.bookFileNum %>" name="bookFileNum"
+                 placeholder="彩插" maxlength="5"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group ">
+        <label class="col-xs-2 control-label">印制地点<span class="must">*</span></label>
+        <div class="col-xs-10">
+          <label class="radio-inline">
+            <% if(!info.bookTopicRecommendType || info.bookTopicRecommendType === '1') { %>
+            <input type="radio" name="bookTopicRecommendType" value="1" data-fv-notempty="true"
+                   data-fv-notempty-message="请选择印制地点" checked/>社内
+            <% } else { %>
+            <input type="radio" name="bookTopicRecommendType" value="1" data-fv-notempty="true"
+                   data-fv-notempty-message="请选择印制地点"/>社内
+            <% } %>
+          </label>
+          <label class="radio-inline">
+            <% if(info.bookTopicRecommendType && info.bookTopicRecommendType === '2') { %>
+            <input type="radio" name="bookTopicRecommendType" value="2" data-fv-notempty="true"
+                   data-fv-notempty-message="请选择印制地点" checked/>其他
+            <% } else { %>
+            <input type="radio" name="bookTopicRecommendType" value="2" data-fv-notempty="true"
+                   data-fv-notempty-message="请选择印制地点"/>其他
+            <% } %>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">装订方式</label>
+        <div class="col-xs-8">
+          <select name="bookTopicOneKind" class="form-control" id="bookTopicOne" data-fv-notempty="true">
+          </select>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">装订顺序<span class="must">*</span></label>
+        <div class="col-xs-10">
+                    <textarea type="text" class="form-control" name="bookDetailSketched"
+                              maxlength="1024" placeholder="装订顺序" data-required-error="请填写装订顺序"><%-info.bookDetailSketched%></textarea>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% if(info.userTaskEntities) { %>
+  <% for(var i = 0 ; i < info.userTaskEntities.length; i++) { %>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">下一流程</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.userTaskEntities[i].flowName %></p>
+          <input type="hidden" name="flowId" value="<%- info.userTaskEntities[i].flowId %>">
+          <input type="hidden" name="flowName" value="<%- info.userTaskEntities[i].flowName %>">
+          <input type="hidden" name="nextCategory" value="<%- info.userTaskEntities[i].category %>">
+          <input type="hidden" name="deptIds" value="<%- info.userTaskEntities[i].deptIds %>">
+          <input type="hidden" name="roleIds" value="<%- info.userTaskEntities[i].roleIds %>">
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <% if(info.userTaskEntities[i].roleIds) { %>
+      <div class="form-group">
+        <label class="col-xs-4 control-label">任务人<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <div class="input-group">
+            <input type="text" class="form-control" name="taskUsers"
+                   value="<%- info.userTaskEntities[i].nextFlowTaskUserNames %>"
+                   data-value="<%- info.userTaskEntities[i].nextFlowTaskUserIds %>" placeholder="任务人" readonly
+                   data-data="{roleIds: '<%- info.userTaskEntities[i].roleIds %>', searchDepartmentId: '<%- info.userTaskEntities[i].deptIds %>'}" data-fv-notempty="true" data-fv-notempty-message="请选择下一任务人">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button" data-open="public/user/select-users"
+                      data-data='{"roleIds": "<%- info.userTaskEntities[i].roleIds %>", "deptIds": "<%- info.userTaskEntities[i].deptIds %>"}'><i class="fa fa-user-o"></i>
+              </button>
+            </span>
+          </div>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+      <% } %>
+    </div>
+  </div>
+  <% } %>
+  <% } %>
+</div>
+<% } else { %>
+<div class="form-horizontal">
+
+</div>
+<% } %>
+

@@ -1,0 +1,176 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    var PageBase = require('../../../common/base-dialog');
+    var listTpl = require('./topic-rechecking-list.tpl');
+
+    var Module = PageBase.extend(new function () {
+        var that;
+        var info = null;
+        var currentConferenceId = '';
+
+        //查看事件
+        function bottomSearch() {
+            var params={
+                topicMeetingId:info.currentConferenceId
+            };
+            console.log(params);
+            util.sendRequest({
+                data: params,
+                action: 'meeting/searchCheckTopicList.action',
+                success: function(resp) {
+                    util.hideLoading();
+                    console.log(resp);
+                    if (resp.code === 0) {
+                         var arr=[];
+                        for(var j in resp.data){
+                            arr.push(resp.data[j]);
+                        }
+                        console.log(arr);
+                        that.$('#selectReportTable').html(util.template(listTpl,{list: arr}));
+                    } else{
+                        util.showAlert(resp.message || '查看上报列表出错，请稍后重试！');
+                    }
+                },
+                error: function(xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('查看上报列表出错，请稍后重试！');
+                }
+            });
+        }
+
+
+        /**
+         * 确定的函数
+         */
+        function reportSure() {
+            var arrRelId=[],arrId=[];
+            if( that.$("#selectReportTable input[type='checkbox']:checked").length > 0 ){
+                util.showConfirm("确定要移除么？",function () {
+                    that.$("#selectReportTable input[type='checkbox']:checked").each(function () {
+                        var $el=$(this).parents('tr');
+                        arrId.push($el.attr('data-id'));
+                        arrRelId.push($el.attr('data-relationId'));
+                    });
+                    var params={
+                        topicIds:arrId.join(','),
+                        topicReportRelationIds:arrRelId.join(',')
+                    };
+                    util.sendRequest({
+                        data: params,
+                        action: 'meeting/makeSureGiveUp.action',
+                        success: function(resp) {
+                            util.hideLoading();
+                            if (resp.code === 0) {
+                                util.showAlert(resp.message || '提交成功，请稍后重试！');
+                                bottomSearch();
+                            } else{
+                                util.showAlert(resp.message || '提交出错，请稍后重试！');
+                            }
+                        },
+                        error: function(xhr) {
+                            // XHR错误
+                            util.hideLoading();
+                            console.log(xhr);
+                            util.showAlert('提交出错，请稍后重试！');
+                        }
+                    });
+                });
+            }else{
+                util.showAlert('没有选择任何一条数据！');
+            }
+        }
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+
+            // 确定点击
+            that.$container.on('click', '#btnReportSure',reportSure);
+            // 选题点击
+            that.$container.on('click', '.topic-name',function () {
+                var $el=$(this).parents('tr');
+                var params={
+                    topicId :$el.attr('data-id')
+                };
+                util.sendRequest({
+                    data: params,
+                    action: 'meeting/searchTopicDetailOfCheck.action',
+                    success: function(resp) {
+                        util.hideLoading();
+                        if (resp.code === 0) {
+                            that.openPage('topic/topic-conference/topic-manage-create', {info:resp.data});
+                        } else{
+                            util.showAlert(resp.message || '提交出错，请稍后重试！');
+                        }
+                    },
+                    error: function(xhr) {
+                        // XHR错误
+                        util.hideLoading();
+                        console.log(xhr);
+                        util.showAlert('提交出错，请稍后重试！');
+                    }
+                });
+            });
+        }
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+            bottomSearch();
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            info = data;
+            console.log(info);
+            that.initTemplate(tpl, {});
+            //生成添加选题列表
+            // that.$('#selectReportTable').html(util.template(listTpl,{
+            //     list: data.records
+            // }));
+            // currentConferenceId=data.topicReportId;
+
+
+            // 初始化页面事件
+            initPageEvent();
+            // 初始化页面数据
+            initPageData();
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function () {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+
+    module.exports = Module;
+});

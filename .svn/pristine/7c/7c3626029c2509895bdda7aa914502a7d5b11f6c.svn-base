@@ -1,0 +1,121 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    // 工作流类窗口继承自工作流Base
+    var Base = require('../../other/base/task-base');
+
+    var topicManageListTpl = require('./change-record-list.tpl');
+    
+    var FLOW_APPLY = 'changeTheRecordsApplication'; // 变更备案申请表
+    var FLOW_EXAMINE = 'toExamine'; // 部门负责人审核
+    var FLOW_SIGN = 'sign' // 总编辑/副总编辑签署
+    var FLOW_REGISTER = 'registrationRecord' // 备案登记
+    var FLOW_INFORM = 'informDutyEditor' // 告知责编
+
+    var Module = Base.extend(new function () {
+        var that;
+
+        this.deployKey = 'BrailleRecordChange';
+        
+        // 与我相关
+        this.searchTaskAbout = '1';
+        // 其他搜索选项
+        this.searchParams = {};
+        
+        this.taskListAction = 'changeRecord/searchChangeRecordList.action';
+
+        /**
+         * 选择行变更事件回调
+         */
+        this.onSelectRowChanged = function(){
+        	// 暂时啥也不做
+        };
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+//          that.openPage('public/workflow/workflow-dialog', {
+//              debug: true,
+//              flowTemplate: 'change-record/change-record-apply',
+//              isEdit: true
+//          });
+
+            // // 新建选题
+            // that.$container.on('click', '#btnTopicAdd', function () {
+            //     // 选题新建步骤
+            //     that.openPage('public/workflow/workflow-dialog', {flowId: 2});
+            // });
+            //
+            // // 申报选题
+            // that.$container.on('click', '#btnTopicSubmit', function () {
+            //     that.openPage('public/workflow/workflow-dialog', {
+            //         taskId:that.currentTaskId,
+            //         flowId:that.currentFlowId,
+            //         bookId:that.currentBookId,
+            //         flowFatherId: that.currentFlowFatherId
+            //     });
+            // });
+
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+        	that.$('#btnChangeHandle').attr('disabled', 'disabled');
+			that.$('#btnChangeBatch').attr('disabled', 'disabled');
+			that.$('#btnChangeCheck').attr('disabled', 'disabled');
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            // that.initTemplate(tpl, {});
+
+            // 初始化数据前需要设置列表模板
+            this.listTpl = topicManageListTpl;
+
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+
+            // TODO: 测试
+            // that.openPage('public/workflow/workflow-dialog', {});
+            // that.openPage('public/file/file-upload', {});
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function () {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+
+    module.exports = Module;
+});

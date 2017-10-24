@@ -1,0 +1,317 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var config = {
+        // 初始化时默认加载的页面
+        defaultModule: 'dashboard/dashboard',
+        // 顶部导航菜单
+        menu: [
+            {
+                title: '选题管理',
+                auth: '02',
+                icon: 'fa fa-book',
+                dashboard: true,
+                items: [
+                    {
+                        title: '选题申报管理',
+                        auth: '021',
+                        dashboard: true,
+                        href: 'topic/topic-manage/topic-manage'
+                    },
+                    {
+                        title: '上报选题',
+                        auth: '022',
+                        dashboard: true,
+                        href: 'topic/topic-report/topic-report'
+                    },
+                    {
+                        title: '选题大会',
+                        auth: '023',
+                        dashboard: true,
+                        href: 'topic/topic-conference/topic-conference'
+                    },
+                    {
+                        title: '选题备案',
+                        auth: '024',
+                        dashboard: true,
+                        href: 'topic/topic-record/topic-record'
+                    }
+                ]
+            },
+            {
+                title: '盲文读物管理',
+                auth: '03',
+                icon: 'fa fa-braille',
+                dashboard: true,
+                items: [
+                    {
+                        title: '审稿',
+                        auth: '031',
+                        dashboard: true,
+                        href: 'braille/review/braille-review'
+                    },
+                    {
+                        title: '译校通读众包管理',
+                        auth: '032',
+                        dashboard: false,
+                        href: 'braille/crowd-source/crowdSource-manage'
+                    },
+                    {
+                        title: '译校通读管理',
+                        auth: '033',
+                        dashboard: true,
+                        href: 'braille/translation-proofreading/tprt-manage'
+                    },
+                    {
+                        title: '印前质检',
+                        auth: '034',
+                        dashboard: true,
+                        href: 'braille/pre-press-qc/qc-manage'
+                    },
+                    {
+                        title: '书号和CIP号申请',
+                        auth: '035',
+                        dashboard: true,
+                        href: 'braille/cip-apply/cip-apply'
+                    },
+                    {
+                        title: '变更备案',
+                        auth: '037',
+                        dashboard: true,
+                        href: 'braille/change-record/change-record'
+                    },
+                    {
+                        title: '清样稿管理',
+                        auth: '038',
+                        dashboard: true,
+                        href: 'braille/original-copy/original-copy-manage'
+                    },
+                    {
+                        title: '图书印制单审核管理',
+                        auth: '039',
+                        dashboard: true,
+                        href: 'braille/print-audit/print-audit-manage'
+                    },
+
+                    {
+                        title: '清样稿印制',
+                        auth: '03a',
+                        dashboard: true,
+                        href: 'braille/sample-print/sample-print'
+                    },
+                    {
+                        title: '印刷管理',
+                        auth: '03b',
+                        dashboard: true,
+                        href: 'braille/print-manage/print-manage'
+                    },
+                    {
+                        title: '封面设计及印刷',
+                        auth: '03c',
+                        dashboard: true,
+                        href: 'braille/cover-design/cover-design'
+                    },
+                    {
+                        title: '备案登记',
+                        auth: '03d',
+                        dashboard: true,
+                        href: 'braille/registration-records/registration-records'
+                    },
+                    {
+                        title: '报表统计',
+                        auth: '',
+                        dashboard: true,
+                        href: ''
+                    }
+                ]
+            },
+            {
+                title: '汉文读物管理',
+                icon: 'fa fa-language',
+                dashboard: true,
+                items: [
+                    {
+                        title: '合同录入',
+                        dashboard: true,
+                        href: 'chinese/contract-input/contract-input'
+                    },
+                    { 
+                        title: '图书排版',
+                        dashboard: true,
+                        href: ''
+                    },
+                    {
+                        title: '审稿',
+                        dashboard: true,
+                        href: ''
+                    },
+                    {
+                        title: '校对',
+                        dashboard: true,
+                        href: ''
+                    },
+                    {
+                        title: '排版及封面申请',
+                        dashboard: true,
+                        href: ''
+                    },
+                    {
+                        title: '书号和CIP申请',
+                        dashboard: true,
+                        href: ''
+                    },
+                    {
+                        title: '成本预算',
+                        dashboard: true,
+                        href: 'chinese/change-record/change-record'
+                    },
+                    {
+                        title: '印前质检',
+                        dashboard: true,
+                        href: ''
+                    },
+                    {
+                        title: '发印申请',
+                        dashboard: true,
+                        href: ''
+                    },
+                    {
+                        title: '蓝纸及样书',
+                        dashboard: true,
+                        href: ''
+                    },
+                    {
+                        title: '稿酬管理',
+                        dashboard: true,
+                        href: ''
+                    },
+                    {
+                        title: '劳务管理',
+                        dashboard: true,
+                        href: ''
+                    },
+                    {
+                        title: '样书管理',
+                        dashboard: true,
+                        href: ''
+                    }
+                ]
+            },
+            {
+                title: '总编室管理',
+                auth: '04',
+                dashboard: true,
+                icon: 'fa fa-sitemap',
+                items: [
+                    {
+                        title: '书号和cip号版署申请',
+                        auth: '041',
+                        dashboard: true,
+                        href: 'manage/cip-version/cip-version'
+                    }
+                ]
+            },
+            {
+                title: '出版管理',
+                icon: 'fa fa-print',
+                dashboard: true,
+                items: [
+                    {
+                        title: '再版重印管理',
+                        dashboard: true,
+                        href: ''
+                    }
+                    // {
+                    //     title: '生产管理',
+                    //     href: ''
+                    // },
+                    // {
+                    //     title: '物资采购',
+                    //     href: ''
+                    // },
+                    // {
+                    //     title: '物资管理',
+                    //     href: ''
+                    // },
+                    // {
+                    //     title: '物资出库',
+                    //     href: ''
+                    // }
+                ]
+            },
+            {
+                title: '资源库',
+                icon: 'fa fa-database',
+                dashboard: true,
+                items: [
+                    {
+                        title: '选题库',
+                        dashboard: true,
+                        href: ''
+                    },
+                    {
+                        title: '合同库',
+                        dashboard: true,
+                        href: ''
+                    },
+                    {
+                        title: '电子书稿库',
+                        dashboard: true,
+                        href: ''
+                    },
+                    {
+                        title: '汉盲语料库',
+                        dashboard: true,
+                        href: ''
+                    },
+                    {
+                        title: '合同模板管理',
+                        auth: '026',
+                        dashboard: true,
+                        href: 'topic/contract-template/contract-template'
+                    }
+                ]
+            },
+            {
+                title: '系统管理',
+                auth: '01',
+                icon: 'fa fa-cogs',
+                items: [
+                    {
+                        title: '人员管理',
+                        auth: '011',
+                        href: 'system/person/person-manage'
+                    },
+                    {
+                        title: '培训管理',
+                        auth: '012',
+                        href: 'system/train/train-manage'
+                    },
+                    {
+                        title: '角色管理',
+                        auth: '013',
+                        href: 'system/role/role-manage'
+                    },
+                    {
+                        title: '部门管理',
+                        auth: '014',
+                        href: 'system/department/department-manage'
+                    },
+                    {
+                        title: '字典管理',
+                        auth: '015',
+                        href: 'system/dictionary/dictionary-manage'
+                    },
+                    {
+                        title: '日志管理',
+                        auth: '016',
+                        href: 'system/logs/logs-manage'
+                    }
+                ]
+            }
+
+        ]
+    };
+
+    module.exports = config;
+});

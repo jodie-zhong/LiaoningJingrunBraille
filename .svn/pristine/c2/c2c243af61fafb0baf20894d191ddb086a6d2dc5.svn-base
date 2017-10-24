@@ -1,0 +1,230 @@
+<!--总编辑/副总编辑审批-->
+<% if(isEdit) { %>
+<div class="form-horizontal" id="formEdit">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label">审批结果</label>
+				<div class="col-xs-10">
+					<label class="radio-inline">
+            <% if(!info.handleState || info.handleState === '1') { %>
+            <input type="radio" name="handleState" value="1" data-fv-notempty="true" data-fv-notempty-message="请选择审批结果"
+                   checked>同意申报
+            <% } else { %>
+            <input type="radio" name="handleState" value="1" data-fv-notempty="true" data-fv-notempty-message="请选择审批结果">同意申报
+            <% } %>
+          </label>
+					<label class="radio-inline">
+            <% if(info.handleState === '4') { %>
+            <input type="radio" name="handleState" value="4" data-fv-notempty="true" data-fv-notempty-message="请选择审批结果"
+                   checked>不同意申报
+            <% } else { %>
+            <input type="radio" name="handleState" value="4" data-fv-notempty="true" data-fv-notempty-message="请选择审批结果">不同意申报
+            <% } %>
+          </label>
+					<label class="radio-inline">
+            <% if(info.handleState === '3') { %>
+            <input type="radio" name="handleState" value="3" data-fv-notempty="true" data-fv-notempty-message="请选择审批结果"
+                   checked>待定
+            <% } else { %>
+            <input type="radio" name="handleState" value="3" data-fv-notempty="true" data-fv-notempty-message="请选择审批结果">待定
+            <% } %>
+
+          </label>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label">审核意见<span class="must">*</span></label>
+				<div class="col-xs-10">
+					<textarea class="form-control" name="handleContentOne" maxlength="2048" placeholder="审核意见（不超过2048字）" data-fv-notempty="true" data-fv-notempty-message="请输入审核意见"><%- info.handleContentOne %></textarea>
+				</div>
+			</div>
+		</div>
+	</div>
+	<% for(var i = 0; i < info.userTaskEntities.length; i++) { %>
+  <% if(info.userTaskEntities[i].flowId) { %>
+  <div class="row" data-flow="<%- info.userTaskEntities[i].flowId %>" data-area="nextFlow" style="display: none;">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">下一流程</label>
+        <div class="col-xs-8">
+          <% if(!info.userTaskEntities[i].sonUserTaskList[0].deptAndRoles) { %>
+          <p class="form-control-static">
+            <%- info.userTaskEntities[i].sonUserTaskList[0].flowName %>
+          </p>
+          <% } else { %>
+          <p class="form-control-static">
+            <%- info.userTaskEntities[i].sonUserTaskList[0].flowName %>（
+            <%- info.userTaskEntities[i].sonUserTaskList[0].deptAndRoles %>）
+          </p>
+          <% } %>
+          <input type="hidden" name="flowId" value="<%- info.userTaskEntities[i].sonUserTaskList[0].flowId %>">
+          <input type="hidden" name="flowName" value="<%- info.userTaskEntities[i].sonUserTaskList[0].flowName %>">
+          <input type="hidden" name="nextCategory" value="<%- info.userTaskEntities[i].sonUserTaskList[0].category %>">
+          <input type="hidden" name="deptIds" value="<%- info.userTaskEntities[i].sonUserTaskList[0].deptIds %>">
+          <input type="hidden" name="roleIds" value="<%- info.userTaskEntities[i].sonUserTaskList[0].roleIds %>">
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <% if(info.userTaskEntities[i].sonUserTaskList[0].roleIds) { %>
+      <div class="form-group forHideTaskUsers">
+        <label class="col-xs-4 control-label">任务人<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <div class="input-group with-clear">
+            <input type="text" class="form-control" name="taskUsers" value="<%- info.userTaskEntities[i].sonUserTaskList[0].nextFlowTaskUserNames %>" data-value="<%- info.userTaskEntities[i].sonUserTaskList[0].nextFlowTaskUserIds %>"
+                   placeholder="任务人" readonly data-data="{searchRoleId: '', searchDepartmentId: ''}" data-fv-notempty="true" data-fv-notempty-message="请选择下一任务人"
+                   title="<%- info.userTaskEntities[i].sonUserTaskList[0].nextFlowTaskUserNames %>">
+            <span class="input-group-btn">
+              <button class="btn btn-clear" type="button" data-action="clear"><i class="fa fa-remove box"></i></button>
+              <button class="btn btn-default" type="button" data-open="public/user/select-users"
+                      data-data='{"roleIds": "<%- info.userTaskEntities[i].sonUserTaskList[0].roleIds %>", "deptIds": "<%- info.userTaskEntities[i].sonUserTaskList[0].deptIds %>"}'><i
+                  class="fa fa-user-o"></i></button>
+            </span>
+          </div>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+      <% } %>
+    </div>
+  </div>
+  <% } %>
+  <% } %>
+	<div class="row" data-flow="issued" data-area="nextFlow" id="nextFlow">
+		<div class="col-xs-12">
+			<table class="table table-bordered table-nowrap">
+				<thead>
+					<tr>
+						<th style="width: 90px;">图书类型</th>
+						<th>下一流程</th>
+						<th>下一流程任务人</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% for(var i = 0; i < info.userTaskEntities.length; i++) { %>
+					<% if(!info.userTaskEntities[i].flowId) { %>
+					<tr data-flow = "nextFlow">
+						<td>
+							<%- info.userTaskEntities[i].bookType %>
+							<input type="hidden" value="<%- info.userTaskEntities[i].bookTypeCode %>" name="bookTypeCode" />
+						</td>
+						<!-- 流程任务人为一个时 -->
+						<% if(info.userTaskEntities[i].sonUserTaskList.length === 1) { %>
+						<td>
+							<%- info.userTaskEntities[i].sonUserTaskList[0].flowName %>(<%- info.userTaskEntities[i].sonUserTaskList[0].deptAndRoles %>)
+							<input type="hidden" name="flowId" value="<%- info.userTaskEntities[i].sonUserTaskList[0].flowId %>">
+          		<input type="hidden" name="flowName" value="<%- info.userTaskEntities[i].sonUserTaskList[0].flowName %>">
+    		      <input type="hidden" name="nextCategory" value="<%- info.userTaskEntities[i].sonUserTaskList[0].category %>">
+    		      <input type="hidden" name="deptIds" value="<%- info.userTaskEntities[i].sonUserTaskList[0].deptIds %>">
+     			    <input type="hidden" name="roleIds" value="<%- info.userTaskEntities[i].sonUserTaskList[0].roleIds %>">
+						</td>
+						<td>
+						<% for( var k = 0; k < info.userTaskEntities[i].sonUserTaskList.length; k++) { %>
+							<div class="input-group with-clear">
+								<input type="text" class="form-control" name="taskUsers" title="<%- info.userTaskEntities[i].sonUserTaskList[k].nextFlowTaskUserNames %>" value="<%- info.userTaskEntities[i].sonUserTaskList[k].nextFlowTaskUserNames %>" data-value = "<%- info.userTaskEntities[i].sonUserTaskList[k].nextFlowTaskUserIds %>" placeholder="任务人" readonly
+									data-data="{searchRoleId: '', searchDepartmentId: ''}" data-fv-notempty="true" data-fv-notempty-message="请选择下一任务人" />
+								<span class="input-group-btn">
+									<button class="btn btn-clear" type="button" data-action="clear" ><i class="fa fa-remove box"></i></button>
+                  <button class="btn btn-default" type="button" data-open="public/user/select-users"
+                    data-data='{"roleIds": "<%- info.userTaskEntities[i].sonUserTaskList[k].roleIds %>", "deptIds": "<%- info.userTaskEntities[i].sonUserTaskList[k].deptIds %>"}'><i
+                    class="fa fa-user-o"></i>
+                  </button>
+								</span>
+							</div>
+						<% } %>		
+						</td>		
+						<% } else { %>
+						<!-- 流程任务人为多个时，使用下拉框 -->
+						<td>
+							<select class="form-control" name="nextFlow">
+								<% for (var j = 0; j < info.userTaskEntities[i].sonUserTaskList.length; j++ ) { %>
+								<option value = "<%- info.userTaskEntities[i].sonUserTaskList[j].deptIds %>"><%- info.userTaskEntities[i].sonUserTaskList[j].flowName %>(<%- info.userTaskEntities[i].sonUserTaskList[j].deptAndRoles %>)</option>
+								<% } %>
+							</select>
+						</td>
+						<td>
+						<% for( var l = 0; l < info.userTaskEntities[i].sonUserTaskList.length; l++) { %>
+							<div class="input-group with-clear" data-dept = "<%- info.userTaskEntities[i].sonUserTaskList[l].deptIds %>">
+								<input type="text" class="form-control" name="taskUsers" title="<%- info.userTaskEntities[i].sonUserTaskList[l].nextFlowTaskUserNames %>" value="<%- info.userTaskEntities[i].sonUserTaskList[l].nextFlowTaskUserNames %>" data-value = "<%- info.userTaskEntities[i].sonUserTaskList[l].nextFlowTaskUserIds %>" placeholder="任务人" readonly
+									data-data="{searchRoleId: '', searchDepartmentId: ''}" data-fv-notempty="true" data-fv-notempty-message="请选择下一任务人" />
+								<span class="input-group-btn">
+									<button class="btn btn-clear" type="button" data-action="clear" ><i class="fa fa-remove box"></i></button>
+                  <button class="btn btn-default" type="button" data-open="public/user/select-users"
+                    data-data='{"roleIds": "<%- info.userTaskEntities[i].sonUserTaskList[l].roleIds %>", "deptIds": "<%- info.userTaskEntities[i].sonUserTaskList[l].deptIds %>"}'><i
+                    class="fa fa-user-o"></i>
+                  </button>
+								</span>
+							</div>
+							<input type="hidden" name="flowId" value="<%- info.userTaskEntities[i].sonUserTaskList[l].flowId %>">
+          			<input type="hidden" name="flowName" value="<%- info.userTaskEntities[i].sonUserTaskList[l].flowName %>">
+    		    	  <input type="hidden" name="nextCategory" value="<%- info.userTaskEntities[i].sonUserTaskList[l].category %>">
+    		    	  <input type="hidden" name="deptIds" value="<%- info.userTaskEntities[i].sonUserTaskList[l].deptIds %>">
+     			  	  <input type="hidden" name="roleIds" value="<%- info.userTaskEntities[i].sonUserTaskList[l].roleIds %>">
+						<% } %>		
+						</td>		
+						<% } %>					
+					</tr>
+					<% } %>
+					<% } %>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<% } else { %>
+<div class="form-horizontal">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label">审批结果</label>
+				<div class="col-xs-10">
+					<p class="form-control-static">
+						<% if(!info.handleState || info.handleState === '1') { %> 同意申报
+						<% } %>
+						<% if(info.handleState === '4') { %> 不同意申报
+						<% } %>
+						<% if(info.handleState === '3') { %> 待定
+						<% } %>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label">审核意见</label>
+				<div class="col-xs-10">
+					<pre class="form-control-static"><%- info.handleContentOne %></pre>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">提交人</label>
+				<div class="col-xs-8">
+					<p class="form-control-static">
+						<%- info.submitUserName %>
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">提交时间</label>
+				<div class="col-xs-8">
+					<p class="form-control-static">
+						<%- info.submitDatetime %>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<% } %>

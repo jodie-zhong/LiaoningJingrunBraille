@@ -1,0 +1,33 @@
+{
+  "code": 0,
+  "message": null,
+  "data": {
+    "records": [
+      {
+        "bookId": 1,
+        "bookName": "在啊",
+        "bookType": "1",
+        "bookTypeName": "盲文读物",
+        "bookRecommendType": "1",
+        "bookRecommendTypeName": "非社推荐选题",
+        "bookIsUrgent": "1",
+        "bookIsUrgentName": "否",
+        "bookState": "1",
+        "bookStateName": "待申报",
+        "flowId": "5",
+        "handleType": null
+      }
+    ],
+    "pageindex": {
+      "startindex": 1,
+      "endindex": 1
+    },
+    "pageCount": 1,
+    "pageSize": 10,
+    "pageNow": 1,
+    "rowCount": 1,
+    "startPage": 0,
+    "pagecode": 5,
+    "firstResult": 0
+  }
+}

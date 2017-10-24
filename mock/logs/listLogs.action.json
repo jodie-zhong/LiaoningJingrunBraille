@@ -1,0 +1,90 @@
+{
+	"code": 0,
+	"message": "查询列表成功",
+	"data": {
+		"records": [
+			{
+				"logId": "77",
+				"operation": "错误记录",
+				"operationContent": "nested exception is org.apache.ibatis.reflection.ReflectionException: There is no getter for property named 'roleIds' in 'class java.lang.String'",
+				"operationTime": "2017-05-16  08:51:46",
+				"computerIp": "192.168.1.56",
+				"operationName": null
+			}, {
+				"logId": "76",
+				"operation": "错误记录",
+				"operationContent": "nested exception is org.apache.ibatis.reflection.ReflectionException: There is no getter for property named 'roleIds' in 'class java.lang.String'",
+				"operationTime": "2017-05-16  08:51:32",
+				"computerIp": "192.168.1.199",
+				"operationName": null
+			}, {
+				"logId": "75",
+				"operation": "错误记录",
+				"operationContent": "nested exception is org.apache.ibatis.reflection.ReflectionException: There is no getter for property named 'roleIds' in 'class java.lang.String'",
+				"operationTime": "2017-05-16  08:51:29",
+				"computerIp": "192.168.1.199",
+				"operationName": null
+			}, {
+				"logId": "74",
+				"operation": "新增",
+				"operationContent": "新增部门：FKDDMG",
+				"operationTime": "2017-05-15  13:47:30",
+				"computerIp": "192.168.1.243",
+				"operationName": null
+			}, {
+				"logId": "73",
+				"operation": "修改",
+				"operationContent": "修改部门：颜廷宇的部门5",
+				"operationTime": "2017-05-15  13:15:12",
+				"computerIp": "192.168.1.243",
+				"operationName": null
+			}, {
+				"logId": "72",
+				"operation": "错误记录",
+				"operationContent": "\r\n### Error querying database.  Cause: com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Column 'is_use' in where clause is ambiguous\r\n### The error may exist in file [D:\\workspace\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp1\\wtpwebapps\\mw.background.web\\WEB-INF\\classes\\com\\jr\\business\\system\\dao\\DepartmentMapper.xml]\r\n### The error may involve com.jr.business.system.dao.DepartmentMapper.selectDepartmentList-Inline\r\n### The error occurred while setting parameters\r\n### Cause: com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Column 'is_use' in where clause is ambiguous\n; SQL []; Column 'is_use' in where clause is ambiguous; nested exception is com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Column 'is_use' in where clause is ambiguous",
+				"operationTime": "2017-05-15  11:11:10",
+				"computerIp": "192.168.1.199",
+				"operationName": null
+			}, {
+				"logId": "71",
+				"operation": "错误记录",
+				"operationContent": "\r\n### Error querying database.  Cause: com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Column 'is_use' in where clause is ambiguous\r\n### The error may exist in file [D:\\workspace\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp1\\wtpwebapps\\mw.background.web\\WEB-INF\\classes\\com\\jr\\business\\system\\dao\\DepartmentMapper.xml]\r\n### The error may involve com.jr.business.system.dao.DepartmentMapper.selectDepartmentList-Inline\r\n### The error occurred while setting parameters\r\n### Cause: com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Column 'is_use' in where clause is ambiguous\n; SQL []; Column 'is_use' in where clause is ambiguous; nested exception is com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Column 'is_use' in where clause is ambiguous",
+				"operationTime": "2017-05-15  11:11:05",
+				"computerIp": "192.168.1.199",
+				"operationName": null
+			}, {
+				"logId": "70",
+				"operation": "修改",
+				"operationContent": "修改部门：颜廷宇的部门6",
+				"operationTime": "2017-05-15  11:04:35",
+				"computerIp": "192.168.1.199",
+				"operationName": null
+			}, {
+				"logId": "69",
+				"operation": "错误记录",
+				"operationContent": "验证码输入错误，请重试",
+				"operationTime": "2017-05-15  09:34:01",
+				"computerIp": "192.168.1.165",
+				"operationName": null
+			}, {
+				"logId": "68",
+				"operation": "新增",
+				"operationContent": "新增部门：颜廷宇的部门6",
+				"operationTime": "2017-05-12  14:50:17",
+				"computerIp": "192.168.1.199",
+				"operationName": null
+			}
+		],
+		"pageindex": {
+			"startindex": 1,
+			"endindex": 5
+		},
+		"pageCount": 8,
+		"pageSize": 10,
+		"pageNow": 1,
+		"rowCount": 76,
+		"startPage": 0,
+		"pagecode": 5,
+		"firstResult": 0
+	}
+}

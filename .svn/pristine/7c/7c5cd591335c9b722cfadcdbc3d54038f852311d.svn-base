@@ -1,0 +1,24 @@
+<% if(list.length > 0) { %>
+<% for(var i = 0; i < list.length; i++) { %>
+<tr data-id="<%- list[i].topicMeetingId %>" data-name="<%- list[i].topicMeetingName %>" data-state="<%-list[i].topicMeetingState %>" data-number="<%- list[i].topicMeetingNum %>">
+  <td><%- (i + 1) %></td>
+  <td data-check="true"><i class="fa fa-square-o" data-action="check"></i></td>
+  <td title="<%- list[i].topicMeetingName %>"><%- list[i].topicMeetingName %></td>
+  <td title="<%- list[i].topicMeetingAddress %>"><%- list[i].topicMeetingAddress %></td>
+  <td title="<%- list[i].topicMeetingDatetime %>"><%- list[i].topicMeetingDatetime %></td>
+  <td title="<%- list[i].createUserName %>"><%- list[i].createUserName %></td>
+  <td title="<%- list[i].topicMeetingNum %>"><%- list[i].topicMeetingNum %></td>
+  <% if(list[i].topicMeetingState === '1') { %>
+  <td>待开会</td>
+  <% } else if(list[i].topicMeetingState === '2') { %>
+  <td>已开会</td>
+  <% }else{ %>
+  <td>已提交</td>
+  <% } %>
+</tr>
+<% } %>
+<% } else { %>
+<tr>
+  <td colspan="8"><p class="empty-tips">没有符合指定条件的数据</p></td>
+</tr>
+<% } %>

@@ -1,0 +1,69 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+    var that;
+
+    /**
+     * Workflow Item
+     */
+    module.exports = ItemBase.extend({
+        // 保存/提交接口
+        saveAction: 'quality/saveOrSubmitQuality.action',
+        // 批量保存/提交接口
+        batchSaveAction: 'quality/batchQuality.action',
+        // 查询接口
+        detailAction: 'quality/searchQualityTestDetail.action',
+
+        /**
+         * 生成参数
+         */
+        getFormData: function () {
+            var params = {bookFascicleEntities: []};
+            // table数据
+            that.$('#dataTBody').children().each(function () {
+                params.bookFascicleEntities.push({
+                    bookFascicleId: $(this).attr('data-fascicule-id'),
+                    bookFascicleCheckPage: $(this).find("input[name='bookFascicleCheckPage']").val(),
+                    bookFascicleCheckVersion: $(this).find("input[name='bookFascicleCheckVersion']").val()
+                });
+            });
+            params.handleContentOne = that.$("textarea[name='handleContentOne']").val();
+            params.taskUsers = that.$("input[name='taskUsers']").attr('data-value');
+            params.flowId = that.$("input[name='flowId']").val();
+            params.flowName = that.$("input[name='flowName']").val();
+            return params;
+        },
+
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+        },
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function (container, tpl) {
+            this._super(container, tpl);
+        },
+
+        /**
+         * 渲染页面
+         */
+        render: function () {
+            this._super();
+            that = this;
+            this.initPageEvent();
+            this.initPageData();
+        }
+    });
+});

@@ -1,0 +1,43 @@
+<% if(list.length > 0) { %>
+<% for(var i = 0; i < list.length; i++) { %>
+<tr data-bookId="<%- list[i].bookId %>" data-bookTopicId="<%- list[i].bookTopicId %>" data-deploy="<%- list[i].bookDeploymentKey %>"
+	 data-taskState="<%- list[i].taskState %>" data-flowId="<%- list[i].flowId %>" data-taskId="<%- list[i].taskId %>" 
+	 data-urgent="<%- list[i].bookTopicIsUrgent %>" data-users="<%- list[i].taskUsers %>" data-num="<%- list[i].taskNum %>">
+  <td><%- (i + 1) %></td>
+  <td data-check="true"><i class="fa fa-square-o" data-action="check"></i></td>
+  <td><%- list[i].bookTopicName %></td>
+  <% if(list[i].bookTopicType === '1') { %>
+  <td>盲文读物</td>
+  <% } else if(list[i].bookTopicType === '2') { %>
+  <td>大字本读物</td>
+  <% } else if(list[i].bookTopicType === '3') { %>
+  <td>普通读物</td>
+  <% } else { %>
+  <td>有声读物</td>
+  <% } %>
+  <% if(list[i].bookTopicSelectProperty === '1') { %>
+  <td>普通</td>
+  <% } else if(list[i].bookTopicSelectProperty === '2') { %>
+  <td>重大选题备案</td>
+  <% } else { %>
+  <td>引进选题备案</td>
+  <% } %>
+  <% if(list[i].bookTopicRecommendType === '1') { %>
+  <td>非社推荐选题</td>
+  <% } else { %>
+  <td>社推荐选题</td>
+  <% } %>
+  <% if(list[i].bookTopicIsUrgent === '1') { %>
+  <td>否</td>
+  <% } else { %>
+  <td>是</td>
+  <% } %>
+  <td><%- list[i].taskUserNames %></td>
+  <td><%- list[i].bookTopicFileState %></td>
+</tr>
+<% } %>
+<% } else { %>
+<tr data-noselect="true">
+  <td colspan="9"><p class="empty-tips">没有符合指定条件的数据</p></td>
+</tr>
+<% } %>

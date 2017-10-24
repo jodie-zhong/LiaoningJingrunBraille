@@ -1,0 +1,164 @@
+<% if(list.length > 0) { %>
+<% for(var i = 0; i < list.length; i++) { %>
+<tr data-bookId="<%- list[i].editIdAndStateEntity.bookEditTprStatisticsId %>" data-name="<%- list[i].bookName %>"
+    data-bookIdOnly="<%- list[i].bookId %>"
+    data-taskState="<%- list[i].taskState %>"
+    data-deploy="<%- list[i].bookDeploymentKey %>" data-taskId="<%- list[i].taskId %>"
+    data-taskUsers="<%- list[i].taskUsers %>" data-users="<%- list[i].taskUsers %>"
+    data-state="<%- list[i].editIdAndStateEntity.bookEditTprStatisticsState %>">
+  <td class="w-table"><%- (i + 1) %></td>
+  <td class="w-table" data-check="true"><i class="fa fa-square-o" data-action="check"></i></td>
+  <td style="width: 80px" title="<%- list[i].bookOneKind %>"><%- list[i].bookOneKind %></td>
+  <td style="width: 150px" title="<%- list[i].bookName %>"><%- list[i].bookName %></td>
+  <td style="width: 80px" title="<%- list[i].bookIsbn %>"><%- list[i].bookIsbn %></td>
+  <td style="width: 150px" title="<%- list[i].bookDetailAuthor %>"><%- list[i].bookDetailAuthor %></td>
+  <td style="width: 100px" title="<%- list[i].bookDetailSketched %>"><%- list[i].bookDetailSketched %></td>
+  <td style="width: 100px" title="<%- list[i].bookDetailPublishingHouse %>"><%- list[i].bookDetailPublishingHouse %></td>
+  <td style="width: 150px" title="<%- list[i].bookDetailPublicationDate %>"><%- list[i].bookDetailPublicationDate %></td>
+  <td style="width: 100px" title="<%- list[i].bookDetailEditionTime %>"><%- list[i].bookDetailEditionTime %></td>
+  <td style="width: 150px" title="<%- list[i].bookTwoKind %>"><%- list[i].bookTwoKind %></td>
+  <td style="width: 150px" title="<%- list[i].bookSubjectHeadings %>"><%- list[i].bookSubjectHeadings %></td>
+  <td style="width: 100px" title="<%- list[i].bookDetailClassNum %>"><%- list[i].bookDetailClassNum %></td>
+  <td style="width: 150px" title="<%- list[i].auditType %>"><%- list[i].auditType %></td>
+  <!--录入-->
+  <td class="text-center border-left" style="width: 120px">
+    <% for(var j = 0; j < list[i].inputVersionNumList.length; j++) { %>
+    <div class="text-center" title="<%- list[i].inputVersionNumList[j].handleUserName %>"><%- list[i].inputVersionNumList[j].handleUserName %></div>
+    <% } %>
+  </td>
+  <td class="text-center" style="width: 120px">
+    <% for(var j = 0; j < list[i].inputVersionNumList.length; j++) { %>
+    <div class="text-center" title="<%- list[i].inputVersionNumList[j].bookWrongVersionNum %>"><%- list[i].inputVersionNumList[j].bookWrongVersionNum %></div>
+    <% } %>
+  </td>
+  <td class="text-center" style="width: 120px">
+    <% for(var j = 0; j < list[i].inputWrongList.length; j++) { %>
+    <div class="text-center" title="<%- list[i].inputWrongList[j].bookWrongRate %>"><%- list[i].inputWrongList[j].bookWrongRate %></div>
+    <% } %>
+  </td>
+  <td class="text-center border-right" style="width: 120px" title=""></td>
+  <!--一校-->
+  <td class="text-center" style="width: 120px">
+    <% for(var j = 0; j < list[i].firstRevisalVersionNumList.length; j++) { %>
+    <div class="text-center" title="<%- list[i].firstRevisalVersionNumList[j].handleUserName %>"><%- list[i].firstRevisalVersionNumList[j].handleUserName %></div>
+    <% } %>
+  </td>
+  <td class="text-center" style="width: 120px">
+    <% for(var j = 0; j < list[i].firstRevisalVersionNumList.length; j++) { %>
+    <div class="text-center" title="<%- list[i].firstRevisalVersionNumList[j].bookWrongVersionNum %>"><%- list[i].firstRevisalVersionNumList[j].bookWrongVersionNum %></div>
+    <% } %>
+  </td>
+  <td class="text-center" style="width: 120px">
+    <% for(var j = 0; j < list[i].firstRevisalWrongList.length; j++) { %>
+    <div class="text-center" title="<%- list[i].firstRevisalWrongList[j].bookWrongRate %>"><%- list[i].firstRevisalWrongList[j].bookWrongRate %></div>
+    <% } %>
+  </td>
+  <td class="text-center border-right" title=""></td>
+  <!--二校-->
+  <td class="text-center" style="width: 120px">
+    <% for(var j = 0; j < list[i].secondRevisalVersionNumList.length; j++) { %>
+    <div class="text-center" title="<%- list[i].secondRevisalVersionNumList[j].handleUserName %>"><%- list[i].secondRevisalVersionNumList[j].handleUserName %></div>
+    <% } %>
+  </td>
+  <td class="text-center" style="width: 120px">
+    <% for(var j = 0; j < list[i].secondRevisalVersionNumList.length; j++) { %>
+    <div class="text-center" title="<%- list[i].secondRevisalVersionNumList[j].bookWrongVersionNum %>"><%- list[i].secondRevisalVersionNumList[j].bookWrongVersionNum %></div>
+    <% } %>
+  </td>
+  <td class="text-center" style="width: 120px">
+    <% for(var j = 0; j < list[i].secondRevisalWrongList.length; j++) { %>
+    <div class="text-center" title="<%- list[i].secondRevisalWrongList[j].bookWrongRate %>"><%- list[i].secondRevisalWrongList[j].bookWrongRate %></div>
+    <% } %>
+  </td>
+  <td class="text-center border-right" style="width: 120px" title=""></td>
+  <!--末校一次-->
+  <td class="text-center" style="width: 120px">
+    <% for(var j = 0; j < list[i].lastRevisalOneVersionNumList.length; j++) { %>
+    <div class="text-center" title="<%- list[i].lastRevisalOneVersionNumList[j].handleUserName %>"><%- list[i].lastRevisalOneVersionNumList[j].handleUserName %></div>
+    <% } %>
+  </td>
+  <td class="text-center" style="width: 120px">
+    <% for(var j = 0; j < list[i].lastRevisalOneVersionNumList.length; j++) { %>
+    <div class="text-center" title="<%- list[i].lastRevisalOneVersionNumList[j].bookWrongVersionNum %>"><%- list[i].lastRevisalOneVersionNumList[j].bookWrongVersionNum %></div>
+    <% } %>
+  </td>
+  <td class="text-center" style="width: 120px">
+    <% for(var j = 0; j < list[i].lastRevisalOneWrongList.length; j++) { %>
+    <div class="text-center" title="<%- list[i].lastRevisalOneWrongList[j].bookWrongRate %>"><%- list[i].lastRevisalOneWrongList[j].bookWrongRate %></div>
+    <% } %>
+  </td>
+  <td class="text-center border-right" style="width: 120px" title=""></td>
+  <!--末校二次-->
+  <td class="text-center" style="width: 120px">
+    <% for(var j = 0; j < list[i].lastRevisalTwoVersionNumList.length; j++) { %>
+    <div class="text-center" title="<%- list[i].lastRevisalTwoVersionNumList[j].handleUserName %>"><%- list[i].lastRevisalTwoVersionNumList[j].handleUserName %></div>
+    <% } %>
+  </td>
+  <td class="text-center" style="width: 120px">
+    <% for(var j = 0; j < list[i].lastRevisalTwoVersionNumList.length; j++) { %>
+    <div class="text-center" title="<%- list[i].lastRevisalTwoVersionNumList[j].bookWrongVersionNum %>"><%- list[i].lastRevisalTwoVersionNumList[j].bookWrongVersionNum %></div>
+    <% } %>
+  </td>
+  <td class="text-center" style="width: 120px">
+    <% for(var j = 0; j < list[i].lastRevisalTwoWrongList.length; j++) { %>
+    <div class="text-center" title="<%- list[i].lastRevisalTwoWrongList[j].bookWrongRate %>"><%-
+      list[i].lastRevisalTwoWrongList[j].bookWrongRate %></div>
+    <% } %>
+  </td>
+  <td class="text-center border-right" style="width: 120px" title=""></td>
+  <!--通读-->
+  <td class="text-center" style="width: 120px">
+    <% for(var j = 0; j < list[i].readRevisalVersionNumList.length; j++) { %>
+    <div class="text-center" title="<%- list[i].readRevisalVersionNumList[j].handleUserName %>"><%-
+      list[i].readRevisalVersionNumList[j].handleUserName %></div>
+    <% } %>
+  </td>
+  <td class="text-center border-right" style="width: 120px">
+    <% for(var j = 0; j < list[i].readRevisalVersionNumList.length; j++) { %>
+    <div class="text-center" title="<%- list[i].readRevisalVersionNumList[j].bookWrongVersionNum %>"><%- list[i].readRevisalVersionNumList[j].bookWrongVersionNum %></div>
+    <% } %>
+  </td>
+  <!--印前质检-->
+  <td class="text-center" style="width: 120px">
+    <% for(var j = 0; j < list[i].prepressQCVersionNumList.length; j++) { %>
+    <div class="text-center" title="<%- list[i].prepressQCVersionNumList[j].handleUserName %>"><%-
+      list[i].prepressQCVersionNumList[j].handleUserName %></div>
+    <% } %>
+  </td>
+  <td class="text-center" style="width: 120px">
+    <% for(var j = 0; j < list[i].prepressQCVersionNumList.length; j++) { %>
+    <div class="text-center"  title="<%- list[i].prepressQCVersionNumList[j].bookWrongVersionNum %>"><%- list[i].prepressQCVersionNumList[j].bookWrongVersionNum %></div>
+    <% } %>
+  </td>
+  <td class="text-center" style="width: 120px">
+    <% for(var j = 0; j < list[i].pageEntityList.length; j++) { %>
+    <div class="text-center" title="<%- list[i].pageEntityList[j].bookFascicleCheckPage %>"><%- list[i].pageEntityList[j].bookFascicleCheckPage %></div>
+    <% } %>
+  </td>
+  <td class="text-center border-right" style="width: 120px">
+    <% for(var j = 0; j < list[i].readRevisalWrongList.length; j++) { %>
+    <div class="text-center" title="<%- list[i].readRevisalWrongList[j].bookWrongRate %>"><%- list[i].readRevisalWrongList[j].bookWrongRate %></div>
+    <% } %>
+  </td>
+
+  <!--最终盲文版数之后内容-->
+  <td class="text-center" style="width: 150px">
+    <% for(var j = 0; j < list[i].prepressQCVersionNumList.length; j++) { %>
+    <div class="text-center" title="<%- list[i].prepressQCVersionNumList[j].bookWrongVersionNum %>"><%- list[i].prepressQCVersionNumList[j].bookWrongVersionNum %></div>
+    <% } %>
+  </td>
+  <td class="search" style="width: 100px">
+    <% for(var j = 0; j < list[i].fascicleIdList.length; j++) { %>
+    <div class="m-b-5">
+      <button data-bookFascicleId="<%- list[i].fascicleIdList[j].bookFascicleId %>"
+              class="btn btn-default btn-rounded btn-sm btn-search">查看详情</button>
+    </div>
+    <% } %>
+  </td>
+</tr>
+<% } %>
+<% } else { %>
+<tr data-noselect="true">
+  <td  colspan="49"><p class="empty-tips">没有符合指定条件的数据</p></td>
+</tr>
+<% } %>

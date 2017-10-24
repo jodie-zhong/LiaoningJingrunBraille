@@ -1,0 +1,222 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    module.exports = {
+    	bookName: {
+    		title: '书名',
+    		type:'input'
+    	},
+    	bookSubtitle: {
+    		title:'副书名及说明文字',
+    		type:'input'
+    	},
+    	bookTieName:{
+    		title: '并列书名',
+    		type:'input'
+    	},
+    	bookDetailAuthor: {
+    		title: '第一作者',
+    		type:'input'
+    	},
+    	bookDetailWorkWay: {
+    		title: '第一著作方式',
+    		type:'input'
+    	},
+    	bookbookDetailOtherAuthorSubtitle: {
+    		title:'副书名及说明文字',
+    		type:'input'
+    	},
+    	bookDetailOtherWorkWay:{
+    		title: '其他著作方式',
+    		type:'input'
+    	},
+    	bookTextLanguage: {
+    		title: '正文文种',
+    		type:'input'
+    	},
+    	bookTextWords: {
+    		title: '正文文字',
+    		type:'input'
+    	},
+    	bindingWay: {
+    		title: '装订形式',
+    		type:'input'
+    	},
+    	bookPageNum:{
+    		title: '全书页数',
+    		type:'input'
+    	},
+    	bookDetailWordsNum: {
+    		title:'字数',
+    		type:'input'
+    	},
+    	bookDetailSheetNum: {
+    		title:'图幅数',
+    		type:'input'
+    	},
+    	bookFileNum:{
+    		title: '附件数量',
+    		type:'input'
+    	},
+    	dutyEditor: {
+    		title: '责任编辑',
+    		type:'input'
+    	},
+    	phone: {
+    		title: '电话',
+    		type:'input'
+    	},
+    	bookDetailSketched: {
+    		title:'内容提要',
+    		type:'input'
+    	},
+    	bookDetailAuthorMsg:{
+    		title: '作者简介',
+    		type:'input'
+    	},
+    	bookSubjectHeadings: {
+    		title: '建议主题词',
+    		type:'input'
+    	},
+    	bookDetailKind: {
+    		title: '图书分类',
+    		type:'input'
+    	},
+    	bookDetailGuideKind: {
+    		title:'指导分类',
+    		type:'input'
+    	},
+    	bookDetailPublishScope:{
+    		title: '发行范围',
+    		type:'input'
+    	},
+    	bookDetailReader: {
+    		title: '读者对象',
+    		type:'input'
+    	},
+    	bookDetailEdition: {
+    		title: '版次',
+    		type:'input'
+    	},
+    	bookDetailLayoutOrder: {
+    		title: '印次',
+    		type:'input'
+    	},
+    	finishedSize: {
+    		title: '成品尺寸',
+    		type:'input'
+    	},
+    	printPaperNum: {
+    		title:'印张数',
+    		type:'input'
+    	},
+    	printRuns:{
+    		title: '本次印量',
+    		type:'input'
+    	},
+    	currentlyPrintRuns: {
+    		title: '本次起印量',
+    		type:'input'
+    	},
+    	bookTotalVolume: {
+    		title: '累计印量',
+    		type:'input'
+    	},
+    	bookFasciclePrice: {
+    		title:'定价（本册）',
+    		type:'input'
+    	},
+    	priceChangeNum:{
+    		title: '价格变更次数',
+    		type:'input'
+    	},
+    	bookPublishMode: {
+    		title: '出版方式',
+    		type:'input'
+    	},
+    	cooperativePublisher: {
+    		title: '合作出版者',
+    		type:'input'
+    	},
+    	placePublication: {
+    		title: '出版地',
+    		type:'input'
+    	},
+    	printingUnit: {
+    		title: '印刷单位',
+    		type:'input'
+    	},
+    	seriesBookName: {
+    		title:'丛书名',
+    		type:'input'
+    	},
+    	accessorySeriesBookName:{
+    		title: '附属丛书名',
+    		type:'input'
+    	},
+    	paratacticSeriesBookName: {
+    		title: '并列丛书名',
+    		type:'input'
+    	},
+    	seriesBookAuthor: {
+    		title: '丛书著作责任者',
+    		type:'input'
+    	},
+    	bookFascicleNum: {
+    		title:'分（辑）册号',
+    		type:'input'
+    	},
+    	bookPrice:{
+    		title: '定价（本套）',
+    		type:'input'
+    	},
+    	counts: {
+    		title: '数量',
+    		type:'input'
+    	},
+    	packageBooksName: {
+    		title: '套书名',
+    		type:'input'
+    	},
+    	packageBooksAuthor: {
+    		title: '套书著作责任者',
+    		type:'input'
+    	},
+    	bookOriginalName: {
+    		title: '引进版图书原书名',
+    		type:'input'
+    	},
+    	author: {
+    		title:'版权合同登记号',
+    		type:'input'
+    	},
+    	pristinePlacePublication:{
+    		title: '原出版地',
+    		type:'input'
+    	},
+    	bookDetailPublicationDate: {
+    		title: '引进版图书原出版者',
+    		type:'input'
+    	},
+    	directoryFileNumber: {
+    		title: '教材目录文件号',
+    		type:'input'
+    	},
+    	catalogInformation: {
+    		title:'目录（章节）信息',
+    		type:'input'
+    	},
+    	remarks:{
+    		title: '备注',
+    		type:'input'
+    	},
+    	coverDesigner: {
+    		title: '封面设计者',
+    		type:'input'
+    	},
+    	bookPressName: {
+    		title: '出版社名称',
+    		type:'input'
+    	}
+    };	
+});

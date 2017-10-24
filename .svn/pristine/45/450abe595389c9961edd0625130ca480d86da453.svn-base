@@ -1,0 +1,139 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    // 工作流类窗口继承自工作流Base
+    var Base = require('../../other/base/book-base');
+
+    var topicManageListTpl = require('./topic-record-list.tpl');
+    // 选题备案新增
+    var FLOW_TOPIC_CREATE = 'topicRecordCreate';
+	var BrailleBigTopicRecord;              //重大选题备案管理
+	var FLOW_BIG_RECORD = 'bigTopicRecordRegister';           //选题备案登记
+	var FLOW_BIG_TRIAL = 'bigBrailleEditorialTrial';          //部门负责人审核
+	var FLOW_BIG_CHIEF = 'bigBrailleChiefEditorTrial';        //总编辑室审核
+	var FLOW_BIG_PUBLI = 'bigReportBureauPublication';        //上报版署
+	var FLOW_BIG_REGISTER = 'bigRecordRegister';              //备案登记
+
+	var BrailleImportedTopicRecord;      //引进选题备案管理
+	var FLOW_CITE_RECORD = 'importTopicRecordRegister';       //选题备案登记
+	var FLOW_CITE_TRIAL = 'importBrailleEditorialTrial';      //部门负责人审核
+	var FLOW_CITE_CHIEF = 'importBrailleChiefEditorTrial';    //总编辑室审核
+	var FLOW_CITE_REGISTER = 'importRecordRegister';          //备案登记
+
+    var Module = Base.extend(new function () {
+        var that;
+
+        // 查询任务树中未完成任务数的接口
+        // this.untreatedTaskAction = 'topic/unreadTopicCount.action';
+        // // 选题任务列表接口
+        // this.taskListActoin = 'topic/topicList.action';
+
+        this.searchBookType = 'BrailleTopicRecord';
+        
+        this.searchParams = {
+            searchTaskAbout : '1'
+        };
+
+        /**
+         * 选择行变更事件回调
+         */
+        this.onSelectRowChanged = function(){
+		// 暂时啥也不做
+        };
+        
+        this.onCheckRowChanged = function() {
+        	this.$('#btnTopicModify').attr('disabled', 'disabled');
+        	this.$('#btnTopicDel').attr('disabled', 'disabled');
+        	this.$('#btnTopicDepart').attr('disabled', 'disabled');
+        	this.$('#btnTopicChief').attr('disabled', 'disabled');
+        	this.$('#btnTopicReport').attr('disabled', 'disabled');
+        	this.$('#btnTopicRecord').attr('disabled', 'disabled');
+        	
+//      	var count = 0, flowId = null, users = null, bookIds = [],
+        };
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+            that.openPage('public/workflow/workflow-dialog', {
+                debug: true,
+                flowTemplate: 'topic-record/topic-record-report',
+                isEdit: true
+            });
+            
+            // 新增备案
+            that.$container.on('click','#btnTopicCreate',function() {
+            	that.openPage('public/workflow/workflow-dialog',{
+            		bookId: '',
+            		taskId: '',
+            		deployId: '2'
+            	});
+            });
+            // 修改备案
+            
+            // 删除备案
+            // 上报版署
+            // 部门负责人审核、主编、副主编审核、备案登记
+
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+
+
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            // that.initTemplate(tpl, {});
+
+            // 初始化数据前需要设置列表模板
+            this.listTpl = topicManageListTpl;
+
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+
+            // TODO: 测试
+            // that.openPage('public/workflow/workflow-dialog', {});
+            // that.openPage('public/file/file-upload', {});
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function () {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+
+    module.exports = Module;
+});

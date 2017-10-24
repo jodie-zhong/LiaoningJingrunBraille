@@ -1,0 +1,106 @@
+define(function(require, exports, module) {
+	"use strict";
+
+	var ItemBase = require('../item-base');
+	var util = require('../../../../../common/util.js');
+
+	/**
+	 * Workflow Item
+	 */
+	var Item = ItemBase.extend({
+		// 保存/提交接口
+		saveAction: 'printing/modifyPrinting.action',
+		// 查询接口
+		detailAction: 'printing/searchPrintingDetail.action',
+		
+		onHandleChange: function () {
+            var isEngraving = this.$('input[name="isEngraving"]:checked').val();
+            var deptChoose = this.$('input[name="deptChoose"]:checked').val();
+            this.$('div[data-area="nextFlow"]').hide();
+            if (isEngraving === '1') {
+                // 待定确认
+                this.$('div[data-flow="engraving"]').show();
+            }
+            if (isEngraving === '2') {
+                // 待定确认
+                this.$('div[data-flow="plate"]').show();
+            }
+            if (deptChoose === '1') {
+                // 待定确认
+                this.$('div[data-flow="braillePrintDeptDesignLeaderIssued"]').show();
+            }
+            if (deptChoose === '2') {
+                // 待定确认
+                this.$('div[data-flow="publicationDeptDesignHeadIssued"]').show();
+            }
+        },
+
+		/**
+		 * 保存或提交工作流
+		 */
+		getFormData: function() {
+			var $form = this.$('#formEdit');
+			// 先调用父类生成基本的数据结构
+			var params = this._super();
+			// 处理上传部份数据结构
+			params.listNext = [];
+			var $flow;
+			$form.find('div[data-area="nextFlow"]').each(function() {
+				$flow = $(this);
+				if($(this).is(':hidden')) {
+					return;
+				} else {
+					params.listNext.push({
+						flowId: $flow.find('input[name="flowId"]').val(),
+						flowName: $flow.find('input[name="flowName"]').val(),
+						nextCategory: $flow.find('input[name="nextCategory"]').val(),
+						deptIds: $flow.find('input[name="deptIds"]').val(),
+						roleIds: $flow.find('input[name="roleIds"]').val(),
+						taskId: $flow.find('input[name="taskId"]').val(),
+						taskUsers: $flow.find('input[name="taskUsers"]').attr('data-value')
+					});
+				}
+			});
+			return params;
+		},
+
+		/**
+		 * 初始化页面事件
+		 */
+		initPageEvent: function() {
+			var that = this;
+			this.$container.on('change', 'input[type="radio"]', this.onHandleChange.bind(this));
+		},
+
+		/**
+		 * 初始化页面数据
+		 */
+		initPageData: function() {
+			this.onHandleChange();
+		},
+
+		/**
+		 * 构造函数
+		 * @param container
+		 * @param tpl
+		 */
+		init: function(container, tpl) {
+			this._super(container, tpl);
+		},
+
+		/**
+		 * 渲染页面
+		 */
+		render: function() {
+			this._super();
+
+			this.initPageEvent();
+
+			this.initPageData();
+		}
+
+	});
+
+	module.exports = Item;
+
+});

@@ -1,0 +1,212 @@
+define(function(require, exports, module) {
+	"use strict";
+
+	var util = require('../../../common/util');
+	// 工作流类窗口继承自工作流Base
+	var Base = require('../../other/base/book-base');
+
+	//  var topicManageListTpl = require('./braille-review-list.tpl');
+
+	var FLOW_DEPTISSUED = 'deptIssued'; // 部门负责人下发
+	var FLOW_FIRSTAUDIT = 'firstAudit'; // 初审
+	var FLOW_SECONDAUDIT = 'secondAudit'; // 复审
+	var FLOW_FINALAUDIT = 'finalAudit'; // 终审
+	var FLOW_UPLOADEBOOK = 'uploadEbook'; // 上传电子书稿
+
+	var Module = Base.extend(new function() {
+		var that;
+
+		this.deployKey = 'BrailleAudit';
+		// 与我相关
+		this.searchTaskAbout = '1';
+		// 其他搜索选项
+		this.searchParams = {};
+		// 搜索选题类别
+		this.staticParams = {
+			bookType: '1'
+		};
+
+		this.searchFlowListId='searchBookId';
+
+		/**
+		 * 选择行变更事件回调
+		 */
+		this.onSelectRowChanged = function() {
+			// 暂时啥也不做
+		};
+
+		this.onCheckRowChanged = function() {
+			// 默认全部禁用
+			// deptIssued		部门负责人下发
+			// firstAudit      	初审
+			// secondAudit      复审
+			// finalAudit 		终审
+			// uploadEbook 		上传电子书稿
+
+			this.$('#btnReviewHandle').attr('disabled', 'disabled'); // 处理
+			this.$('#btnReviewBatch').attr('disabled', 'disabled'); // 批量处理
+			this.$('#btnReviewCheck').attr('disabled', 'disabled'); // 查看
+
+			var count = 0,
+				flowId = null,
+				users = null,
+				bookIds = [],
+				bookTopicIds = [],
+				taskIds = [];
+			var allDeptIssued = true,
+				allFirstAudit = true,
+				allSecondAudit = true,
+				allFinalAudit = true,
+				allUploadEbook = true,
+				allMe = true,
+				allUnfinished = true;
+			var userId = util.getUserInfo().userId;
+			that.$('#workListTBody').find('tr[checked]').each(function() {
+				flowId = $(this).attr('data-flowId');
+				users = $(this).attr('data-users') || '';
+				users = users ? users.split(',') : [];
+				// 包含非部门负责人下发
+				if(flowId !== FLOW_DEPTISSUED) {
+					allDeptIssued = false;
+				}
+				// 包含非初审
+				if(flowId !== FLOW_FIRSTAUDIT) {
+					allFirstAudit = false;
+				}
+				// 包含非复审
+				if(flowId !== FLOW_SECONDAUDIT) {
+					allSecondAudit = false;
+				}
+				// 包含非终审
+				if(flowId !== FLOW_FINALAUDIT) {
+					allFinalAudit = false;
+				}
+				// 包含非上传电子书稿
+				if(flowId !== FLOW_UPLOADEBOOK) {
+					allUploadEbook = false;
+				}
+				// 待我处理
+				if(users.indexOf(userId) < 0) {
+					allMe = false;
+				}
+				// 任务状态未完成
+				if($(this).attr('data-taskState') === '2') {
+					allUnfinished = false;
+				}
+
+				bookIds.push($(this).attr('data-bookId'));
+				bookTopicIds.push($(this).attr('data-bookTopicId'));
+				taskIds.push($(this).attr('data-taskId'));
+				count++;
+			});
+
+			this.currentBookId = bookIds.join(',');
+			this.currentBookTopicId = bookTopicIds.join(',');
+			this.currentTaskId = taskIds.join(',');
+
+			// 只选择了一条，查看可用
+			if(count === 1) {
+				// 查看可用
+				if (!allDeptIssued) {
+					this.$('#btnReviewCheck').removeAttr('disabled');
+				}
+				// 部门负责人下发、初审、复审、终审、上传电子书稿可用
+				if(allMe && allUnfinished && (allDeptIssued || allFirstAudit || allSecondAudit || allFinalAudit || allUploadEbook)) {
+					this.$('#btnReviewHandle').removeAttr('disabled');
+				}
+			}
+			// 选择一条或多条
+			if(count > 1) {
+				// 全部都是部门负责人下发、复审、终审
+				if((allDeptIssued || allSecondAudit || allFinalAudit) && allMe && allUnfinished) {
+					this.$('#btnReviewBatch').removeAttr('disabled');
+				}
+			}
+		};
+
+		/**
+		 * 初始化页面事件
+		 */
+		function initPageEvent() {
+
+//			that.openPage('public/workflow/workflow-dialog', {
+//				debug: true,
+//				flowTemplate: 'chinese-print-manage/print-manage-advice',
+//				isEdit: true
+//			});
+
+			// 部门负责人下发
+			that.$container.on('click', '#btnReviewHandle,#btnReviewBatch', function() {
+				that.openPage('public/workflow/workflow-dialog', {
+					flowInfoAction: 'common/searchBookFlowList.action',
+					bookId: that.currentBookId,
+					bookTopicId: that.currentBookTopicId,
+					taskId: that.currentTaskId,
+					deployId: that.deployKey
+				});
+			});
+
+			// 查看
+			that.$container.on('click', '#btnReviewCheck', function() {
+				that.openPage('public/workflow/workflow-dialog', {
+					flowInfoAction: 'common/searchBookFlowList.action',
+					bookId: that.currentBookId,
+					taskId: that.currentTaskId,
+					deployId: that.deployKey,
+					isView: true
+				});
+			});
+		}
+
+		/**
+		 * 初始化页面数据
+		 */
+		function initPageData() {
+
+		}
+
+		/**
+		 * 初始化时被调用
+		 */
+		this.onInit = function($el, tpl, data, indexRef) {
+			this._super($el, tpl, data, indexRef);
+			that = this;
+			// that.initTemplate(tpl, {});
+
+			//      	初始化数据前需要设置列表模板
+			//          this.listTpl = topicManageListTpl;
+
+			// 初始化页面事件
+			initPageEvent();
+
+			// 初始化页面数据
+			initPageData();
+		};
+
+		/**
+		 * 页面返回事件
+		 * @param data
+		 */
+		this.onBack = function(data) {
+			this._super(data);
+
+		};
+
+		/**
+		 * 窗口缩放事件
+		 */
+		this.onResize = function() {
+			this._super();
+		};
+
+		/**
+		 * 页面销毁
+		 */
+		this.onDestroy = function() {
+			this._super();
+		};
+
+	}());
+
+	module.exports = Module;
+});

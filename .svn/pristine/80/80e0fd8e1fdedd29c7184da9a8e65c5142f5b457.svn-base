@@ -1,0 +1,223 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util.js');
+    // 工作流类窗口继承自工作流Base
+    var Base = require('../../other/base/task-base');
+
+    var topicManageListTpl = require('./cip-apply-list.tpl');
+
+    var FLOW_ISDN_CIP = 'applyISDNCIP';                         // 提交申请
+    var FLOW_AUDITt = 'applyAudit';                             // 审核
+    var FLOW_VERSION_APPLY = 'versionApply';	               // 版署申请
+    var FLOW_ISSUED = 'issued';	                                // 下发
+    var FLOW_FAILURE = 'failureApply';	                        // 未通过处理
+    var FLOW_COMP = 'completionBook';	                        // 补全图书信息
+    var FLOW_COVER = 'completionCoverBook';	                    // 盲文封面信息补全
+    var FLOW_REGISTER = 'registrationConfirmation';	            // 备案登记确认
+
+    var Module = Base.extend(new function () {
+        var that;
+
+        // 查询任务树中未完成任务数的接口
+        // this.untreatedTaskAction = 'topic/unreadTopicCount.action';
+
+        this.deployKey = 'BrailleApplyISBNCIP';
+
+        // 与我相关
+        this.searchTaskAbout = '1';
+        // 其他搜索选项
+        this.searchParams = {};
+
+        this.searchFlowListKey='bookId';
+
+        this.flowInfoAction='common/searchBookFlowList.action';
+
+        /**
+         * 搜索任务列表的接口(覆盖父级)
+         */
+        this.taskListAction= 'cipApply/searchBookList.action';
+
+
+        /**
+         * 选择行变更事件回调
+         */
+        this.onSelectRowChanged = function(){
+            // params[this.searchFlowListKey] = this.currentId;
+        };
+
+        this.onCheckRowChanged = function () {
+            // 默认全部禁用
+
+            this.$('#btnCipSingle').attr('disabled', 'disabled');        // 处理
+            this.$('#btnCipBatch').attr('disabled', 'disabled');         // 批量处理
+            this.$('#btnCipSearch').attr('disabled', 'disabled');        // 查看
+
+            var count = 0, flowId = null, users = null, bookIds = [],taskIds=[];
+            var applyCip = true,applyAudit=true,versionApply=true, issued=true,failureApply=true,completionBook=true,completionCoverBook=true,registrationConfirmation=true,allMe = true, allUnfinished = true;
+            var userId = util.getUserInfo().userId;
+            that.$('#workListTBody').find('tr[checked]').each(function () {
+                flowId = $(this).attr('data-flowId');
+                users = $(this).attr('data-users') || '';
+                users = users? users.split(','): [];
+                // 包含非提交申请
+                if(flowId !== FLOW_ISDN_CIP ){
+                    applyCip=false
+                }
+                // 包含非审核
+                if(flowId !==FLOW_AUDITt ){
+                    applyAudit=false
+                }
+                // 包含非版署申请
+                if(flowId !== FLOW_VERSION_APPLY){
+                    versionApply=false
+                }
+                // 包含非下发
+                if(flowId !== FLOW_ISSUED ){
+                    issued=false
+                }
+                // 包含非未通过处理
+                if(flowId !== FLOW_FAILURE ){
+                    failureApply=false
+                }
+                // 包含非补全图书信息
+                if(flowId !== FLOW_COMP ){
+                    completionBook=false
+                }
+                // 包含非盲文封面信息补全
+                if(flowId !== FLOW_COVER){
+                    completionCoverBook=false
+                }
+                // 包含非备案登记确认
+                if(flowId !== FLOW_REGISTER){
+                    registrationConfirmation=false
+                }
+
+                // 待我处理
+                if(users.indexOf(userId) <0){
+                    allMe = false;
+                }
+                // 任务状态未完成
+                if($(this).attr('data-taskState') === '2'){
+                    allUnfinished = false;
+                }
+                bookIds.push($(this).attr('data-bookId'));
+                taskIds.push($(this).attr('data-taskId'));
+                count++;
+            });
+
+            this.currentBookId = bookIds.join(',');
+            this.currentTaskId = taskIds.join(',');
+
+            // 只选择了一条，处理（对应该模块所有的flowid状态）可用
+            if(count === 1 ) {
+                // 应该加与我相关和完成状态？
+                if(applyCip || applyAudit|| versionApply|| issued || failureApply|| completionBook|| completionCoverBook|| registrationConfirmation){
+                    this.$('#btnCipSingle').removeAttr('disabled');
+                }
+
+                // 查看可用
+                if(applyCip || applyAudit|| versionApply|| issued || failureApply|| completionBook|| completionCoverBook|| registrationConfirmation){
+                    this.$('#btnCipSearch').removeAttr('disabled');
+                }
+
+            }
+            // 选择一条或多条
+            if (count > 1) {
+                // 批量处理可用
+                if (allMe && allUnfinished && (applyAudit || failureApply || registrationConfirmation )) {
+                    this.$('#btnCipBatch').removeAttr('disabled');
+                }
+            }
+        };
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+            // that.openPage('public/workflow/workflow-dialog', {
+            //     debug: true,
+            //     flowTemplate: 'cip-apply/cip-apply',
+            //     isEdit: true
+            // });
+
+            // 处理
+            that.$container.on('click', '#btnCipSingle,#btnCipBatch', function () {
+                that.openPage('public/workflow/workflow-dialog', {
+                    flowInfoAction: that.flowInfoAction,
+                    bookId: that.currentBookId,
+                    taskId: that.currentTaskId,
+                    deployId: that.deployKey
+                });
+            });
+            // 查看
+            that.$container.on('click', '#btnCipSearch', function () {
+                that.openPage('public/workflow/workflow-dialog', {
+                    // flowInfoAction: that.flowInfoAction,
+                    bookId: that.currentBookId,
+                    taskId: that.currentTaskId,
+                    deployId: that.deployKey,
+                    isView: true
+                });
+            });
+
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+
+
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            // that.initTemplate(tpl, {});
+
+            // 初始化数据前需要设置列表模板
+            this.listTpl = topicManageListTpl;
+
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+
+            // TODO: 测试
+            // that.openPage('public/workflow/workflow-dialog', {});
+            // that.openPage('public/file/file-upload', {});
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function () {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+
+    module.exports = Module;
+});

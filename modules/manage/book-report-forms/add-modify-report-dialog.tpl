@@ -1,0 +1,30 @@
+<!--译校通读-任务接受-->
+<div class="modal-dialog dialog-container" style="width: 600px;">
+  <div class="modal-content">
+    <div class="panel">
+      <div class="panel-header">
+        <h3><i class="fa fa-user-o"></i><%- inParams.isAdd ? '新增上报' : '修改上报' %></h3>
+        <div class="control-btn">
+          <a class="panel-close btn-close"><i class="fa fa-close"></i></a>
+        </div>
+      </div>
+      <div class="panel-content">
+        <div class="form-horizontal" id="formDiv">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="form-group">
+                <label class="col-xs-2 control-label">上报名称<span class="must">*</span></label>
+                <div class="col-xs-9">
+                  <input class="form-control" value="<%- inParams.reportName %>" name="reportName" placeholder="上报名称" maxlength="16" data-fv-notempty="true" data-fv-notempty-message="请填写上报名称"/>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="dialog-options">
+            <button class="btn btn-primary" id="btnSubmit" style="margin-right: 0;">提交</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+<% for(var i = 0; i < list.length; i++) { %>
+<tr data-id="<%- list[i].topicMeetingId %>" data-name="<%- list[i].topicMeetingName %>" data-state="<%-list[i].topicMeetingState %>" data-number="<%- list[i].topicMeetingNum %>">
+  <td><%- (i + 1) %></td>
+  <td data-check="true"><i class="fa fa-square-o" data-action="check"></i></td>
+  <td><%- list[i].topicMeetingName %></td>
+  <td><%- list[i].topicMeetingAddress %></td>
+  <td><%- list[i].topicMeetingDatetime %></td>
+  <!--<td data-id="<%-list[i].createUserId%>"><%- list[i].createUserName %></td>-->
+  <td><%- list[i].createUserName %></td>
+  <td><%- list[i].topicMeetingNum %></td>
+  <% if(list[i].topicMeetingState === '1') { %>
+  <td>待开会</td>
+  <% }else{ %>
+  <td>已开会</td>
+  <% } %>
+</tr>
+<% } %>

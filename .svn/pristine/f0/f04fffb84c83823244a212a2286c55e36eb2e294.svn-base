@@ -1,0 +1,195 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+    var NEX_FLOW_ID_PASS = "firstProofreadRigthWrongConfirm";
+    var NEX_FLOW_ID_NOT_PASS = "translationAcceptBook";
+    var that;
+
+    /**
+     * Workflow Item
+     */
+    module.exports = ItemBase.extend({
+        // 保存/提交接口
+        saveAction: 'tpr/saveOrSubmitTrpTask.action',
+        // 批量保存/提交接口
+        batchSaveAction: 'tpr/batchSaveOrSubmitTrpTask.action',
+        // 查询接口
+        detailAction: 'tpr/searchTrpDetail.action',
+
+        /**
+         * 添加行
+         */
+        addTableRow: function () {
+            // 添加行
+            var tb = that.$("#trueOrFalseTb");
+            var optionText = "";
+            if (that.data.info.bookFascicleList) {
+                for (var i = 0; i < that.data.info.bookFascicleList.length; i++) {
+                    optionText += "         <option value='" + that.data.info.bookFascicleList[i].bookFascicleId + "'>" + that.data.info.bookFascicleList[i].bookFascicleBookName + "</option>";
+                }
+            }
+            tb.append(
+                "<tr>" +
+                "   <td>" + (tb.children().length + 1) + "</td>" +
+                "   <td>" +
+                "      <select name='fascicule' class='form-control' data-fv-notempty='true' data-fv-field='fascicule'>" +
+                optionText +
+                "      </select>" +
+                "   </td>" +
+                "   <td><div class='col-xs-12'><input type='text' class='form-control' name='pageNum' placeholder='页码' maxlength='10' data-fv-notempty='true' data-fv-notempty-message='请填写页码'/></div></td>" +
+                "   <td><div class='col-xs-12'><input type='text' class='form-control' name='rowNum' placeholder='行' maxlength='10' data-fv-notempty='true' data-fv-notempty-message='请填写行'/></div></td>" +
+                "   <td><div class='col-xs-12'><input type='text' class='form-control' name='wrongInfo' placeholder='内容' maxlength='128' data-fv-notempty='true' data-fv-notempty-message='请填写内容'/></div></td>" +
+                "   <td><button class='removeTableRow btn btn-xs btn-danger'><i class='fa fa-minus box'></i></button></td>" +
+                "</tr>"
+            );
+            that.recalculateDiff();
+        },
+
+        /**
+         * 删除行
+         */
+        removeTableRow: function () {
+            that.$(this).parents('tr').remove();
+            that.recalculateDiff();
+        },
+
+        /**
+         * 重新计算差错
+         */
+        recalculateDiff: function () {
+            var diffInfo = [];
+            that.$("#trueOrFalseTb").children().each(function () {
+                var fasciculeId = that.$(this).find('select').val();
+                var idx = -1;
+                for (var i = 0; i < diffInfo.length; i++) {
+                    if (diffInfo[i].fasciculeId === fasciculeId) {
+                        idx = i;
+                        break;
+                    }
+                }
+                if (idx < 0) {
+                    var fasciculeName = "";
+                    var bookFascicleList = that.data.info.bookFascicleList;
+                    for (var k = 0; k < bookFascicleList.length; k++) {
+                        if (bookFascicleList[k].bookFascicleId === fasciculeId) {
+                            fasciculeName = bookFascicleList[k].bookFascicleBookName;
+                            break;
+                        }
+                    }
+                    diffInfo.push({fasciculeId: fasciculeId, fasciculeName: fasciculeName, diffCount: 1});
+                } else {
+                    diffInfo[idx].diffCount++;
+                }
+            });
+            var diffTbHtml = "";
+            var totalCount = that.data.info.bookFascicleList[0].tprQualityWordNum;
+            for (var i = 0; i < diffInfo.length; i++) {
+                diffTbHtml +=
+                    "<tr  data-fascicule-id='" + diffInfo[i].fasciculeId + "'>" +
+                    "   <td>" + (i + 1) + "</td>" +
+                    "   <td>" + diffInfo[i].fasciculeName + "</td>" +
+                    "   <td data-name='bookWrongNum'>" + diffInfo[i].diffCount + "</td>" +
+                    "   <td data-name='bookWrongRate'>" + (diffInfo[i].diffCount / totalCount).toFixed(2) + "</td>" +
+                    "</tr>";
+            }
+            that.$("#diffTb").html(diffTbHtml);
+        },
+
+        /**
+         * 生成参数
+         */
+        getFormData: function () {
+            var params = {rightWrongList: [], bookWrongList: []};
+            // 正误表数据
+            that.$('#trueOrFalseTb').children().each(function () {
+                params.rightWrongList.push({
+                    bookFascicleId: that.$(this).find("select[name='fascicule']").val(),
+                    page: that.$(this).find("input[name='pageNum']").val(),
+                    line: that.$(this).find("input[name='rowNum']").val(),
+                    content: that.$(this).find("input[name='wrongInfo']").val()
+                });
+            });
+            // 差错表数据
+            that.$('#diffTb').children().each(function () {
+                params.bookWrongList.push({
+                    bookFascicleId: that.$(this).attr("data-fascicule-id"),
+                    bookWrongNum: that.$(this).find("td[data-name='bookWrongNum']").text(),
+                    bookWrongRate: that.$(this).find("td[data-name='bookWrongRate']").text()
+                });
+            });
+            params.handleContentOne = that.$("textarea[name='handleContentOne']").val();
+            var handle = that.$('input[name="handleState"]:checked').val();
+            var nextFlowId = (!handle || handle === '1') ? NEX_FLOW_ID_PASS : NEX_FLOW_ID_NOT_PASS;
+            that.$("div[data-area='nextFlow']").each(function () {
+                if (that.$(this).attr('data-flow') === nextFlowId) {
+                    params.taskUsers = that.$(this).find("input[name='taskUsers']").attr('data-value');
+                    params.flowId = that.$(this).find("input[name='flowId']").val();
+                    params.flowName = that.$(this).find("input[name='flowName']").val();
+                }
+            });
+            return params;
+        },
+
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+            // 添加行
+            this.$container.on('click', '.addTableRow', this.addTableRow);
+            // 删除行
+            this.$container.on('click', '.removeTableRow', this.removeTableRow);
+            // 分册选择
+            this.$container.on('change', 'select[name="fascicule"]', this.recalculateDiff);
+            // 一校结果
+            that.$container.on('change', 'input[name="handleState"]', function () {
+                var handle = that.$('input[name="handleState"]:checked').val();
+                that.$('div[data-area="nextFlow"]').hide();
+                // 通过（默认）
+                if (!handle || handle === '1') {
+                    that.$("div[data-flow='" + NEX_FLOW_ID_PASS + "']").show();
+                }
+                // 不通过
+                else {
+                    that.$("div[data-flow='" + NEX_FLOW_ID_NOT_PASS + "']").show();
+                }
+            });
+        },
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+            this.recalculateDiff();
+            // 一校结果
+            this.$('div[data-area="nextFlow"]').hide();
+            // 通过（默认）
+            if (!this.data.info.handleState || this.data.info.handleState === '1') {
+                that.$("div[data-flow='" + NEX_FLOW_ID_PASS + "']").show();
+            }
+            // 不通过
+            else {
+                that.$("div[data-flow='" + NEX_FLOW_ID_NOT_PASS + "']").show();
+            }
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function (container, tpl) {
+            this._super(container, tpl);
+        },
+
+        /**
+         * 渲染页面
+         */
+        render: function () {
+            this._super();
+            that = this;
+            this.initPageEvent();
+            this.initPageData();
+        }
+    });
+});

@@ -1,0 +1,19 @@
+<% for(var i = 0; i < list.length; i++) { %>
+<tr data-id="<%- list[i].bookTopicId %>" data-name="<%- list[i].bookTopicName %>">
+  <td><%- (i + 1) %></td>
+  <td title="<%- list[i].bookTopicName %>"><%- list[i].bookTopicName %></td>
+  <td title="<%- list[i].bookDetailAuthor %>"><%- list[i].bookDetailAuthor %></td>
+  <td title="<%- list[i].bookDetailWorkWay %>"><%- list[i].bookDetailWorkWay %></td>
+  <td title="<%- list[i].bookDetailWordsNum %>"><%- list[i].bookDetailWordsNum %></td>
+  <td title="<%- list[i].bookDetailPublishingHouse %>"><%- list[i].bookDetailPublishingHouse %></td>
+  <td title="<%- list[i].bookDetailPublicationDate %>"><%- list[i].bookDetailPublicationDate %></td>
+  <% if(list[i].bookTopicRecommendType === '1') { %>
+  <td title="非社推荐选题">非社推荐选题</td>
+  <% } else { %>
+  <td title="社推荐选题">社推荐选题</td>
+  <% } %>
+  <td title="<%- list[i].dutyEditor %>"><%- list[i].dutyEditor %></td>
+  <td title="<%- list[i].bookDetailMarketMsg %>"><%- list[i].bookDetailMarketMsg %></td>
+  <td><button class="btn btn-rounded  btn-xs btn-default">选择</button></td>
+</tr>
+<% } %>

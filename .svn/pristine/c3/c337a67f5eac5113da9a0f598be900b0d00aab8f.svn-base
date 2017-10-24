@@ -1,0 +1,152 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+    var util = require('../../../../../common/util.js');
+
+    /**
+     * Workflow Item
+     */
+    module.exports = ItemBase.extend({
+        // 保存/提交接口
+        saveAction: 'CNQuality/saveOrSubmitCNQuality.action',
+        // 批量保存/提交接口
+        batchSaveAction: '',
+        // 查询接口
+        detailAction: 'CNQuality/searchCNQualityDetail.action',
+
+        /**
+         * 生成参数
+         */
+        getFormData: function () {
+            var params = this._super();
+            params.cnRightWrongList = [];
+            // 正误表数据
+            this.$("#dataTBody").children().each(function () {
+                var rightWrongId = $(this).attr("data-right-wrong-id");
+                params.cnRightWrongList.push({
+                    rigthWrongId: rightWrongId,
+                    isConfirm: $(this).find("input[name='confirmSelection']").prop('checked') ? "1" : "2",
+                    confirmCause: $(this).find("input[name='disConfirmReason']").val()
+                });
+            });
+            return params;
+        },
+
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+            var that = this;
+            // 是否确认监听
+            this.$container.on('change', 'input[name="confirmSelection"]', function () {
+                var selectionRow = $(this).parents('tr');
+                // 确认
+                if ($(this).prop('checked')) {
+                    // 判断全选
+                    var allChecked = true;
+                    selectionRow.parent().find('input[name="confirmSelection"]').each(function () {
+                        if (!$(this).prop('checked')) {
+                            allChecked = false;
+                            return false;
+                        }
+                    });
+                    if (allChecked) {
+                        $(this).parents('table').find('input[name="confirmSelectionBatch"]').prop('checked', 'checked');
+                        // 没有输入框不显示必填星号
+                        that.$(".uncheckMust").hide();
+                    }
+                    // 隐藏输入框
+                    selectionRow.find("input[name='disConfirmReason']").parent().hide();
+                }
+                // 不确认
+                else {
+                    // 去掉全选
+                    $(this).parents('table').find('input[name="confirmSelectionBatch"]').removeProp('checked');
+                    // 有输入框显示必填星号
+                    that.$(".uncheckMust").show();
+                    // 显示输入框
+                    selectionRow.find("input[name='disConfirmReason']").parent().show();
+                }
+                // 重新计算差错
+                that.calculateDiff();
+            });
+            // 是否批量确认
+            this.$container.on('change', 'input[name="confirmSelectionBatch"]', function () {
+                var table = $(this).parents('table');
+                // 确认
+                if ($(this).prop('checked')) {
+                    // 设置复选框选中
+                    table.find('input[name="confirmSelection"]').prop('checked', 'checked');
+                    // 没有输入框不显示必填星号
+                    that.$(".uncheckMust").hide();
+                    // 隐藏输入框
+                    table.find("input[name='disConfirmReason']").parent().hide();
+                }
+                // 不确认
+                else {
+                    // 设置复选框不选中
+                    $(this).parents('table').find('input[name="confirmSelection"]').removeProp('checked');
+                    // 有输入框显示必填星号
+                    that.$(".uncheckMust").show();
+                    // 显示输入框
+                    table.find("input[name='disConfirmReason']").parent().show();
+                }
+            });
+            // 下载发文稿
+            this.$container.on('click', "button[name='downloadReport']", function () {
+                window.open(util.getServerBase() + 'common/downloadFile.action?path=' + encodeURIComponent($(this).attr('data-download-address')), '_blank');
+            });
+        },
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+            var that = this;
+            // 判断全选
+            var allChecked = true;
+            var isEmpty = true;
+            this.$('input[name="confirmSelection"]').each(function () {
+                isEmpty = false;
+                // 确认
+                if ($(this).prop('checked')) {
+                    // 没有输入框不显示必填星号
+                    that.$(".uncheckMust").hide();
+                    // 隐藏输入框
+                    $(this).parents('tr').find("input[name='disConfirmReason']").parent().hide();
+                }
+                // 不确认
+                else {
+                    // 去掉全选
+                    allChecked = false;
+                    // 有输入框显示必填星号
+                    that.$(".uncheckMust").show();
+                    // 显示输入框
+                    $(this).parents('tr').find("input[name='disConfirmReason']").parent().show();
+                }
+            });
+            if (!isEmpty && allChecked) {
+                this.$('input[name="confirmSelectionBatch"]').prop('checked', 'checked');
+            }
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function (container, tpl) {
+            this._super(container, tpl);
+        },
+
+        /**
+         * 渲染页面
+         */
+        render: function () {
+            this._super();
+            this.initPageEvent();
+            this.initPageData();
+        }
+    });
+});

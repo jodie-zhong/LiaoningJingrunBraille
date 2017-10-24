@@ -1,0 +1,30 @@
+<% if(list.length > 0) { %>
+<% for(var i = 0; i < list.length; i++) { %>
+<tr data-bookId="<%- list[i].bookId %>" data-PrintId="<%- list[i].bookPrintId %>" data-bookTopicId="<%- list[i].bookTopicId %>" data-taskState="<%- list[i].taskState %>"
+    data-flowId="<%- list[i].flowId %>" data-taskId="<%- list[i].taskId %>" data-users="<%- list[i].taskUsers %>"
+    data-state="<%- list[i].bookPrintState %>">
+  <td><%- (i + 1) %></td>
+  <td data-check="true"><i class="fa fa-square-o" data-action="check"></i></td>
+  <td title="<%- list[i].bookDetailKind %>"><%- list[i].bookDetailKind %></td>
+  <th title="<%- list[i].bookName %>"><%- list[i].bookName %></th>
+  <th title="<%- list[i].bookIsbn %>"><%- list[i].bookIsbn %></th>
+  <th title="<%- list[i].bookDetailAuthor %>"><%- list[i].bookDetailAuthor %></th>
+  <th title="<%- list[i].revision %>"><%- list[i].revision %></th>
+  <th title="<%- list[i].dutyEditor %>"><%- list[i].dutyEditor %></th>
+  <th title="<%- list[i].versionNum %>"><%- list[i].versionNum %></th>
+  <th title="<%- list[i].bookPrice %>"><%- list[i].bookPrice %></th>
+  <th title="<%- list[i].libraryNeedNum %>"><%- list[i].libraryNeedNum %></th>
+  <th title="<%- list[i].readersServiceneedNum %>"><%- list[i].readersServiceneedNum %></th>
+  <th title="<%- list[i].totalPrintNum %>"><%- list[i].totalPrintNum %></th>
+  <th title="<%- list[i].totalPrintPaperNum %>"><%- list[i].totalPrintPaperNum %></th>
+  <th title="<%- list[i].formats %>"><%- list[i].formats %></th>
+  <th title="<%- list[i].usePaper %>"><%- list[i].usePaper %></th>
+  <th title="<%- list[i].pubDate %>"><%- list[i].pubDate %></th>
+  <th title="<%- list[i].bookPrintState %>"><%- list[i].bookPrintState %></th>
+</tr>
+<% } %>
+<% } else { %>
+<tr data-noselect="true">
+  <td colspan="18"><p class="empty-tips">没有符合指定条件的数据</p></td>
+</tr>
+<% } %>

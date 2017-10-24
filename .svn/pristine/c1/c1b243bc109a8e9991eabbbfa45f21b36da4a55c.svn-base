@@ -1,0 +1,107 @@
+<!--劳务录入-->
+<div class="row">
+  <div class="col-xs-12">
+    <div class="form-group">
+      <label class="col-xs-2 control-label">姓名</label>
+      <div class="col-xs-5">
+        <input type="text" name="userName" value="<%- list.userName %>"
+               class="form-control" placeholder="姓名(最多32个字)" maxlength="32"/>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12">
+    <div class="form-group">
+      <label class="col-xs-2 control-label">身份证号<span class="must">*</span></label>
+      <div class="col-xs-5">
+        <input type="text" name="userIdCard" value="<%- list.userIdCard %>"
+               class="form-control" placeholder="身份证号（18位）"
+               data-fv-notempty="true" pattern="(^\d{18}$)|(^\d{17}(\d|X|x)$)" data-fv-regexp-message="请输入正确的身份证号" data-fv-notempty-message="请填写身份证号"
+               maxlength="18"/>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12">
+    <div class="form-group">
+      <label class="col-xs-2 control-label">出勤天数</label>
+      <div class="col-xs-5">
+        <input type="text" name="jobInsideDays" value="<%- list.jobInsideDays %>"
+               class="form-control"
+               pattern="^(([1-9][0-9]{0,6})|([0-9]\.[0-9]{1,2})|([1-9][0-9]{0,6}\.[0-9]{1,2}))$"
+               data-fv-regexp-message="请输入大于零小于10000000的数字(允许两位小数)" />
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12">
+    <div class="form-group">
+      <label class="col-xs-2 control-label">全勤奖</label>
+      <div class="col-xs-5">
+        <input type="text" name="jobInsideReward" value="<%- list.jobInsideReward %>"
+               class="form-control" pattern="^(([1-9][0-9]{0,6})|([0-9]\.[0-9]{1,2})|([1-9][0-9]{0,6}\.[0-9]{1,2}))$"
+               data-fv-regexp-message="请输入大于零小于10000000的数字(允许两位小数)"/>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12">
+    <div class="form-group">
+      <label class="col-xs-2 control-label">加班费</label>
+      <div class="col-xs-5">
+        <input type="text" name="overtimePay" class="form-control" value="<%- list.overtimePay %>"
+               pattern="^(([1-9][0-9]{0,6})|([0-9]\.[0-9]{1,2})|([1-9][0-9]{0,6}\.[0-9]{1,2}))$"
+               data-fv-regexp-message="请输入大于零小于10000000的数字(允许两位小数)"/>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12">
+    <div class="form-group">
+      <label class="col-xs-2 control-label">劳务费</label>
+      <div class="col-xs-5">
+        <input type="text" name="serviceFee" value="<%- list.serviceFee %>"
+               class="form-control" pattern="^(([1-9][0-9]{0,6})|([0-9]\.[0-9]{1,2})|([1-9][0-9]{0,6}\.[0-9]{1,2}))$"
+               data-fv-regexp-message="请输入大于零小于10000000的数字(允许两位小数)"/>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12">
+    <div class="form-group">
+      <label class="col-xs-2 control-label">效益津贴</label>
+      <div class="col-xs-5">
+        <input type="text" name="benefitAllowance" value="<%- list.benefitAllowance %>"
+               class="form-control" pattern="^(([1-9][0-9]{0,6})|([0-9]\.[0-9]{1,2})|([1-9][0-9]{0,6}\.[0-9]{1,2}))$"
+               data-fv-regexp-message="请输入大于零小于10000000的数字(允许两位小数)"/>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12">
+    <div class="form-group">
+      <label class="col-xs-2 control-label">伙食补贴</label>
+      <div class="col-xs-5">
+        <input type="text" name="foodAllowance" class="form-control" value="<%- list.foodAllowance %>"
+               pattern="^(([1-9][0-9]{0,6})|([0-9]\.[0-9]{1,2})|([1-9][0-9]{0,6}\.[0-9]{1,2}))$"
+               data-fv-regexp-message="请输入大于零小于10000000的数字(允许两位小数)"/>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12">
+    <div class="form-group">
+      <label class="col-xs-2 control-label">郊区补贴</label>
+      <div class="col-xs-5">
+        <input type="text" name="suburbAllowance"
+               class="form-control" value="<%- list.suburbAllowance %>"
+               pattern="^(([1-9][0-9]{0,6})|([0-9]\.[0-9]{1,2})|([1-9][0-9]{0,6}\.[0-9]{1,2}))$"
+               data-fv-regexp-message="请输入大于零小于10000000的数字(允许两位小数)"/>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12">
+    <div class="form-group">
+      <label class="col-xs-2 control-label">合计</label>
+      <div class="col-xs-5">
+        <input type="text" name="total" value="<%- list.total %>"
+               class="form-control" readonly/>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dialog-options">
+  <button class="btn btn-primary" id="btnSave">保存</button>
+</div>

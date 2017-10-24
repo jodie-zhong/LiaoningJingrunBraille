@@ -1,0 +1,14 @@
+{
+  "code": 0,
+  "message": "查询流程信息集合成功",
+  "data": {
+    "listFlow": [
+      {
+        "taskId": "",
+        "flowName": "选题申报",
+        "flowId": "2"
+      }
+    ],
+    "currentFlow": "2"
+  }
+}

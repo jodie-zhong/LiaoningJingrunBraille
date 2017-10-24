@@ -1,0 +1,46 @@
+<div class="modal-dialog dialog-container" style="width: 600px;">
+  <div class="modal-content">
+    <div class="panel">
+      <div class="panel-header">
+        <h3><i class="fa fa-list"></i> 流程详情</h3>
+        <div class="control-btn">
+          <a class="panel-close btn-close"><i class="fa fa-close"></i></a>
+        </div>
+      </div>
+      <div class="panel-content">
+        <div class="form-horizontal">
+          <div class="form-group">
+            <label class="col-sm-4 col-xs-4 control-label">流程名称</label>
+            <div class="col-sm-8 col-xs-8">
+              <p class="form-control-static"><%- info.flowName %></p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-4 col-xs-4 control-label">负责人</label>
+            <div class="col-sm-8 col-xs-8">
+              <p class="form-control-static"><%- info.handleUserId %></p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-4 col-xs-4 control-label">起始时间</label>
+            <div class="col-sm-8 col-xs-8">
+              <p class="form-control-static"><%- info.submitDatetime %></p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-4 col-xs-4 control-label">完成时间</label>
+            <div class="col-sm-8 col-xs-8">
+              <p class="form-control-static"><%- info.handleDatetime %></p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-4 col-xs-4 control-label">审核结果</label>
+            <div class="col-sm-8 col-xs-8">
+              <p class="form-control-static"><%- info.handleContentOne %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

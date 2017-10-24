@@ -1,0 +1,199 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    // 工作流类窗口继承自工作流Base
+    var Base = require('../../other/base/task-base');
+
+    var topicCipListTpl = require('./cip-version-list.tpl');
+
+    var FLOW_DECLARE = 'brailleTopicDeclare';                   // 选题申报
+    var FLOW_EDITOR_TRIAL = 'brailleEditorialTrial';            // 部门负责人审核
+    var FLOW_CHIEF_EDITOR_TRIAL = 'brailleChiefEditorTrial';	// 总编辑/副总编辑审批意见
+    var FLOW_REPORT = 'brailleTopicReport';	                    // 选题上报信息
+    var FLOW_CONFERENCE = 'brailleTopicConference';	            // 选题大会信息
+    var FLOW_PEND = 'braillePend';	                            // 待定确认(盲文)
+    var Module = Base.extend(new function () {
+        var that;
+
+        this.deployKey = 'BrailleApplyISBNCIP';
+
+        this.searchFlowListKey='bookId';
+
+        /**
+         * 搜索任务列表的接口(覆盖父级)
+         */
+        this.taskListAction= 'cipEditionApply/searchApplyList.action';
+
+        // 查询任务树中未完成任务数的接口
+        // this.untreatedTaskAction = 'topic/unreadTopicCount.action';
+        // // 选题任务列表接口
+        // this.taskListActoin = 'topic/topicList.action';
+
+
+        /**
+         * 选择行变更事件回调
+         */
+        this.onSelectRowChanged = function(){
+
+        };
+
+        this.onCheckRowChanged = function () {
+            // 默认全部禁用
+
+            this.$('#btnCipAdd').attr('disabled', 'disabled');          // 新增
+            this.$('#btnCipModify').attr('disabled', 'disabled');       // 修改
+            this.$('#btnCipDelete').attr('disabled', 'disabled');       // 删除
+            this.$('#btnCipSubmit').attr('disabled', 'disabled');       // 提交
+            this.$('#btnCipSend').attr('disabled', 'disabled');         // 版署下发
+
+            var count = 0, flowId = null, users = null, bookIds = [],taskIds=[];
+            var allDeclare = true, allEditor = true, allChief = true, allMe = true, allUnfinished = true;
+            var userId = util.getUserInfo().userId;
+            that.$('#workListTBody').find('tr[checked]').each(function () {
+                flowId = $(this).attr('data-flowId');
+                users = $(this).attr('data-users') || '';
+                users = users? users.split(','): [];
+                // 包含非选题上报状态
+                if(flowId !== FLOW_DECLARE){
+                    allDeclare = false;
+                }
+                // 包含非部门负责人审核状态
+                if(flowId !== FLOW_EDITOR_TRIAL){
+                    allEditor = false;
+                }
+                // 包含非主编审核状态
+                if(flowId !== FLOW_CHIEF_EDITOR_TRIAL){
+                    allChief = false;
+                }
+                // 待我处理
+                if(users.indexOf(userId) <0){
+                    allMe = false;
+                }
+                // 任务状态未完成
+                if($(this).attr('data-taskState') === '2'){
+                    allUnfinished = false;
+                }
+
+                bookIds.push($(this).attr('data-bookId'));
+                taskIds.push($(this).attr('data-taskId'));
+                count++;
+            });
+
+            this.currentBookId = bookIds.join(',');
+            this.currentTaskId = taskIds.join(',');
+
+            // 只选择了一条，查看可用
+            if(count === 1) {
+                if (flowId !== FLOW_DECLARE) {
+                    this.$('#btnTopicView').removeAttr('disabled');
+                }
+                if(flowId === FLOW_PEND && allMe && allUnfinished){
+                    this.$('#btnTopicHold').removeAttr('disabled');
+                }
+            }
+            // 选择一条或多条
+            if(count >0){
+                // 全部都是申报阶段
+                if(allDeclare && allMe && allUnfinished){
+                    // 删除可用
+                    this.$('#btnTopicDelete').removeAttr('disabled');
+                    // 申报可用
+                    this.$('#btnTopicSubmit').removeAttr('disabled');
+                }
+                // 全部是部门负责人审核
+                if(allEditor && allMe && allUnfinished){
+                    // 部门负责人审核可用
+                    this.$('#btnPrincipalCheck').removeAttr('disabled');
+                }
+                // 全部是主编审核
+                if(allChief && allMe && allUnfinished){
+                    this.$('#btnChiefCheck').removeAttr('disabled');
+                }
+            }
+        };
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+            // that.openPage('public/workflow/workflow-dialog', {
+            //     debug: true,
+            //     flowTemplate: 'cip-apply/cip-apply',
+            //     isEdit: true
+            // });
+
+            // 申请
+            // that.$container.on('click', '#btnCipSubmit,#btnCipCheck,#btnCipSend,#btnCipBook,#btnCipBraille,#btnCipChange', function () {
+            //     that.openPage('public/workflow/workflow-dialog', {
+            //         bookId: that.currentBookId,
+            //         taskId: that.currentTaskId,
+            //         deployId: that.deployKey
+            //     });
+            // });
+
+            // 新增
+            that.$container.on('click','#btnCipAdd',function () {
+                that.openPage('braille/cip-version/cip-version-create', {});
+            })
+
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+
+
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            // that.initTemplate(tpl, {});
+
+            // 初始化数据前需要设置列表模板
+            this.listTpl = topicCipListTpl;
+
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+
+            // TODO: 测试
+            // that.openPage('public/workflow/workflow-dialog', {});
+            // that.openPage('public/file/file-upload', {});
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function () {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+
+    module.exports = Module;
+});

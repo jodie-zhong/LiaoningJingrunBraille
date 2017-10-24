@@ -1,0 +1,172 @@
+define(function(require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    var PageBase = require('../../../common/base-dialog');
+
+    var Module = PageBase.extend(new function() {
+        var that;
+        var info=null;
+        var bookDateAdd={};
+
+
+        /**
+         * 保存数据
+         */
+        function saveReportInfo(){
+            if(bookDateAdd.idBook){
+                var params={
+                    bookIds:bookDateAdd.idBook,
+                    searchYear:info.createYear,
+                    searchMonth:info.createMonth,
+                    statisticsType:info.statisticsType
+                };
+                util.showLoading();
+                util.sendRequest({
+                    data: params,
+                    action: 'editing/addBookForStatistics.action',
+                    success: function (resp) {
+                        util.hideLoading();
+                        if (resp.code === 0) {
+                            // 业务执行成功
+                            util.showAlert(resp.message ||'添加图书成功!', function(){
+                                that.close({refresh: true});
+                            });
+                        } else {
+                            // 业务执行失败
+                            util.showAlert(resp.message ||'添加图书出错，请稍后重试！');
+                        }
+                    },
+                    error: function (xhr) {
+                        // XHR错误
+                        util.hideLoading();
+                        console.log(xhr);
+                        util.showAlert('添加图书出错，请稍后重试！');
+                    }
+                });
+            }else {
+                util.showAlert('请选择要添加的图书！');
+            }
+        }
+
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+            that.$container.on('click', '.addbook', function () {
+                that.openPage('braille/braille-statistical/statistical-select', info);
+            });
+
+            that.$container.on('click', 'button.book-delete', function () {
+                var $el=$(this);
+                var id=$el.attr('data-id');
+                var ids=bookDateAdd.idBook.split(',');
+                var bookNames=bookDateAdd.idName.split(',');
+                var index=$.inArray(id,ids);
+                if (index >= 0){
+                    ids.splice(index, 1);
+                    bookNames.splice(index, 1);
+                }
+                var $tbody=$("#selectBookTbodyOne");
+                // 重新渲染tobdy
+                $tbody.empty();
+                for(var i=0;i<ids.length;i++){
+                    var bookTr=$('<tr><td>'+(i + 1)+'</td><td>'+ bookNames[i]+'</td><td><button data-id="' + ids[i] +'" data-name="' +bookNames[i] +'" class="btn btn-xs btn-danger btn-rounded book-delete">删除</button></td></tr>');
+                    $tbody.append(bookTr);
+                }
+                // 重新生成bookDateAdd
+                if(ids){
+                    bookDateAdd={
+                        idBook: ids.join(','),
+                        idName: bookNames.join(',')
+                    };
+                }
+                info.book=bookDateAdd;
+            });
+
+            // 保存按钮
+            that.$container.on('click', '#btnBookCheckSelectOne', saveReportInfo);
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            info = data;
+            bookDateAdd={}
+            that.initTemplate(tpl, {});
+
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function(data) {
+            this._super(data);
+            if(data.book){
+                bookDateAdd=data;
+                var length=$('#selectBookTbodyOne tr').length;
+                var ids=[], names=[];
+                if(data.bookIds.indexOf(',') >= 0){
+                    ids=data.bookIds.split(',');
+                    names=data.bookNames.split(',');
+                }else{
+                    ids[0]=data.bookIds;
+                    names[0]=data.bookNames;
+                }
+
+                //将数据添加到已有的table表格数据后
+                var $tbody=$("#selectBookTbodyOne");
+                for(var i=0;i<ids.length;i++){
+                    var bookTr=$('<tr><td>'+(i + 1+ length)+'</td><td>'+ names[i]+'</td><td><button data-id="' + ids[i] +'" data-name="' +names[i] +'" class="btn btn-xs btn-danger btn-rounded book-delete">删除</button></td></tr>');
+                    $tbody.append(bookTr);
+                }
+                // 获取渲染后的所有tr上的id与name，将bookDateAdd替换
+                var newId=[],newName=[];
+                $("#selectBookTbodyOne tr").each(function () {
+                    var $el1=$(this);
+                    newId.push($el1.find('button').attr('data-id'));
+                    newName.push($el1.find('button').attr('data-name'));
+                });
+                bookDateAdd={
+                    idBook:newId.join(','),
+                    idName:newName.join(',')
+                };
+            }
+            info.book=bookDateAdd;
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function() {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function() {
+            this._super();
+        };
+
+    }());
+
+    module.exports = Module;
+});

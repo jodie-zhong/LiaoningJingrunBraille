@@ -1,0 +1,232 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    // 工作流类窗口继承自工作流Base
+    var Base = require('../../other/base/book-base');
+
+    // var topicManageListTpl = require('./topic-manage-list.tpl');
+
+    var FLOW_DECLARE = 'brailleTopicDeclare';                   // 选题申报
+    var FLOW_EDITOR_TRIAL = 'brailleEditorialTrial';            // 部门负责人审核
+    var FLOW_CHIEF_EDITOR_TRIAL = 'brailleChiefEditorTrial';	// 总编辑/副总编辑审批意见
+    var FLOW_REPORT = 'brailleTopicReport';	                    // 选题上报信息
+    var FLOW_CONFERENCE = 'brailleTopicConference';	            // 选题大会信息
+    var FLOW_PEND = 'braillePend';	                            // 待定确认(盲文)
+
+
+    var Module = Base.extend(new function () {
+        var that;
+
+//      this.searchBookType = 'BrailleAudit';
+
+//      this.searchParams = {
+//          searchTaskAbout : '1'
+//      };
+
+        /**
+         * 选择行变更事件回调
+         */
+        this.onSelectRowChanged = function () {
+            // 暂时啥也不做
+        };
+
+        this.onCheckRowChanged = function () {
+            // // 默认全部禁用
+            // // brailleTopicDeclare	选题申报
+            // // brailleEditorialTrial	部门负责人审核
+            // // brailleChiefEditorTrial	总编辑/副总编辑审批意见
+            // // brailleTopicReport	选题上报信息
+            // // brailleTopicConference	选题大会信息
+            // // braillePend	待定确认(盲文)
+            //
+            // this.$('#btnTopicDelete').attr('disabled', 'disabled');     // 删除
+            // this.$('#btnTopicSubmit').attr('disabled', 'disabled');     // 申报
+            // this.$('#btnTopicView').attr('disabled', 'disabled');       // 查看
+            // this.$('#btnPrincipalCheck').attr('disabled', 'disabled');  // 部门负责人审核
+            // this.$('#btnChiefCheck').attr('disabled', 'disabled');      // 总编/副总编审批
+            // this.$('#btnTopicHold').attr('disabled', 'disabled');       // 待定确认
+            //
+            // var count = 0, flowId = null, users = null, bookIds = [],taskIds=[];
+            // var allDeclare = true, allEditor = true, allChief = true, allMe = true;
+            // var userId = util.getUserInfo().userId;
+            // that.$('#taskListTable').find('tr[checked]').each(function () {
+            //     flowId = $(this).attr('data-flowId');
+            //     users = $(this).attr('data-users') || '';
+            //     users = users? users.split(','): [];
+            //     // 包含非选题上报状态
+            //     if(flowId !== FLOW_DECLARE){
+            //         allDeclare = false;
+            //     }
+            //     // 包含非部门负责人审核状态
+            //     if(flowId !== FLOW_EDITOR_TRIAL){
+            //         allEditor = false;
+            //     }
+            //     // 包含非主编审核状态
+            //     if(flowId !== FLOW_CHIEF_EDITOR_TRIAL){
+            //         allChief = false;
+            //     }
+            //     // 待我处理
+            //     if(users.indexOf(userId) <0){
+            //         allMe = false;
+            //     }
+            //
+            //     bookIds.push($(this).attr('data-bookId'));
+            //     taskIds.push($(this).attr('data-taskId'));
+            //     count++;
+            // });
+            //
+            // this.currentBookId = bookIds.join(',');
+            // this.currentTaskId = taskIds.join(',');
+            //
+            // // 只选择了一条，查看可用
+            // if(count === 1) {
+            //     this.$('#btnTopicView').removeAttr('disabled');
+            //     if(flowId === FLOW_PEND && allMe){
+            //         this.$('#btnTopicHold').removeAttr('disabled');
+            //     }
+            // }
+            // // 选择一条或多条
+            // if(count >0){
+            //     // 全部都是申报阶段
+            //     if(allDeclare && allMe){
+            //         // 删除可用
+            //         this.$('#btnTopicDelete').removeAttr('disabled');
+            //         // 申报可用
+            //         this.$('#btnTopicSubmit').removeAttr('disabled');
+            //     }
+            //     // 全部是部门负责人审核
+            //     if(allEditor && allMe){
+            //         // 部门负责人审核可用
+            //         this.$('#btnPrincipalCheck').removeAttr('disabled');
+            //     }
+            //     // 全部是主编审核
+            //     if(allChief && allMe){
+            //         this.$('#btnChiefCheck').removeAttr('disabled');
+            //     }
+            // }
+        };
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+			
+			that.openPage('public/workflow/workflow-dialog', {
+                debug: true,
+                flowTemplate: 'review/review-first',
+                isEdit: true
+            });
+            // // 新建选题
+            // that.$container.on('click', '#btnTopicAdd', function () {
+            //     // 选题新建步骤
+            //     that.openPage('public/workflow/workflow-dialog', {
+            //         bookId: '',
+            //         taskId: ''
+            //     });
+            // });
+            //
+            // // 申报、主管、主编、待定
+            // that.$container.on('click', '#btnTopicSubmit,#btnPrincipalCheck,#btnChiefCheck,#btnTopicHold', function () {
+            //     that.openPage('public/workflow/workflow-dialog', {
+            //         bookId: that.currentBookId,
+            //         taskId: that.currentTaskId,
+            //         deployId: that.currentDeployId
+            //     });
+            // });
+            //
+            // // 查看
+            // that.$container.on('click', '#btnTopicView', function () {
+            //     that.openPage('public/workflow/workflow-dialog', {
+            //         bookId: that.currentBookId,
+            //         taskId: that.currentTaskId,
+            //         deployId: that.currentDeployId,
+            //         isView: true
+            //     });
+            // });
+            //
+            // // 删除
+            // that.$container.on('click', '#btnTopicDelete', function () {
+            //     util.showConfirm('确定要删除所选的选题么？', function(){
+            //         // 删除选题
+            //         util.showLoading();
+            //         util.sendRequest({
+            //             action: 'bookTopic/batchRemoveBookTopic.action',
+            //             data:{
+            //                 bookTopicIds: that.currentBookId
+            //             },
+            //             success:function(resp){
+            //                 util.hideLoading();
+            //                 if(resp && resp.code === 0){
+            //                     util.showAlert('删除选题成功！', function(){
+            //                         that.searchUntreatedTask();
+            //                     });
+            //                 } else {
+            //                     console.log(resp);
+            //                     util.showAlert(resp.message || '删除选题出错，请稍后重试！');
+            //                 }
+            //             },
+            //             error:function(xhr){
+            //                 // XHR错误
+            //                 util.hideLoading();
+            //                 console.log(xhr);
+            //                 util.showAlert('删除选题出错，请稍后重试！');
+            //             }
+            //         });
+            //     });
+            // });
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            // that.initTemplate(tpl, {});
+
+            // 初始化数据前需要设置列表模板
+            // this.listTpl = topicManageListTpl;
+
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function () {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+
+    module.exports = Module;
+});

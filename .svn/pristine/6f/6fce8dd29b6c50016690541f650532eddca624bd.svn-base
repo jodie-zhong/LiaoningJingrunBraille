@@ -1,0 +1,182 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+    var util = require('../../../../../common/util.js');
+
+    /**
+     * Workflow Item
+     */
+    var Item = ItemBase.extend({
+        // 保存/提交接口
+        saveAction: 'cover/saveOrSubmitCover.action',
+
+        // 查询接口
+        detailAction: 'cover/searchCoverDetail.action',
+
+        onHandleChange: function () {
+            var handle = this.$('input[name="handleState"]:checked').val();
+            this.$('div[data-area="nextFlow"]').hide();
+            if (handle === '2') {
+                //拒绝
+                this.$('div[data-flow="devise"]').show();
+            } else if (handle === '1') {
+                //同意
+                this.$('div[data-flow="coverPrinting"]').show();
+            }
+        },
+        getFormData:function () {
+            var $form = this.$('#formEdit');
+            // 先调用父类生成基本的数据结构
+//      	var params = {};
+            var params = this._super();
+            // 处理上传部份数据结构
+            var arr=[];
+            $form.find('tr[data-type="ebook"]').each(function(){
+                var $el=$(this);
+                var obj={};
+                obj.bookFileId=$el.attr('data-bookFileId');
+                obj.bookFileName=$el.find('input.bookAddress').val();
+                obj.bookFileAddress=$el.find('input.bookAddress').attr('data-value');
+                obj.bookFascicleId=$el.attr('data-bookFascicleId');
+                obj.bookFascicleBookName=$el.find('.bookFileName').html();
+                obj.bookFileType=$el.attr('data-bookFileType');
+                obj.createDatetime=$el.find('.createDatetime').html();
+                obj.createUserId=$el.attr('data-createUserId');
+                arr.push(obj);
+            });
+            params.coverInfoEntities=arr;
+            if($('.deputeHandleContentOne').length > 0){ // 代表是委托人
+                var deputeObj={};
+                params.handleContentOne=$('.deputeHandleContentOne').val()||'';
+                if(params.hasOwnProperty("handleStateAuthorized")){
+                    delete params.handleStateAuthorized;// 针对name相同做的处理
+                }
+                params.handleState=$('.deputeHandleState:checked').val() || '';
+                params.isLoginUser='1';
+            }
+            params.deputeTaskUsers=$('.deputeUsers').find('input').attr('data-value');
+            params.bookDeploymentKey=$('#depute').attr('data-bookDeploymentKey');
+            return params;
+        },
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+            var that = this;
+            this.$container.on('change', 'input[name="handleState"]', this.onHandleChange.bind(this));
+            this.$container.on('click', '#depute', function () {
+                var $el=$(this);
+                var $deputeUsers=$el.parents('.deputeUsers').find('input');
+                if($deputeUsers.attr('data-value')){
+                    var params={
+                        bookId:$el.attr('data-bookId'),
+                        taskId:$el.attr('data-taskId'),
+                        flowId:'responsibleEditorAudit',
+                        deputeTaskUsers:$deputeUsers.attr('data-value'),
+                        bookDeploymentKey:$el.attr('data-bookDeploymentKey')
+                    };
+                    util.showLoading();
+                    util.sendRequest({
+                        data: params,
+                        action: 'cover/doDeputeReview.action',
+                        success: function(resp) {
+                            util.hideLoading();
+                            if (resp.code === 0) {
+                                util.showAlert(resp.message || '下发成功！',function () {
+                                    that.$('#depute').attr('disabled', 'disabled');
+                                });
+                            } else{
+                                util.showAlert(resp.message || '下发出错，请稍后重试！');
+                            }
+                        },
+                        error: function(xhr) {
+                            // XHR错误
+                            util.hideLoading();
+                            console.log(xhr);
+                            util.showAlert('下发出错，请稍后重试！');
+                        }
+                    });
+                }
+            });
+
+            this.$container.on('click','.btn-preview',function () {
+                var $el=$(this);
+                // 在此区分是不是.png格式的文件，是.png直接放到ifram里，不用向后台发请求，转成html的
+                var $preview=$el.attr('data-preview');
+                if($preview.slice(-4)==='.png' || $preview.slice(-4)==='.jpg' || $preview.slice(-5)==='.jpeg'){
+                    // 预览
+                    util.openPage('public/preview/html-preview', {
+                        url: util.getServerBase() + $el.attr('data-preview')
+                    });
+                } else {
+                    util.showLoading();
+                    util.sendRequest({
+                        data: {filePath:$el.attr('data-preview')},
+                        action: 'common/coverPreview.action',
+                        success: function(resp) {
+                            util.hideLoading();
+                            if(resp.code === 0) {
+                                // 预览
+                                util.openPage('public/preview/html-preview', {
+                                    url: util.getServerBase() + resp.data
+                                });
+                            } else {
+                                console.log(resp);
+                                util.showAlert(resp.message || '预览出错，请稍后重试！');
+                            }
+                        },
+                        error: function(xhr) {
+                            // XHR错误
+                            util.hideLoading();
+                            util.showAlert('预览出错，请稍后重试！');
+                        }
+                    });
+                }
+            });
+
+            this.$container.on('click','.address',function () {
+                var $el=$(this);
+                if($el.attr('data-address')){
+                    var str=$el.parents('tr').find('.bookFileName').text();
+                    if(str.indexOf('.') > 0){ //表明含有格式后缀
+                        str=str.split('.')[0];
+                    }
+                    window.open(util.getServerBase() + 'common/downloadFile.action?path=' + encodeURIComponent($el.attr('data-address'))+ '&bookFileName=' + encodeURIComponent(str) , '_blank');
+                }
+            });
+        },
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+            this.onHandleChange();
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function (container, tpl) {
+            this._super(container, tpl);
+        },
+        /**
+         * 渲染页面
+         */
+        render: function () {
+            this._super();
+
+            this.initPageEvent();
+
+            this.initPageData();
+        }
+
+    });
+
+
+    module.exports = Item;
+
+});
+

@@ -1,0 +1,337 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    var tree = require('../../other/base/tree-base');
+    //列表界面模板
+    var listTplIn = require('./labor-management-in.tpl');
+    var listTplOut = require('./labor-management-out.tpl');
+    var Module = tree.extend(new function () {
+        var that;
+
+        // 当前页数
+        var currentPage = 1;
+        // 当前年月
+        var currentMonth="";
+        var currentYear="";
+        // 当前是社内还是社外
+        var inOut = true;
+        // 导入文件
+        var currentFile = '';
+        // 引入模板
+        var listTpl='';
+        // 对应哪个列表显示
+        var $table=null;
+        // 当前选中的信息
+        var currentNames='';
+        var currentIds='';
+        /**
+         *  列表
+         */
+        function jobList() {
+            that.$('#btnLeadIn').attr('disabled','disabled');
+            that.$('#btnEntering').attr('disabled','disabled');
+            that.$('#btnModify').attr('disabled','disabled');
+            that.$('#btnDelete').attr('disabled','disabled');
+            //清空选题列表的thead选中事件
+            that.$('#jobIn thead').find('i[data-action="check"]').removeClass('fa-check-square-o').addClass('fa-square-o');
+            that.$('#jobOut thead').find('i[data-action="check"]').removeClass('fa-check-square-o').addClass('fa-square-o');
+            var params = {};
+            var action='';
+            params.page = currentPage;
+            if(inOut){
+                params.searchJobInsideYear=currentYear;
+                params.searchJobInsideMonth=currentMonth;
+                action='job/searchJobInsideList.action';
+                listTpl=listTplIn;
+                $table=that.$('#jobListIn');
+            }else{
+                params.searchJobInsideYear=currentYear;
+                params.searchJobInsideMonth=currentMonth;
+                action='job/searchJobOutsideList.action';
+                listTpl=listTplOut;
+                $table=that.$('#jobListOut');
+            }
+            util.showLoading();
+            util.sendRequest({
+                data: params,
+                action: action,
+                success: function (resp) {
+                    util.hideLoading();
+                    if (resp.code === 0) {
+                        $table.html(util.template(listTpl, {
+                            list: resp.data.records
+                        }));
+                        // 分页数据
+                        that.$('#jobListPaging').html(that.buildPagination(resp.data.pageNow, resp.data.pageCount));
+                    } else {
+                        util.showAlert(resp.message || '查询列表出错，请稍后重试！');
+                    }
+                },
+                error: function (xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('查询列表出错，请稍后重试！');
+                }
+            });
+        }
+
+        /**
+         * 树选择后回调函数
+         */
+        function selectTree(y,m) {
+            currentYear=y;
+            currentMonth=m;
+            currentPage = 1;
+            jobList();
+            if(currentMonth){
+                that.$('#btnLeadIn').removeAttr('disabled');
+                that.$('#btnEntering').removeAttr('disabled');
+            }else{
+                that.$('#btnLeadIn').attr('disabled','disabled');
+                that.$('#btnEntering').attr('disabled','disabled');
+            }
+        }
+        /**
+         * 导入文件
+         */
+        function importFile() {
+            var params = {
+                filePath: currentFile
+            }
+            var action = '';
+            if(inOut){
+                action='job/doImportJobInsideExcel.action';
+                params.jobInsideYear=currentYear;
+                params.jobInsideMonth=currentMonth;
+            }else{
+                action='job/doImportJobOutsideExcel.action';
+                params.jobOutsideYear =currentYear;
+                params.jobOutsideMonth=currentMonth;
+            }
+            util.showLoading();
+            util.sendRequest({
+                data: params,
+                action: action,
+                success: function(resp) {
+                    util.hideLoading();
+                    if(resp.code === 0) {
+                        util.showAlert('导入成功');
+                        // 成功之后直接刷新列表
+                        currentPage = 1;
+                        jobList();
+                    } else {
+                        console.log(resp);
+                        util.showAlert(resp.message || '导入出错，请稍后重试！');
+                    }
+                },
+                error: function(xhr) {
+                    // XHR错误
+                    console.log(xhr);
+                    util.hideLoading();
+                    util.showAlert('导入出错，请稍后重试！');
+                }
+            });
+        }
+        /**
+        *   选中事件
+         */
+        function checkJob($tb) {
+            that.$('#btnModify').attr('disabled','disabled');
+            that.$('#btnDelete').attr('disabled','disabled');
+            var names = [], ids = [], count =0;
+            $tb.find('tr[checked]').each(function () {
+                var $el = $(this);
+                names.push($el.attr("data-name"));
+                ids.push($el.attr("data-id"));
+                count++;
+            });
+            currentNames=names.join(',');
+            currentIds=ids.join(',');
+            if(count===1){
+                that.$('#btnModify').removeAttr('disabled');
+                that.$('#btnDelete').removeAttr('disabled');
+            }
+            if(count > 1){
+                that.$('#btnDelete').removeAttr('disabled');
+            }
+        }
+        /**
+         *  删除事件
+         */
+        function setRemoveJob() {
+            util.showConfirm('确定要将“' + currentNames + '”删除吗？', function(){
+                var params = {};
+                var action='';
+                if(inOut){
+                    params.jobnIsideIds=currentIds
+                    action='job/removeJobInside.action';
+                }else{
+                    params.jobOutsideIds=currentIds
+                    action='job/removeJobOutside.action';
+                }
+                util.showLoading();
+                util.sendRequest({
+                    data: params,
+                    action: action,
+                    success: function(resp) {
+                        util.hideLoading();
+                        if (resp.code === 0) {
+                            util.showAlert(resp.message || '删除成功',function () {
+                                currentPage = 1;
+                                jobList();
+                            });
+
+                        } else{
+                            util.showAlert(resp.message || '删除出错，请稍后重试！');
+                        }
+                    },
+                    error: function(xhr) {
+                        // XHR错误
+                        util.hideLoading();
+                        console.log(xhr);
+                        util.showAlert('删除出错，请稍后重试！');
+                    }
+                });
+            });
+        }
+
+        /**
+         * 跳转页面
+         */
+        function jumpPage() {
+            var $el = $(this);
+            var page = $el.attr('data-page');
+            if (page) {
+                // 修改页面后重新刷新页面数据
+                currentPage = page;
+                jobList();
+            }
+        }
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+            // 社内与社外切换
+            that.$container.on('change', 'input[name="handleState"]', function() {
+                if($(this).val()==='1'){
+                    inOut=true;
+                    that.$('#jobIn').show();
+                    that.$('#jobOut').hide();
+                }else{
+                    inOut=false;
+                    that.$('#jobIn').hide();
+                    that.$('#jobOut').show();
+                }
+                // currentMonth="";
+                // currentYear="";
+                // 初始化年月树
+                that.initMonthTree("#monthTree","劳务",null,selectTree);
+                jobList();
+                if(currentMonth){
+                    that.$('#btnLeadIn').removeAttr('disabled');
+                    that.$('#btnEntering').removeAttr('disabled');
+                }else{
+                    that.$('#btnLeadIn').attr('disabled','disabled');
+                    that.$('#btnEntering').attr('disabled','disabled');
+                }
+            });
+
+            that.makeSelectableTable('#jobIn',null,function () {
+                checkJob($('#jobIn'));
+            });
+            that.makeSelectableTable('#jobOut',null,function () {
+                checkJob($('#jobOut'));
+            });
+            // 导入
+            that.$container.on('click', '#btnLeadIn', function() {
+                that.openPage('public/file/file-upload', {"type": "*.xls;*.xlsx"});
+            });
+            // 新增
+            that.$container.on('click', '#btnEntering', function() {
+                if(inOut){
+                    that.openPage('chinese/labor-management/labor-management-edit', {currentYear:currentYear,currentMonth:currentMonth});
+                }else{
+                    that.openPage('chinese/labor-management/labor-management-edit-out', {currentYear:currentYear,currentMonth:currentMonth});
+                }
+            });
+
+            // 修改
+            that.$container.on('click', '#btnModify', function() {
+                if(inOut){
+                    that.openPage('chinese/labor-management/labor-management-edit', {currentId:currentIds});
+                }else{
+                    that.openPage('chinese/labor-management/labor-management-edit-out', {currentId:currentIds});
+                }
+            });
+            // 删除
+            that.$container.on('click', '#btnDelete', setRemoveJob);
+
+            // 分页
+            that.$container.on('click', '#jobListPaging a', jumpPage);
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+            // // 初始化年月树
+            that.initMonthTree("#monthTree","劳务",null,selectTree);
+            jobList();
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            currentMonth="";
+            currentYear="";
+            inOut = true;
+            that.initTemplate(tpl, {});
+
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+            if (data && data.refresh === true) {
+                currentPage = 1;
+                jobList();
+            }
+            var excal = data.id;
+            if (data && data.id) {
+                currentFile = excal;
+                importFile();
+            }
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function () {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+    module.exports = Module;
+});

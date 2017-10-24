@@ -1,0 +1,115 @@
+<div class="form-horizontal">
+	<% if(action) { %>
+	<div class="row">
+		<div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
+			<div class="form-group">
+				<img class="userhead" onerror="this.setAttribute('src', 'img/head.jpg')" src="<%- info.userHead %>" style="height: 200px; width: 200px;display: block;margin: 5px auto;" />
+			</div>
+		</div>
+		<div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+			<div class="form-group">
+				<label class="col-sm-4 col-xs-4 control-label">登录账号</label>
+				<div class="col-sm-8 col-xs-8">
+					<p class="form-control-static">
+						<%- info.userLoginName %>
+					</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-4 col-xs-4 control-label">用户手机</label>
+				<div class="col-sm-8 col-xs-8">
+					<p class="form-control-static">
+						<%- info.userPhone %>
+					</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-4 col-xs-4 control-label">所属部门</label>
+				<div class="col-sm-8 col-xs-8">
+					<p class="form-control-static">
+						<%- info.departmentName %>
+					</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-4 col-xs-4 control-label">出生年月</label>
+				<div class="col-sm-8 col-xs-8">
+					<p class="form-control-static">
+						<%- info.userBir %>
+					</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-4 col-xs-4 control-label">邮件地址</label>
+				<div class="col-sm-8 col-xs-8">
+					<p class="form-control-static">
+						<%- info.userEmail %>
+					</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-4 col-xs-4 control-label">职称</label>
+				<div class="col-sm-8 col-xs-8">
+					<p class="form-control-static">
+						<%- info.userTitle %>
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+			<div class="form-group">
+				<label class="col-sm-4 col-xs-4 control-label">用户姓名</label>
+				<div class="col-sm-8 col-xs-8">
+					<p class="form-control-static">
+						<%- info.userName %>
+					</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-4 col-xs-4 control-label">角色</label>
+				<div class="col-sm-8 col-xs-8">
+					<p class="form-control-static">
+						<%- info.roleName %>
+					</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-4 col-xs-4 control-label">办公室电话</label>
+				<div class="col-sm-8 col-xs-8">
+					<p class="form-control-static">
+						<%- info.officeTelephone %>
+					</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-4 col-xs-4 control-label">性别</label>
+				<div class="col-sm-8 col-xs-8">
+					<% if(info.userSex === '1') { %>
+					<p class="form-control-static">男</p>
+					<% } else { %>
+					<p class="form-control-static">女</p>
+					<% } %>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-4 col-xs-4 control-label">身份证号码</label>
+				<div class="col-sm-8 col-xs-8">
+					<p class="form-control-static">
+						<%- info.userIdCard %>
+					</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-4 col-xs-4 control-label">专业</label>
+				<div class="col-sm-8 col-xs-8">
+					<p class="form-control-static">
+						<%- info.userSpecialty %>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<% } else { %>
+	<h3 class="c-gray">单击人员列表查看人员信息。</h3>
+	<% } %>
+</div>

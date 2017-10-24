@@ -1,0 +1,117 @@
+<!-- 盲文图书编辑译校统计 -->
+<div class="row">
+  <div class="col-xs-3">
+    <!-- 左侧树 -->
+    <div class="panel">
+      <div class="panel-header custom-panel-header">
+        <h3><i class="fa fa-braille"></i> 发稿完成统计</h3>
+      </div>
+      <div class="panel-content panel-height-0">
+        <div id="monthTree">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-9">
+    <div class="row">
+      <div class="col-xs-6">
+        <div class="panel">
+          <div class="panel-header custom-panel-header">
+            <h3>发稿完成统计</h3>
+            <div class="control-btn">
+              <button class="btn btn-xs btn-success" data-auth="03e41" id="btnAdd" disabled>添加</button>
+              <button class="btn btn-xs btn-danger" data-auth="03e42" id="btnDel" disabled>删除</button>
+              <button class="btn btn-xs btn-blue" data-auth="03e43" id="btnSubmit" disabled>提交</button>
+              <button class="btn btn-xs btn-primary" data-auth="03e44" id="btnSingle" disabled>审核</button>
+            </div>
+          </div>
+          <div class="panel-content book-detail">
+            <div class="table-10 table-scroll">
+              <table class="table table-striped table-hover table-nowrap" data-multi="true" id="workListTable">
+                <thead>
+                <tr>
+                  <th rowspan="2" style="width: 45px">序号</th>
+                  <th rowspan="2" style="width: 40px"><i class="fa fa-square-o" data-action="check"></i></th>
+                  <th rowspan="2" style="width: 15%" title="书名">书名</th>
+                  <th rowspan="2" style="width: 15%" title="类别">类别</th>
+                  <th colspan="2" style="width: 25%" title="末校一次">末校一次</th>
+                  <th colspan="2" style="width: 25%" title="末校二次">末校二次</th>
+                  <th colspan="2" style="width: 20%" title="通读">通读</th>
+                </tr>
+                <tr>
+                  <th title="姓名" style="padding: 0">姓名</th>
+                  <th title="版数" style="padding: 0">版数</th>
+                  <th title="姓名" style="padding: 0">姓名</th>
+                  <th title="版数" style="padding: 0">版数</th>
+                  <th title="姓名" style="padding: 0">姓名</th>
+                  <th title="版数" style="padding: 0">版数</th>
+                </tr>
+                </thead>
+                <tbody id="workListTBody">
+
+                </tbody>
+              </table>
+            </div>
+            <div class="pagination-container" id="workListPaging">
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-6">
+        <div class="panel">
+          <div class="panel-header custom-panel-header">
+            <h3>统计列表</h3>
+          </div>
+          <div class="panel-content book-detail">
+            <div class="table-10 table-scroll">
+              <table class="table table-striped table-hover table-nowrap" data-multi="true" id="workListTableRight">
+                <thead>
+                <tr>
+                  <th style="width: 20%" title="种类">种类</th>
+                  <th class="number-species" style="width: 20%" title="品种数量">品种数量</th>
+                  <th style="width: 20%" title="累计字数(万/年)">累计字数(万/月)</th>
+                  <th style="width: 20%" title="品种数量(年)">品种数量(年)</th>
+                  <th style="width: 20%" title="累计字数(万/年)">累计字数(万/年)</th>
+                </tr>
+                </thead>
+                <tbody id="workListTBodyRight">
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="panel">
+          <div class="panel-header custom-panel-header">
+            <h3>流程查看</h3>
+          </div>
+          <div class="panel-content">
+            <table class="table table-striped table-nowrap table-top">
+              <thead>
+              <tr>
+                <th style="width: 50px">序号</th>
+                <th style="width: 20%">状态</th>
+                <th style="width: 20%">处理人</th>
+                <th style="width: 20%">起始时间</th>
+                <th style="width: 20%">完成时间</th>
+                <th style="width: 20%">审核结果</th>
+                <th style="width: 100px">详细信息</th>
+              </tr>
+              </thead>
+            </table>
+            <div class="tbody-5-static">
+              <table class="table table-striped table-nowrap">
+                <tbody id="taskWorkflowTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

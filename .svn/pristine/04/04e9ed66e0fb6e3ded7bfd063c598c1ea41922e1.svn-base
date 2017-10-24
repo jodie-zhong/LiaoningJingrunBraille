@@ -1,0 +1,164 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    var PageBase = require('../../../common/base-dialog');
+    var listTpl = require('./select-departments-list.tpl');
+
+    var Module = PageBase.extend(new function () {
+        var that;
+        var ids= [];
+
+        /**
+         * 显示部门列表
+         */
+        function searchDepartList() {
+            util.showLoading('正在查询部门列表……');
+            util.sendRequest({
+                type: 'POST',
+                data: {},
+                action: 'department/listDepartmentNoPage.action',
+                success: function (resp) {
+                    util.hideLoading();
+                    if (resp.code === 0) {
+                        that.$('#selectDepartmentsTable').html(util.template(listTpl, {list: resp.data, ids: ids}));
+                        // 查看是否为全选
+						searchCheck();
+                    } else {
+                        util.showAlert(resp.message || '查询部门列表出错，请稍后重试！');
+                    }
+                },
+                error: function (xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('查询部门列表出错，请稍后重试！');
+                }
+            });        	
+        }
+        
+		/**
+		 * 查看是否为全选
+		 * */
+		function searchCheck() {
+			var trL;
+			trL = that.$('#selectDepartmentsTable').find('i[data-action="check"]:not(.fa-check-square-o)').length;
+			if(trL === 0) {
+				console.log('hello');
+				that.$('th[data-type="check"]').find('i[data-action="check"]').removeClass('fa-square-o').addClass('fa-check-square-o');
+			}
+		}
+		
+        /**
+		 * 确定选择部门
+		 */
+		function selectDepartsCheck() {
+			var $row;
+			var ids = [],names = [];
+			that.$('#selectDepartmentsTable tr').each(function(){
+				$row = $(this);
+				if ($row.find('i[data-action="check"]').hasClass('fa-check-square-o')) {
+					ids.push($row.attr('data-id'));
+					names.push($row.attr('data-name'));
+				}
+			});
+
+			// 返回给前一个页面
+			var data = {
+				id: ids.join(','),
+				name: names.join(',')
+			};
+			that.close(data);
+		}
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+        	// 列头全选按钮
+			that.$container.on('click', '#selectDepartsTableContainer thead i[data-action="check"]', function() {
+				var $el = $(this);
+				if($el.hasClass('fa-check-square-o')) {
+					// 取消全选
+					$el.removeClass('fa-check-square-o').addClass('fa-square-o');
+					$el.parents('table').find('tbody tr i[data-action="check"]').removeClass('fa-check-square-o').addClass('fa-square-o');
+				} else {
+					// 全选
+					$el.removeClass('fa-square-o').addClass('fa-check-square-o');
+					$el.parents('table').find('tbody tr i[data-action="check"]').removeClass('fa-square-o').addClass('fa-check-square-o');
+				}
+			});
+
+			// 勾选行
+			that.$container.on('click', '#selectDepartsTableContainer tbody tr',function() {
+				var $el = $(this);
+				// 设置选择状态
+				if($el.find('i[data-action="check"]').hasClass('fa-check-square-o')) {
+					$el.find('i[data-action="check"]').removeClass('fa-check-square-o').addClass('fa-square-o');
+				} else {
+					$el.find('i[data-action="check"]').removeClass('fa-square-o').addClass('fa-check-square-o');
+				}
+
+				// 判断全选状态
+				if($el.parents('tbody').find('i[data-action="check"]:not(.fa-check-square-o)').length === 0) {
+					$el.parents('table').find('thead i[data-action="check"]').removeClass('fa-square-o').addClass('fa-check-square-o');
+				} else {
+					$el.parents('table').find('thead i[data-action="check"]').removeClass('fa-check-square-o').addClass('fa-square-o');
+				}
+			});
+			
+        	that.$container.on('click','#btnDeptsSelect',selectDepartsCheck);
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+        	searchDepartList();
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            that.initTemplate(tpl, {});
+
+            // 获取已经选择的ID
+            ids = data.id ? data.id.split(',') : [];
+
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function () {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+
+    module.exports = Module;
+});

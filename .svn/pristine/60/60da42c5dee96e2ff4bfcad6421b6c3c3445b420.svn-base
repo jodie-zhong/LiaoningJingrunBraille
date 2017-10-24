@@ -1,0 +1,93 @@
+<!--<div class="row">-->
+  <!--<div class="col-md-3 col-sm-3 col-xs-3">-->
+    <!--<div class="panel">-->
+      <!--<div class="panel-content widget-info">-->
+        <!--<div class="row">-->
+          <!--<div class="left">-->
+            <!--<i class="fa fa-book bg-green"></i>-->
+          <!--</div>-->
+          <!--<div class="right">-->
+            <!--<p class="number countup" data-from="0" data-to="19">19</p>-->
+            <!--<p class="count-title">立项图书</p>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
+  <!--<div class="col-md-3 col-sm-3 col-xs-3">-->
+    <!--<div class="panel">-->
+      <!--<div class="panel-content widget-info">-->
+        <!--<div class="row">-->
+          <!--<div class="left">-->
+            <!--<i class="fa fa-print bg-blue"></i>-->
+          <!--</div>-->
+          <!--<div class="right">-->
+            <!--<p class="number countup" data-from="0" data-to="575">575</p>-->
+            <!--<p class="count-title">审稿图书</p>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
+  <!--<div class="col-md-3 col-sm-3 col-xs-3">-->
+    <!--<div class="panel">-->
+      <!--<div class="panel-content widget-info">-->
+        <!--<div class="row">-->
+          <!--<div class="left">-->
+            <!--<i class="fa fa-search bg-red"></i>-->
+          <!--</div>-->
+          <!--<div class="right">-->
+            <!--<p class="number countup" data-from="0" data-to="101">101</p>-->
+            <!--<p class="count-title">校对图书</p>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
+  <!--<div class="col-md-3 col-sm-3 col-xs-3">-->
+    <!--<div class="panel">-->
+      <!--<div class="panel-content widget-info">-->
+        <!--<div class="row">-->
+          <!--<div class="left">-->
+            <!--<i class="fa fa-file-text-o bg-purple"></i>-->
+          <!--</div>-->
+          <!--<div class="right">-->
+            <!--<p class="number countup" data-from="0" data-to="1210">1,210</p>-->
+            <!--<p class="count-title">定稿图书</p>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
+<!--</div>-->
+<div class="row">
+  <% for(var i = 0; i < menu.length; i++) { %>
+  <% if(menu[i].dashboard && (!menu[i].auth || auth.indexOf(menu[i].auth) >= 0)) { %>
+  <div class="col-md-4 col-xs-4 col-lg-3">
+    <div class="panel">
+      <div class="panel-header panel-controls">
+        <h3><i class="<%- menu[i].icon %>"></i> <%- menu[i].title %></h3>
+      </div>
+      <div class="panel-content widget-table">
+        <div class="withScroll" data-height="225" style="height: 225px;">
+          <table class="table table-striped">
+            <tbody>
+            <% for(var j = 0; j < menu[i].items.length; j++) { %>
+            <% if(menu[i].items[j].dashboard && ( !menu[i].items[j].auth || auth.indexOf(menu[i].items[j].auth) >= 0)) { %>
+            <tr>
+              <td><%- menu[i].items[j].title %> <span class="badge badge-warning">0</span></td>
+              <td style="width: 100px;">
+                <button class="btn btn-white btn-sm btn-rounded">任务详情</button>
+              </td>
+            </tr>
+            <% } %>
+            <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% } %>
+  <% } %>
+</div>

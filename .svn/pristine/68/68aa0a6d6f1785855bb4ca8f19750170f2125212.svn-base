@@ -1,0 +1,13 @@
+<% for(var i = 0; i < listchild.length; i++) { %>
+<tr data-id = "<%- listchild[i].codeId %>" data-use = "<%- listchild[i].isUse %>">
+	<td><%- (i + 1) %></td>
+    <td><%- listchild[i].value %></td>
+    <td><%- listchild[i].code %></td>
+    <td><%- listchild[i].remark %></td>
+    <% if(listchild[i].isUse === '1') { %>
+    <td>可用</td>
+    <% } else { %>
+    <td>不可用</td>
+    <% } %>
+</tr>
+<% } %>

@@ -1,0 +1,318 @@
+{
+  "code": 0,
+  "message": "初始化角色权限成功",
+  "data": [
+    {
+      "authorityId": "01",
+      "authorityFatherId": null,
+      "authorityName": "系统管理",
+      "authorityType": "1"
+    },
+    {
+      "authorityId": "011",
+      "authorityFatherId": "01",
+      "authorityName": "人员管理",
+      "authorityType": "2"
+    },
+    {
+      "authorityId": "0111",
+      "authorityFatherId": "011",
+      "authorityName": "新增",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0112",
+      "authorityFatherId": "011",
+      "authorityName": "修改",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0113",
+      "authorityFatherId": "011",
+      "authorityName": "查看",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0114",
+      "authorityFatherId": "011",
+      "authorityName": "删除",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "012",
+      "authorityFatherId": "01",
+      "authorityName": "培训管理",
+      "authorityType": "2"
+    },
+    {
+      "authorityId": "0121",
+      "authorityFatherId": "012",
+      "authorityName": "新增",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0122",
+      "authorityFatherId": "012",
+      "authorityName": "修改",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0123",
+      "authorityFatherId": "012",
+      "authorityName": "删除",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "013",
+      "authorityFatherId": "01",
+      "authorityName": "角色管理",
+      "authorityType": "2"
+    },
+    {
+      "authorityId": "0131",
+      "authorityFatherId": "013",
+      "authorityName": "权限设置",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0132",
+      "authorityFatherId": "013",
+      "authorityName": "保存",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "014",
+      "authorityFatherId": "01",
+      "authorityName": "部门管理",
+      "authorityType": "2"
+    },
+    {
+      "authorityId": "0141",
+      "authorityFatherId": "014",
+      "authorityName": "新增",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0142",
+      "authorityFatherId": "014",
+      "authorityName": "修改",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "015",
+      "authorityFatherId": "01",
+      "authorityName": "字典管理",
+      "authorityType": "2"
+    },
+    {
+      "authorityId": "0151",
+      "authorityFatherId": "015",
+      "authorityName": "一级新增",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0152",
+      "authorityFatherId": "015",
+      "authorityName": "一级修改",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0153",
+      "authorityFatherId": "015",
+      "authorityName": "一级停用",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0154",
+      "authorityFatherId": "015",
+      "authorityName": "二级新增",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0155",
+      "authorityFatherId": "015",
+      "authorityName": "二级修改",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0156",
+      "authorityFatherId": "015",
+      "authorityName": "二级停用",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "016",
+      "authorityFatherId": "01",
+      "authorityName": "日志管理",
+      "authorityType": "2"
+    },
+    {
+      "authorityId": "02",
+      "authorityFatherId": null,
+      "authorityName": "选题管理",
+      "authorityType": "1"
+    },
+    {
+      "authorityId": "021",
+      "authorityFatherId": "02",
+      "authorityName": "选题管理",
+      "authorityType": "2"
+    },
+    {
+      "authorityId": "0211",
+      "authorityFatherId": "021",
+      "authorityName": "新增",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0212",
+      "authorityFatherId": "021",
+      "authorityName": "修改",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0213",
+      "authorityFatherId": "021",
+      "authorityName": "删除",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0214",
+      "authorityFatherId": "021",
+      "authorityName": "申报",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0215",
+      "authorityFatherId": "021",
+      "authorityName": "查看",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0216",
+      "authorityFatherId": "021",
+      "authorityName": "部门负责人审核",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0217",
+      "authorityFatherId": "021",
+      "authorityName": "总编/副总编审批",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0218",
+      "authorityFatherId": "021",
+      "authorityName": "待定确认",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "022",
+      "authorityFatherId": "02",
+      "authorityName": "上报选题 ",
+      "authorityType": "2"
+    },
+    {
+      "authorityId": "0221",
+      "authorityFatherId": "022",
+      "authorityName": "新增上报",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0222",
+      "authorityFatherId": "022",
+      "authorityName": "修改上报",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0223",
+      "authorityFatherId": "022",
+      "authorityName": "删除",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0224",
+      "authorityFatherId": "022",
+      "authorityName": "提交上报",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0225",
+      "authorityFatherId": "022",
+      "authorityName": "添加选题",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0226",
+      "authorityFatherId": "022",
+      "authorityName": "移除选题",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0227",
+      "authorityFatherId": "022",
+      "authorityName": "确定",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "023",
+      "authorityFatherId": "02",
+      "authorityName": "选题大会",
+      "authorityType": "2"
+    },
+    {
+      "authorityId": "0231",
+      "authorityFatherId": "023",
+      "authorityName": "新增会议",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0232",
+      "authorityFatherId": "023",
+      "authorityName": "修改会议",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0233",
+      "authorityFatherId": "023",
+      "authorityName": "删除会议",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0234",
+      "authorityFatherId": "023",
+      "authorityName": "登记",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0235",
+      "authorityFatherId": "023",
+      "authorityName": "提交",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0236",
+      "authorityFatherId": "023",
+      "authorityName": "查看",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0237",
+      "authorityFatherId": "023",
+      "authorityName": "添加",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0238",
+      "authorityFatherId": "023",
+      "authorityName": "移除",
+      "authorityType": "3"
+    },
+    {
+      "authorityId": "0239",
+      "authorityFatherId": "023",
+      "authorityName": "确定",
+      "authorityType": "3"
+    }
+  ]
+}

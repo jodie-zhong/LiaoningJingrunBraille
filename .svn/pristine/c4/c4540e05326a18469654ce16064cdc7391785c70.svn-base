@@ -1,0 +1,56 @@
+<!--成本预算-确认-->
+<!---------------------------------------------------------------------------------------------编辑状态--------------------------------------------------------------------------------------------->
+<% if(isEdit) { %>
+<div class="form-horizontal">
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">确认结果</label>
+        <div class="col-xs-8">
+          <% if(info.handleState === '2') { %>
+          <label class="radio-inline"><input type="radio" name="handleState" value="1"/>没问题</label>
+          <label class="radio-inline"><input type="radio" name="handleState" value="2" checked/>有问题</label>
+          <% } else { %>
+          <label class="radio-inline"><input type="radio" name="handleState" value="1" checked/>没问题</label>
+          <label class="radio-inline"><input type="radio" name="handleState" value="2"/>有问题</label>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">复确认意见</label>
+        <div class="col-xs-10">
+          <textarea class="form-control" name="handleContentOne" placeholder="复确认意见（最大256字）" maxlength="256"><%- info.handleContentOne %></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!---------------------------------------------------------------------------------------------查看状态--------------------------------------------------------------------------------------------->
+<% } else { %>
+<div class="form-horizontal">
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">确认结果</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.handleState==='1' ? '没问题' : (info.handleState==='2' ? 有问题 : '') %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">复确认意见</label>
+        <div class="col-xs-10">
+          <p class="form-control-static"><%- info.handleContentOne %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>

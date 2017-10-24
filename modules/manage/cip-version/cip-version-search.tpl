@@ -1,0 +1,159 @@
+<div class="modal-dialog dialog-container">
+  <div class="modal-content">
+    <div class="panel-content">
+      <div class="control-btn clearfix">
+        <a class="panel-close btn-close" style="float: right;color: #ccc"><i class="fa fa-close"></i></a>
+      </div>
+      <div style="overflow-x: auto">
+        <table class="table table-striped table-nowrap table-hover" data-multi="true">
+          <thead>
+          <tr>
+            <th style="width: 150px">选题类型</th>
+            <th style="width: 150px">选题备案文号</th>
+            <th style="width: 150px">本社选题编号</th>
+            <th style="width: 150px">本社选题种类</th>
+            <th style="width: 150px">重大选题备案号</th>
+            <th style="width: 150px">初审人员</th>
+            <th style="width: 150px">复审人员</th>
+            <th style="width: 150px">终审人员</th>
+            <th style="width: 150px">三审意见</th>
+            <th style="width: 150px">ISBN号</th>
+            <th style="width: 150px">书名（正书名）</th>
+            <th style="width: 150px">副书名及说明文字</th>
+            <th style="width: 150px">并列书名</th>
+            <th style="width: 150px">第一作者</th>
+            <th style="width: 150px">第一著作方式</th>
+            <th style="width: 150px">其他作者</th>
+            <th style="width: 150px">其他著作方式</th>
+            <th style="width: 150px">正文文种</th>
+            <th style="width: 150px">正文文字</th>
+            <th style="width: 150px">装订形式</th>
+            <th style="width: 150px">全书页数</th>
+            <th style="width: 150px">字数(千字)</th>
+            <th style="width: 150px">图幅数</th>
+            <th style="width: 150px">附件类型</th>
+            <th style="width: 150px">附件数量</th>
+            <th style="width: 150px">责任编辑</th>
+            <th style="width: 150px">电话</th>
+            <th style="width: 150px">内容提要</th>
+            <th style="width: 150px">作者简介</th>
+            <th style="width: 150px">建议主题词</th>
+            <th style="width: 150px">图书类型</th>
+            <th style="width: 150px">图书分类</th>
+            <th style="width: 150px">指导分类</th>
+            <th style="width: 150px">发行范围</th>
+            <th style="width: 150px">读者对象</th>
+            <th style="width: 150px">版次</th>
+            <th style="width: 150px">印次</th>
+            <th style="width: 150px">成品尺寸</th>
+            <th style="width: 150px">印张数</th>
+            <th style="width: 150px">本次印量</th>
+            <th style="width: 150px">本次起始印数</th>
+            <th style="width: 150px">累计印量</th>
+            <th style="width: 150px">定价(本册)</th>
+            <th style="width: 150px">价格变更次数</th>
+            <th style="width: 150px">出版方式</th>
+            <th style="width: 150px">合作出版者</th>
+            <th style="width: 250px">出版地（申领者所在地）</th>
+            <th style="width: 150px">印刷单位</th>
+            <th style="width: 150px">计划出版时间</th>
+            <th style="width: 150px">实际出版时间</th>
+            <th style="width: 150px">丛书名</th>
+            <th style="width: 150px">附属丛书名</th>
+            <th style="width: 150px">并列丛书名</th>
+            <th style="width: 150px">丛书著作责任者 </th>
+            <th style="width: 150px">分(辑)册号</th>
+            <th style="width: 150px">定价(本套) </th>
+            <th style="width: 150px">数量</th>
+            <th style="width: 150px">套书名</th>
+            <th style="width: 150px">套书著作责任者</th>
+            <th style="width: 150px">引进版图书原书名</th>
+            <th style="width: 150px">版权合同登记号</th>
+            <th style="width: 150px">原出版地</th>
+            <th style="width: 250px">引进版图书原书出版者</th>
+            <th style="width: 150px">教材目录文件号</th>
+            <th style="width: 150px">目录（章节）信息</th>
+            <th style="width: 150px">备注</th>
+            <th style="width: 150px">封面设计者</th>
+            <th style="width: 150px">出版社名称</th>
+          </tr>
+          </thead>
+          <tbody id="reportListTable">
+          <% for(var i = 0; i < list.length; i++) { %>
+          <tr class="form-horizontal">
+            <td title="<%- list[i].bookTopicType %>"><%- list[i].bookTopicType %></td>
+            <td title="<%- list[i].bookTopicFileNo %>"><%- list[i].bookTopicFileNo %></td>
+            <td title="<%- list[i].bookTopicNo %>"><%- list[i].bookTopicNo %></td>
+            <td title="<%- list[i].bookTopicClasses %>"><%- list[i].bookTopicClasses %></td>
+            <td title="<%- list[i].importantTopicCode %>"><%- list[i].importantTopicCode %></td>
+            <td title="<%- list[i].firstInstanceOfficer %>"><%- list[i].firstInstanceOfficer %></td>
+            <td title="<%- list[i].secondInstanceOfficer %>"><%- list[i].secondInstanceOfficer %></td>
+            <td title="<%- list[i].lastInstanceOfficer %>"><%- list[i].lastInstanceOfficer %></td>
+            <td title="<%- list[i].threeOpinions%>"><%- list[i].threeOpinions%></td>
+            <td title="<%- list[i].bookIsbn %>"><%- list[i].bookIsbn %></td>
+            <td title="<%- list[i].bookName %>"><%- list[i].bookName %></td>
+            <td title="<%- list[i].bookSubtitle %>"><%- list[i].bookSubtitle %></td>
+            <td title="<%- list[i].bookTieName %>"><%- list[i].bookTieName %></td>
+            <td title="<%- list[i].bookDetailAuthor %>"><%- list[i].bookDetailAuthor %></td>
+            <td title="<%- list[i].bookDetailWorkWay %>"><%- list[i].bookDetailWorkWay %></td>
+            <td title="<%- list[i].bookDetailOtherAuthor %>"><%- list[i].bookDetailOtherAuthor %></td>
+            <td title="<%- list[i].bookDetailOtherWorkWay %>"><%- list[i].bookDetailOtherWorkWay %></td>
+            <td title="<%- list[i].bookTextLanguage %>"><%- list[i].bookTextLanguage %></td>
+            <td title="<%- list[i].bookTextWords %>"><%- list[i].bookTextWords %></td>
+            <td title="<%- list[i].bindingWay %>"><%- list[i].bindingWay %></td>
+            <td title="<%- list[i].bookPageNum %>"><%- list[i].bookPageNum %></td>
+            <td title="<%- list[i].bookDetailWordsNum %>"><%- list[i].bookDetailWordsNum %></td>
+            <td title="<%- list[i].bookDetailSheetNum %>"><%- list[i].bookDetailSheetNum %></td>
+            <td title="<%- list[i].bookFileType %>"><%- list[i].bookFileType %></td>
+            <td title="<%- list[i].bookFileNum %>"><%- list[i].bookFileNum %></td>
+            <td title="<%- list[i].dutyEditor %>"><%- list[i].dutyEditor %></td>
+            <td title="<%- list[i].phone %>"><%- list[i].phone %></td>
+            <td title="<%- list[i].bookDetailSketched %>"><%- list[i].bookDetailSketched %></td>
+            <td title="<%- list[i].bookDetailAuthorMsg %>"><%- list[i].bookDetailAuthorMsg %></td>
+            <td title="<%- list[i].bookSubjectHeadings %>"><%- list[i].bookSubjectHeadings %></td>
+            <td title="<%- list[i].bookType %>"><%- list[i].bookType %></td>
+            <td title="<%- list[i].bookDetailKind %>"><%- list[i].bookDetailKind %></td>
+            <td title="<%- list[i].bookDetailGuideKind %>"><%- list[i].bookDetailGuideKind %></td>
+            <td title="<%- list[i].bookDetailPublishScope %>"><%- list[i].bookDetailPublishScope %></td>
+            <td title="<%- list[i].bookDetailReader %>"><%- list[i].bookDetailReader %></td>
+            <td title="<%- list[i].revision %>"><%- list[i].revision %></td>
+            <td title="<%- list[i].bookDetailLayoutOrder %>"><%- list[i].bookDetailLayoutOrder %></td>
+            <td title="<%- list[i].finishedSize %>"><%- list[i].finishedSize %></td>
+            <td title="<%- list[i].printPaperNum %>"><%- list[i].printPaperNum %></td>
+            <td title="<%- list[i].printRuns %>"><%- list[i].printRuns %></td>
+            <td title="<%- list[i].currentlyPrintsRuns %>"><%- list[i].currentlyPrintsRuns %></td>
+            <td title="<%- list[i].bookTotalVolume %>"><%- list[i].bookTotalVolume %></td>
+            <td title="<%- list[i].bookFasciclePrice %>"><%- list[i].bookFasciclePrice %></td>
+            <td title="<%- list[i].priceChangeNum %>"><%- list[i].priceChangeNum %></td>
+            <td title="<%- list[i].bookPublishMode %>"><%- list[i].bookPublishMode %></td>
+            <td title="<%- list[i].cooperativePublisher %>"><%- list[i].cooperativePublisher %></td>
+            <td title="<%- list[i].placePublication %>"><%- list[i].placePublication %></td>
+            <td title="<%- list[i].printingUnit %>"><%- list[i].printingUnit %></td>
+            <td title="<%- list[i].planPublishDatetime %>"><%- list[i].planPublishDatetime %></td>
+            <td title="<%- list[i].actualPublishDatetime %>"><%- list[i].actualPublishDatetime %></td>
+            <td title="<%- list[i].seriesBookName %>"><%- list[i].seriesBookName %></td>
+            <td title="<%- list[i].accessorySeriesBookName %>"><%- list[i].accessorySeriesBookName %></td>
+            <td title="<%- list[i].paratacticSeriesBookName %>"><%- list[i].paratacticSeriesBookName %></td>
+            <td title="<%- list[i].seriesBookAuthor %>"><%- list[i].seriesBookAuthor %></td>
+            <td title="<%- list[i].bookFascicleNum %>"><%- list[i].bookFascicleNum %></td>
+            <td title="<%- list[i].bookPrice %>"><%- list[i].bookPrice %></td>
+            <td title="<%- list[i].packageBooksName %>"><%- list[i].packageBooksName %></td>
+            <td title="<%- list[i].counts %>"><%- list[i].counts %></td>
+            <td title="<%- list[i].packageBooksAuthor %>"><%- list[i].packageBooksAuthor %></td>
+            <td title="<%- list[i].bookOriginalName %>"><%- list[i].bookOriginalName %></td>
+            <td title="<%- list[i].copyrightContractNum %>"><%- list[i].copyrightContractNum %></td>
+            <td title="<%- list[i].pristinePlacePublication %>"><%- list[i].pristinePlacePublication %></td>
+            <td title="<%- list[i].directoryFileNumber %>"><%- list[i].directoryFileNumber %></td>
+            <td title="<%- list[i].catalogInformation %>"><%- list[i].catalogInformation %></td>
+            <td title="<%- list[i].author %>"><%- list[i].author %></td>
+            <td title="<%- list[i].remarks %>"><%- list[i].remarks %></td>
+            <td title="<%- list[i].coverLayoutUser %>"><%- list[i].coverLayoutUser %></td>
+            <td title="<%- list[i].bookPressName %>"><%- list[i].bookPressName %></td>
+          </tr>
+          <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

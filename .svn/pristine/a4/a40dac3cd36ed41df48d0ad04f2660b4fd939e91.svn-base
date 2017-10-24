@@ -1,0 +1,186 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    var PageBase = require('../../../common/base-page');
+    //列表界面模板
+    var listTpl = require('./crowdSource-manage-list.tpl');
+    require('../../../assets/plugins/icheck/icheck.min');
+    require('../../../assets/plugins/icheck/skins/minimal/blue.css');
+
+    module.exports = PageBase.extend(new function () {
+        var that;
+        // 当前选中的列表ids
+        var dialogData = {};
+        // 当前页数
+        var currentPage = 1;
+        // 是否可领用
+        var available = 1;
+        // 查询内容
+        var searchBookName = '';
+
+        /**
+         *  众包列表
+         */
+        function CrowdSourceList() {
+            //将全选状态取消
+            // $('#crowdSourceTable thead').find('fa-check-square-o').removeClass('fa-check-square-o').addClass('fa-square-o');
+            dialogData = {};
+            $('#btnCrowdSourceGet').attr('disabled', 'disabled');
+            util.showLoading();
+            var params = {};
+            params.page = currentPage;
+            params.available = available;// TODO
+            params.searchBookName = searchBookName;// TODO
+            util.sendRequest({
+                type: 'POST',
+                data: params,
+                action: 'tpr/searchTaskGetList.action',
+                success: function (resp) {
+                    util.hideLoading();
+                    console.log(resp);
+                    if (resp.code === 0) {
+                        that.$('#crowdSourceList').html(util.template(listTpl, {
+                            list: resp.data.records
+                        }));
+                        // 分页数据
+                        that.$('#crowdSourceListPaging').html(that.buildPagination(resp.data.pageNow, resp.data.pageCount));
+                    } else {
+                        util.showAlert(resp.message || '查询列表出错，请稍后重试！');
+                    }
+                },
+                error: function (xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('查询列表出错，请稍后重试！');
+                }
+            });
+        }
+
+        /**
+         * 跳转页面
+         */
+        function jumpPage() {
+            var $el = $(this);
+            var page = $el.attr('data-page');
+            if (page) {
+                // 修改页面后重新刷新页面数据
+                currentPage = page;
+                CrowdSourceList();
+            }
+        }
+
+        /**
+         * 选中事件
+         */
+        function checkFn() {
+            var ids = [], names = [], bIds = [], tprTaskGetUserIdsArray = [], flowNames = [], taskContents = [];
+            $('#crowdSourceList').find(".fa-check-square-o").each(function () {
+                var $el = $(this);
+                var $parent = $el.parent().parent();
+                ids.push($parent.attr("data-id"));
+                names.push($parent.attr("data-name"));
+                bIds.push($parent.attr("data-bookId"));
+                flowNames.push($parent.attr("data-flowName"));
+                taskContents.push($parent.attr("data-taskContent"));
+                tprTaskGetUserIdsArray.push($parent.attr("data-tprTaskGetUserIds"));
+            });
+            if (ids.length === 1 && tprTaskGetUserIdsArray[0].split(',').indexOf(util.getUserInfo().userId) < 0) {
+                $('#btnCrowdSourceGet').removeAttr('disabled');
+            } else {
+                $('#btnCrowdSourceGet').attr('disabled', 'disabled');
+            }
+            dialogData = {
+                tprTaskIds: ids.join(','),
+                names: names.join(','),
+                bookIds: bIds.join(','),
+                flowNames: flowNames.join(","),
+                taskContents: taskContents.join(",")
+            };
+        }
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+            // 选中事件
+            that.makeSelectableTable("#crowdSourceTable", null, checkFn);
+
+            // 领取
+            that.$container.on('click', '#btnCrowdSourceGet', function () {
+                that.openPage('braille/crowd-source/crowdSource-manage-edit', dialogData);
+            });
+
+            // 分页
+            that.$container.on('click', '#crowdSourceListPaging a', jumpPage);
+
+            // 列表上的搜索按钮
+            that.$container.on('click', '#btnSearchWork', function () {
+                searchBookName = that.$("input[name='searchBookName']").val();
+                currentPage = 1;
+                CrowdSourceList();
+            });
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+            // 众包列表
+            CrowdSourceList();
+            // 生成iCheck
+            that.$container.find('#searchTaskAbout').iCheck({
+                checkboxClass: 'icheckbox_minimal-blue',
+                radioClass: 'icheckbox_minimal-blue'
+            }).on('ifChanged', function (event) {
+                available = $(this).prop('checked') ? '1' : '2';
+                currentPage = 1;
+                CrowdSourceList();
+            });
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            that.initTemplate(tpl, {});
+
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+            if (data && data.refresh === true) {
+                currentPage = 1;
+                CrowdSourceList();
+            }
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function () {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+});

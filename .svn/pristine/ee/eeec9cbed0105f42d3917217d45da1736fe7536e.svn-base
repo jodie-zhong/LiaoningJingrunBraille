@@ -1,0 +1,249 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var config = {
+        // 初始化时默认加载的页面
+        defaultModule: 'dashboard/dashboard',
+        // 顶部导航菜单
+        menu: [
+            {
+                title: '选题与合同管理',
+                roleId:'02',
+                icon: 'fa fa-book',
+                items: [
+                    {
+                        title: '选题管理',
+                        roleId:'021',
+                        href: 'topic/topic-manage/topic-manage'
+                    },
+                    {
+                        title: '上报选题',
+                        roleId:'022',
+                        href: 'topic/topic-report/topic-report'
+                    },
+                    {
+                        title: '选题大会',
+                        roleId:'023',
+                        href: 'topic/topic-conference/topic-conference'
+                    },
+                    {
+                        title: '选题备案',
+                        roleId:'024',
+                        href: 'topic/topic-record/topic-record'
+                    },
+                    {
+                        title: '合同录入',
+                        roleId:'025',
+                        href: ''
+                    }
+                ]
+            },
+            {
+                title: '盲文读物管理',
+                icon: 'fa fa-braille',
+                items: [
+                    {
+                        title: '审稿',
+                        href: 'braille/review/braille-review'
+                    },
+                    {
+                        title: '译校通读众包管理',
+                        href: 'braille/crowd-source/crowdSource-manage'
+                    },
+                    {
+                        title: '译校通读管理',
+                        href: 'braille/translation-proofreading/tprt-manage'
+                    },
+                    {
+                        title: '印前质检',
+                        href: ''
+                    },
+                    {
+                        title: '书号和CIP号申请',
+                        href: 'braille/cip-apply/cip-apply'
+                    },
+                    {
+                        title: '变更备案',
+                        href: 'braille/change-record/change-record'
+                    },
+                    {
+                        title: '清样稿管理',
+                        href: ''
+                    },
+                    {
+                        title: '图书印制单审核管理',
+                        href: ''
+                    },
+
+                    {
+                        title: '清样稿印制',
+                        href: 'braille/sample-print/sample-print'
+                    },
+                    {
+                        title: '印刷管理',
+                        href: 'braille/print-manage/print-manage'
+                    },
+                    {
+                        title: '封面设计及印刷',
+                        href: ''
+                    },
+                    {
+                        title: '备案登记',
+                        href: ''
+                    },
+                    {
+                        title: '报表统计',
+                        href: ''
+                    }
+                ]
+            },
+            {
+                title: '汉文读物管理',
+                icon: 'fa fa-language',
+                items: [
+                    {
+                        title: '图书排版',
+                        href: ''
+                    },
+                    {
+                        title: '审稿',
+                        href: ''
+                    },
+                    {
+                        title: '校对',
+                        href: ''
+                    },
+                    {
+                        title: '排版及封面申请',
+                        href: ''
+                    },
+                    {
+                        title: '书号和CIP申请',
+                        href: ''
+                    },
+                    {
+                        title: '成本预算',
+                        href: ''
+                    },
+                    {
+                        title: '印前质检',
+                        href: ''
+                    },
+                    {
+                        title: '发印申请',
+                        href: ''
+                    },
+                    {
+                        title: '蓝纸及样书',
+                        href: ''
+                    },
+                    {
+                        title: '稿酬管理',
+                        href: ''
+                    },
+                    {
+                        title: '劳务管理',
+                        href: ''
+                    },
+                    {
+                        title: '样书管理',
+                        href: ''
+                    }
+                ]
+            },
+            {
+                title: '出版管理',
+                icon: 'fa fa-print',
+                items: [
+                    {
+                        title: '再版重印管理',
+                        href: ''
+                    },
+                    {
+                        title: '生产管理',
+                        href: ''
+                    },
+                    {
+                        title: '物资采购',
+                        href: ''
+                    },
+                    {
+                        title: '物资管理',
+                        href: ''
+                    },
+                    {
+                        title: '物资出库',
+                        href: ''
+                    }
+                ]
+            },
+            {
+                title: '资源库',
+                icon: 'fa fa-database',
+                items: [
+                    {
+                        title: '选题库',
+                        href: ''
+                    },
+                    {
+                        title: '合同库',
+                        href: ''
+                    },
+                    {
+                        title: '电子书稿库',
+                        href: ''
+                    },
+                    {
+                        title: '汉盲语料库',
+                        href: ''
+                    },
+                    {
+                        title: '合同模板管理',
+                        roleId:'026',
+                        href: 'topic/contract-template/contract-template'
+                    }
+                ]
+            },
+            {
+                title: '系统管理',
+                auth:'01',
+                icon: 'fa fa-cogs',
+                items: [
+                    {
+                        title: '人员管理',
+                        auth: '011',
+                        href: 'system/person/person-manage'
+                    },
+                    {
+                        title: '培训管理',
+                        auth: '012',
+                        href: 'system/train/train-manage'
+                    },
+                    {
+                        title: '角色管理',
+                        auth: '013',
+                        href: 'system/role/role-manage'
+                    },
+                    {
+                        title: '部门管理',
+                        auth: '014',
+                        href: 'system/department/department-manage'
+                    },
+                    {
+                        title: '字典管理',
+                        auth: '015',
+                        href: 'system/dictionary/dictionary-manage'
+                    },
+                    {
+                        title: '日志管理',
+                        auth: '016',
+                        href: 'system/logs/logs-manage'
+                    }
+                ]
+            }
+
+        ]
+    };
+
+    module.exports = config;
+});

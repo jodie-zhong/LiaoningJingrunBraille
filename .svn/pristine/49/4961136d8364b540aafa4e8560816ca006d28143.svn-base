@@ -1,0 +1,159 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    var PageBase = require('../../../common/base-dialog');
+    var enterListTpl=require('./topic-conference-enter.tpl')
+    var Module = PageBase.extend(new function () {
+        var that;
+        var info=null;
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+            // 点击录入按钮
+            that.$container.on('click', '.enteringMeeting', function(){
+                var $el=$(this);
+                var num=$el.attr('data-index');
+                $("#enteringInfo").show();
+                //渲染对应的录入信息
+                $("#enteringInfoList").html(util.template(enterListTpl,{list: info.reportMeetingList[num].registerTopicList}));
+
+                var $parent=$el.parent().parent();
+                $("#btnTopicSave").on('click',function () {
+                    // var data={};
+                    var data1=[];
+                    var data2=[];
+                    var data3=[];
+                    var data4=[];
+                    $("#enteringInfo input").each(function () {
+                        var $el1=$(this);
+                        if($el1.prop('checked')){
+                            data1.push($el1.val());
+                        }
+                    });
+                    $("#enteringInfo textarea").each(function () {
+                        var $el1=$(this);
+                        if($el1.val()!==''){
+                            data2.push($el1.val());
+                        }else{
+                            data2.push("同意");
+                        }
+                    });
+                    $("#enteringInfo .enter-book").each(function () {
+                        var $el1=$(this);
+                        data3.push($el1.attr('data-id'));
+                        data4.push($el1.attr('data-name'));
+                    });
+                    $parent.attr("data-result",data1);
+                    $parent.attr("data-remark",data2);
+                    $parent.attr("book-id",data3);
+                    $parent.attr("book-name",data4);
+                    $("#enteringInfo").hide();
+                });
+            });
+            // 点击保存按钮
+            that.$container.on('click', '#btnConRegSave', function(){
+
+            });
+            // 点击提交按钮
+            that.$container.on('click', '#btnConRegSubmit', function(){
+                alert(11111);
+                //获取每行绑定的信息，用于发给后台
+                var params=[];
+                $("#conRegListTable").find("tr").each(function () {
+                    var $el=$(that);
+                    console.log($el.attr('data-id'));
+                    console.log($el.attr('book-id'));
+                    console.log($el.attr('book-name'));
+                    console.log($el.attr('data-result'));
+                    console.log($el.attr('data-remark'));
+                    var datas={
+                        reportTopicId:$el.attr('data-id'),
+                        bookTopicId:$el.attr('book-id'),
+                        bookTopicName:$el.attr('book-name'),
+                        result:$el.attr('data-result'),
+                        remark:$el.attr('data-remark')
+                    };
+                    console.log(datas);
+                    params.push(datas);
+                })
+                // params.operationType=2;
+                console.log(params);
+                util.sendRequest({
+                    data:params,
+                    action:'meeting/registerMeeting.action',
+                    success:function (resp) {
+                        util.hideLoading();
+                        if(resp.code===0){
+                            // util.showAlert(resp.message || '初始化会议列表成功，请稍后重试！');
+                            that.$('#conferenceListTable').html(util.template(topicConferenceListTpl, {list: resp.data.records}));
+                            // 分页数据
+                            that.$('#conferenceListPaging').html(that.buildPagination(resp.data.pageNow, resp.data.pageCount));
+                        }else{
+                            console.log(resp);
+                            util.showAlert(resp.message || '初始化会议列表出错，请稍后重试！');
+                        }
+                    },
+                    error:function (xhr) {
+                        // XHR错误
+                        util.hideLoading();
+                        console.log(xhr);
+                        util.showAlert('初始化会议列表出错，请稍后重试！');
+                    }
+                });
+            });
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            info=data;
+            console.log(info);
+            that.initTemplate(tpl, {info:info});
+
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function(){
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+
+    module.exports = Module;
+});

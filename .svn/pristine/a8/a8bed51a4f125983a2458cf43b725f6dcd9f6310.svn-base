@@ -1,0 +1,66 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+    var util = require('../../../../../common/util.js');
+
+    /**
+     * Workflow Item
+     */
+    module.exports = ItemBase.extend({
+        // 保存/提交接口
+        saveAction: 'CNQuality/saveOrSubmitCNQuality.action',
+        // 批量保存/提交接口
+        batchSaveAction: '',
+        // 查询接口
+        detailAction: 'CNQuality/searchCNQualityDetail.action',
+
+        /**
+         * 印刷方式改变时界面切换
+         */
+        changeFlow: function () {
+            this.$("div[data-area='nextFlow']").hide();
+            if (this.$("input[name='handleState']:checked").val() === '1') {
+                this.$("div[data-index='0']").show();
+            } else {
+                this.$("div[data-index='1']").show();
+            }
+        },
+
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+            var that = this;
+            // 印制方式切换
+            this.$container.on("click", "input[name='handleState']", function () {
+                that.changeFlow();
+            });
+        },
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+            this.changeFlow();
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function (container, tpl) {
+            this._super(container, tpl);
+        },
+
+        /**
+         * 渲染页面
+         */
+        render: function () {
+            this._super();
+            this.initPageEvent();
+            this.initPageData();
+        }
+    });
+});

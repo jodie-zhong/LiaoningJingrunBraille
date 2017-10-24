@@ -1,0 +1,13 @@
+{
+	"code": 0,
+	"message": "查询培训人员列表成功",
+	"data": [
+		{
+			"userId": "1",
+			"userName": "管理员",
+			"roleIds": "1,2",
+			"roleNames": "系统管理员,社长/总编辑",
+			"departmentName": "社长/总编辑"
+		}
+	]
+}

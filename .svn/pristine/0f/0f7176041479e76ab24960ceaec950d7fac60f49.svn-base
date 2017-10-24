@@ -1,0 +1,18 @@
+<% if(list.length > 0) { %>
+<% for(var i = 0; i < list.length; i++) { %>
+<tr data-id="<%- list[i].trainId %>">
+<td><%- (i + 1) %></td>
+<td><%- list[i].trainName %></td>
+<td><%- list[i].trainUnitName %></td>
+<td><%- list[i].trainDatetime %></td>
+<td><%- list[i].trainContent %></td>
+<td><%- list[i].trainFormName %></td>
+<td><%- list[i].trainHour %></td>
+<td><%- list[i].trainIntegral %></td>
+</tr>
+<% } %>
+<% } else { %>
+<tr data-noselect="true">
+  <td colspan="8"><p class="empty-tips">暂无数据</p></td>
+</tr>
+<% } %>

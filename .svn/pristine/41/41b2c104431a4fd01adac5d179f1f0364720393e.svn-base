@@ -1,0 +1,58 @@
+<!--下发-->
+<% if(isEdit) { %>
+<div class="form-horizontal">
+  <% if(info.nextFlowInfoEntities) { %>
+  <% for(var i = 0; i < info.nextFlowInfoEntities.length; i++) { %>
+  <div class="row" data-flow="<%- info.nextFlowInfoEntities[i].nextFlowId %>" data-area="nextFlow" >
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">下一流程<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.nextFlowInfoEntities[i].nextFlowName %></p>
+          <input type="hidden" name="nextFlowId" value="<%- info.nextFlowInfoEntities[i].nextFlowId %>">
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">任务人</label>
+        <div class="col-xs-8">
+          <div class="input-group">
+            <input type="text" class="form-control" name="taskUsers"
+                   value="<%- info.nextFlowInfoEntities[i].nextFlowTaskUserNames %>"
+                   data-value="<%- info.nextFlowInfoEntities[i].nextFlowTaskUserIds %>" placeholder="任务人" readonly
+                   data-data="{searchRoleId: '', searchDepartmentId: ''}">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button" data-open="public/user/select-user-check" data-data="{}"><i
+                      class="fa fa-user-o"></i></button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% } %>
+  <% } %>
+</div>
+<% } else { %>
+<div class="form-horizontal">
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">提交人</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitUserName %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">提交时间</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitDatetime %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>

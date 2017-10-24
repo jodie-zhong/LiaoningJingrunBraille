@@ -1,0 +1,211 @@
+define(function(require, exports, module) {
+	"use strict";
+
+	var util = require('../../../common/util');
+	var DialogBase = require('../../../common/base-dialog');
+	var listTpl = require('./publish-plan-increasedlist.tpl')
+
+	var Module = DialogBase.extend(new function() {
+		var that;
+		var info = null;
+		// 当前选中的页数
+		var currentPage = 1;
+		var ids = [];
+		
+		/**
+		 * 查询
+		 */
+		function searchPublishBook() {
+			var type = that.$('input[name="bookAndTopicType"]:checked').val();
+			util.showLoading();
+			util.sendRequest({
+				type: 'POST',
+				data: {bookAndTopicType: type, page: currentPage},
+				action: 'publication/searchReportList.action',
+				success: function(resp) {
+					util.hideLoading();
+					if(resp.code === 0) {
+						that.$('#publishChooseList').html(util.template(listTpl, {
+							list: resp.data.records,
+							action: true
+						}));
+						// 分页数据
+						that.$('#publishChoosePaging').html(that.buildPagination(resp.data.pageNow, resp.data.pageCount));
+					} else {
+						util.showAlert(resp.message);
+					}
+				},
+				error: function(xhr) {
+					// XHR错误
+                    console.log(xhr);
+					util.hideLoading();
+					til.showAlert(resp.message);
+				}
+			});
+		}
+		
+		/**
+		 * 选择的选题或图书Id
+		 */
+		function bookAndTopic() {
+			var $tr;
+			ids = [];
+			that.$('#publishChooseList tr').each(function() {
+				$tr = $(this);
+				if ($tr.find('i[data-action="check"]').hasClass('fa-check-square-o')) {
+					ids.push({
+						bookAndTopicId: $tr.attr('data-id')
+					})
+				}
+			});
+			console.log(ids);
+		}
+		
+		/**
+		 * 跳转页面
+		 */
+		function jumpPage() {
+			var $el = $(this);
+			var page = $el.attr('data-page');
+			if(page) {
+				// 修改页面后重新刷新页面数据
+				currentPage = page;
+				searchPublishBook();
+			}
+		}
+		
+		/**
+		 * 保存
+		 */
+		function savePublish() {
+			var params = {};
+			params.bookList = ids;
+			params.bookAndTopicType = that.$('input[name="bookAndTopicType"]:checked').val();
+			params.uploadYear = info;
+			util.showLoading();
+			util.sendRequest({
+				type: 'POST',
+				data: params,
+				action: 'publication/submitReport.action',
+				success: function(resp) {
+					util.hideLoading();
+					if(resp.code === 0) {
+						util.showAlert('数据保存成功!', function() {
+							// 关闭页面
+							that.close({
+								refresh: true
+							});
+						});
+					} else {
+						util.showAlert(resp.message);
+					}
+				},
+				error: function(xhr) {
+					// XHR错误
+                    console.log(xhr);
+					util.hideLoading();
+					util.showAlert(resp.message);
+				}
+			});
+		}
+
+		/**
+		 * 初始化页面事件
+		 */
+		function initPageEvent() {
+			// 查询
+			that.$container.on('change', 'input[name="bookAndTopicType"]', function() {
+				searchPublishBook();
+			});
+			// 保存
+			that.$container.on('click', '#btnPublishSave', function() {
+				savePublish();
+			});
+			// 分页
+			that.$container.on('click', '#publishChoosePaging a', jumpPage);
+			// 列头全选按钮
+			that.$container.on('click', '#searchPublishTable thead i[data-action="check"]', function() {
+				var $el = $(this);
+				if($el.hasClass('fa-check-square-o')) {
+					// 取消全选
+					$el.removeClass('fa-check-square-o').addClass('fa-square-o');
+					$el.parents('table').find('tbody tr i[data-action="check"]').removeClass('fa-check-square-o').addClass('fa-square-o');
+					bookAndTopic();
+				} else {
+					// 全选
+					$el.removeClass('fa-square-o').addClass('fa-check-square-o');
+					$el.parents('table').find('tbody tr i[data-action="check"]').removeClass('fa-square-o').addClass('fa-check-square-o');
+					bookAndTopic();
+				}
+			});
+
+			// 勾选行
+			that.$container.on('click', '#searchPublishTable tbody tr', function() {
+				var $el = $(this);
+				// 设置选择状态
+				if($el.find('i[data-action="check"]').hasClass('fa-check-square-o')) {
+					$el.find('i[data-action="check"]').removeClass('fa-check-square-o').addClass('fa-square-o');
+					bookAndTopic();
+				} else {
+					$el.find('i[data-action="check"]').removeClass('fa-square-o').addClass('fa-check-square-o');
+					bookAndTopic();
+				}
+
+				// 判断全选状态
+				if($el.parents('tbody').find('i[data-action="check"]:not(.fa-check-square-o)').length === 0) {
+					$el.parents('table').find('thead i[data-action="check"]').removeClass('fa-square-o').addClass('fa-check-square-o');
+				} else {
+					$el.parents('table').find('thead i[data-action="check"]').removeClass('fa-check-square-o').addClass('fa-square-o');
+				}
+			});
+		}
+
+		/**
+		 * 初始化页面数据
+		 */
+		function initPageData() {
+			searchPublishBook();
+		}
+
+		/**
+		 * 初始化时被调用
+		 */
+		this.onInit = function($el, tpl, data, indexRef) {
+			this._super($el, tpl, data, indexRef);
+			that = this;
+			info = data;
+
+			that.initTemplate(tpl, {});
+			// 初始化页面事件
+			initPageEvent();
+			// 初始化页面数据
+			initPageData();
+		};
+
+		/**
+		 * 页面返回事件
+		 * @param data
+		 */
+		this.onBack = function(data) {
+			this._super(data);
+
+		};
+
+		/**
+		 * 窗口缩放事件
+		 */
+		this.onResize = function() {
+			this._super();
+		};
+
+		/**
+		 * 页面销毁
+		 */
+		this.onDestroy = function() {
+			this._super();
+		};
+
+	}());
+
+	module.exports = Module;
+});

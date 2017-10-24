@@ -1,0 +1,173 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    // 工作流类窗口继承自工作流Base
+    var Base = require('../../other/base/book-base');
+
+    var Module = Base.extend(new function () {
+        var that;
+
+        this.deployKey = 'TRP';
+
+        this.searchParams = {
+            searchTaskAbout: '1'
+        };
+
+        /**
+         * 选择行变更事件回调
+         */
+        this.onSelectRowChanged = function () {
+            // 暂时啥也不做
+        };
+
+        this.onCheckRowChanged = function () {
+            // 默认全部禁用
+            this.$('#btnTaskAssignment').attr('disabled', 'disabled');// 任务分配
+            this.$('#btnManuscriptReceiving').attr('disabled', 'disabled');// 接收书稿
+            this.$('#btnTranslationEntering').attr('disabled', 'disabled');// 译录
+            this.$('#btnManuscriptRetrieving').attr('disabled', 'disabled');// 书稿归还确认
+            this.$('#btnFirstProofreading').attr('disabled', 'disabled');// 一校
+            this.$('#btnFirstProofreadingConfirmation').attr('disabled', 'disabled');// 一校正误表确认
+            this.$('#btnFirstProofreadingChecking').attr('disabled', 'disabled');// 一校正误表审核
+            this.$('#btnFirstProofreadingModification').attr('disabled', 'disabled');// 一校修改
+            this.$('#btnSecondProofreading').attr('disabled', 'disabled');// 二校
+            this.$('#btnSecondProofreadingConfirmation').attr('disabled', 'disabled');// 二校正误表确认
+            this.$('#btnSecondProofreadingChecking').attr('disabled', 'disabled');// 二校正误表审核
+            this.$('#btnSecondProofreadingModification').attr('disabled', 'disabled');// 二校修改
+            this.$('#btnThirdProofreading').attr('disabled', 'disabled');// 三校
+            this.$('#btnThirdProofreadingConfirmation').attr('disabled', 'disabled');// 三校正误表确认
+            this.$('#btnThirdProofreadingChecking').attr('disabled', 'disabled');// 三校正误表审核
+            this.$('#btnThirdProofreadingModification').attr('disabled', 'disabled');// 三校修改
+            this.$('#btnReadThrough').attr('disabled', 'disabled');// 通读
+            this.$('#btnReadThroughConfirmation').attr('disabled', 'disabled');// 通读正误表确认
+            this.$('#btnReadThroughChecking').attr('disabled', 'disabled');// 通读正误表审核
+            this.$('#btnReadThroughModification').attr('disabled', 'disabled');// 通读修改
+        };
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+            // 任务分配
+            that.$container.on('click', '#btnTaskAssignment', function () {
+                // 选题新建步骤
+                that.openPage('public/workflow/workflow-dialog', {
+                    debug: true,
+                    flowTemplate: 'translation-proofreading/tprt-deal',
+                    isEdit: true
+                });
+            });
+            // // 新建选题
+            // that.$container.on('click', '#btnTopicAdd', function () {
+            //     // 选题新建步骤
+            //     that.openPage('public/workflow/workflow-dialog', {
+            //         bookId: '',
+            //         taskId: ''
+            //     });
+            // });
+            //
+            // // 申报、主管、主编、待定
+            // that.$container.on('click', '#btnTopicSubmit,#btnPrincipalCheck,#btnChiefCheck,#btnTopicHold', function () {
+            //     that.openPage('public/workflow/workflow-dialog', {
+            //         bookId: that.currentBookId,
+            //         taskId: that.currentTaskId,
+            //         deployId: that.currentDeployId
+            //     });
+            // });
+            //
+            // // 查看
+            // that.$container.on('click', '#btnTopicView', function () {
+            //     that.openPage('public/workflow/workflow-dialog', {
+            //         bookId: that.currentBookId,
+            //         taskId: that.currentTaskId,
+            //         deployId: that.currentDeployId,
+            //         isView: true
+            //     });
+            // });
+            //
+            // // 删除
+            // that.$container.on('click', '#btnTopicDelete', function () {
+            //     util.showConfirm('确定要删除所选的选题么？', function(){
+            //         // 删除选题
+            //         util.showLoading();
+            //         util.sendRequest({
+            //             action: 'bookTopic/batchRemoveBookTopic.action',
+            //             data:{
+            //                 bookTopicIds: that.currentBookId
+            //             },
+            //             success:function(resp){
+            //                 util.hideLoading();
+            //                 if(resp && resp.code === 0){
+            //                     util.showAlert('删除选题成功！', function(){
+            //                         that.searchUntreatedTask();
+            //                     });
+            //                 } else {
+            //                     console.log(resp);
+            //                     util.showAlert(resp.message || '删除选题出错，请稍后重试！');
+            //                 }
+            //             },
+            //             error:function(xhr){
+            //                 // XHR错误
+            //                 util.hideLoading();
+            //                 console.log(xhr);
+            //                 util.showAlert('删除选题出错，请稍后重试！');
+            //             }
+            //         });
+            //     });
+            // });
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+            that.$('#btnTaskAssignment').removeAttr('disabled');// 任务分配
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            // that.initTemplate(tpl, {});
+
+            // 初始化数据前需要设置列表模板
+            // this.listTpl = topicManageListTpl;
+
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function () {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+
+    module.exports = Module;
+});

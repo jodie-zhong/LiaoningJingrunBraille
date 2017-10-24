@@ -1,0 +1,105 @@
+<!--劳务录入-->
+<div class="row">
+  <div class="col-xs-12">
+    <div class="form-group">
+      <label class="col-xs-2 control-label">姓名<span class="must">*</span></label>
+      <div class="col-xs-5">
+        <input type="text" name="userName" value="<%- list.userName %>"
+               class="form-control" placeholder="姓名(最多64个字)"
+               data-fv-notempty="true" data-fv-notempty-message="请填写姓名" maxlength="64"/>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12">
+    <div class="form-group">
+      <label class="col-xs-2 control-label">身份证号<span class="must">*</span></label>
+      <div class="col-xs-5">
+        <input type="text" name="userIdCard" value="<%- list.userIdCard %>"
+               class="form-control" placeholder="身份证号(最多64个字)"
+               data-fv-notempty="true" data-fv-notempty-message="请填写身份证号" maxlength="64"/>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12">
+    <div class="form-group">
+      <label class="col-xs-2 control-label">出勤天数<span class="must">*</span></label>
+      <div class="col-xs-5">
+        <input type="text" name="jobInsideDays" value="<%- list.jobInsideDays %>"
+               class="form-control" placeholder="出勤天数(最多64个字)"
+               data-fv-notempty="true" data-fv-notempty-message="请填写出勤天数" maxlength="64"/>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12">
+    <div class="form-group">
+      <label class="col-xs-2 control-label">全勤奖<span class="must">*</span></label>
+      <div class="col-xs-5">
+        <input type="text" name="jobInsideReward" value="<%- list.jobInsideReward %>"
+               class="form-control" placeholder="全勤奖(最多64个字)"
+               data-fv-notempty="true" data-fv-notempty-message="请填写全勤奖"/>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12">
+    <div class="form-group">
+      <label class="col-xs-2 control-label">加班费<span class="must">*</span></label>
+      <div class="col-xs-5">
+        <input type="text" name="overtimePay" class="form-control"
+               placeholder="加班费(最多64个字)" data-fv-notempty="true" data-fv-notempty-message="请填写加班费"
+               maxlength="64"/>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12">
+    <div class="form-group">
+      <label class="col-xs-2 control-label">劳务费<span class="must">*</span></label>
+      <div class="col-xs-5">
+        <input type="text" name="serviceFee" value="<%- list.serviceFee %>"
+               class="form-control" placeholder="劳务费(最多64个字)"
+               data-fv-notempty="true" data-fv-notempty-message="请填写劳务费" maxlength="64"/>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12">
+    <div class="form-group">
+      <label class="col-xs-2 control-label">效益津贴<span class="must">*</span></label>
+      <div class="col-xs-5">
+        <input type="text" name="benefitAllowance" value="<%- list.benefitAllowance %>"
+               class="form-control" placeholder="效益津贴(最多64个字)"
+               data-fv-notempty="true" data-fv-notempty-message="请填写效益津贴"/>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12">
+    <div class="form-group">
+      <label class="col-xs-2 control-label">伙食补贴<span class="must">*</span></label>
+      <div class="col-xs-5">
+        <input type="text" name="foodAllowance" class="form-control" value="<%- list.foodAllowance %>"
+               placeholder="伙食补贴(最多64个字)" data-fv-notempty="true" data-fv-notempty-message="请填写伙食补贴"
+               maxlength="64"/>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12">
+    <div class="form-group">
+      <label class="col-xs-2 control-label">郊区补贴<span class="must">*</span></label>
+      <div class="col-xs-5">
+        <input type="text" name="suburbAllowance"
+               class="form-control" placeholder="郊区补贴(最多64个字)" value="<%- list.suburbAllowance %>"
+               data-fv-notempty="true" data-fv-notempty-message="请填写郊区补贴" maxlength="64"/>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12">
+    <div class="form-group">
+      <label class="col-xs-2 control-label">合计</label>
+      <div class="col-xs-5">
+        <input type="text" name="total" value="<%- list.total %>"
+               class="form-control"/>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dialog-options">
+  <button class="btn btn-primary" id="btnSave">保存</button>
+</div>

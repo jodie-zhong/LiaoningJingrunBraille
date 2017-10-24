@@ -1,0 +1,26 @@
+<!--译校通读-译录的发送书稿-->
+<div class="form-horizontal">
+  <% if(info.userTaskEntities && info.userTaskEntities.length > 0){ %>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">下一流程</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.userTaskEntities[0].flowName %></p>
+          <input type="hidden" name="flowId" value="<%- info.userTaskEntities[0].flowId %>">
+          <input type="hidden" name="flowName" value="<%- info.userTaskEntities[0].flowName %>">
+          <input type="hidden" name="taskUsers" value="<%- info.userTaskEntities[0].handleUserId %>">
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-5 control-label">下一流程任务人</label>
+        <div class="col-xs-7">
+          <p class="form-control-static"><%- info.userTaskEntities[0].handleUserName %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% } %>
+</div>

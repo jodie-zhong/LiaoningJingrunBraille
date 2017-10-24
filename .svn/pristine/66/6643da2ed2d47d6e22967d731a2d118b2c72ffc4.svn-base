@@ -1,0 +1,162 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    var Base = require('../../../common/base-page');
+    require('../../../assets/plugins/jstree/jstree.min');
+    require('../../../assets/plugins/jstree/src/themes/default/style.min.css');
+
+    var Module = Base.extend({
+        /**
+         * 年月列表公共接口（子类一般不需覆盖）
+         * 该接口用于查询左侧年月列表树
+         */
+        yearMonthListAction: 'common/searchYearMonthList.action',
+
+        /**
+         * 当前选择树节点的年月
+         */
+        currentMonth: '',
+        currentYear: '',
+        searchYearMonth: '',
+
+        /**
+         * 初始化年月树
+         * 该函数仅在页面初始化时调用一次
+         */
+        initMonthTree: function (treeId, postfix, buildCallback, selectCallback) {
+            util.showLoading();
+            util.sendRequest({
+                data: {},
+                action: this.yearMonthListAction,
+                success: function (resp) {
+                    util.hideLoading();
+                    if (resp.code === 0) {
+                        // tree 基础数据
+                        var treeData = {
+                            'core': {
+                                'data': []
+                            }
+                        };
+
+                        // 排序
+                        // 服务器返回JSON格式，无法确保顺序，所以需要转成数组重新倒序排序
+                        var data = resp.data, count = 0, node;
+                        var newData = [];
+                        for (var i in data) {
+                            if (data.hasOwnProperty(i)) {
+                                newData.push({year: i, data: data[i]});
+                            }
+                        }
+                        newData.sort(function (a, b) {
+                            return (b.year - a.year);
+                        });
+
+
+                        // 遍历 年
+                        for (i = 0; i < newData.length; i++) {
+                            treeData.core.data.push({
+                                text: newData[i].year + '年',
+                                // 默认先显示动图
+                                icon: 'fa fa-calendar box',
+                                state: {
+                                    'opened': true,
+                                    'selected': false
+                                },
+                                children: [],
+                                data: {
+                                    year: parseInt(newData[i].year),
+                                    type: 'year'
+                                }
+                            });
+                            // 当前年节点子成员
+                            node = treeData.core.data[count++].children;
+                            for (var j = 0; j < newData[i].data.length; j++) {
+                                node.push({
+                                    'text': newData[i].data[j] + '月'+postfix,
+                                    'icon': 'fa fa-bookmark-o',
+                                    'data': {
+                                        year: parseInt(newData[i].year),
+                                        month: parseInt(newData[i].data[j]),
+                                        type: 'month'
+                                    }
+                                });
+                            }
+                        }
+
+                        // 生成树
+                        this.$('#monthTree').jstree(treeData).bind('changed.jstree', function (src, evt) {
+                            this.currentPage = 1;
+                            // 点击树节点后重新检索选题列表
+                            var data = evt.node.data;
+                            if (data && data.month) {
+                                this.currentMonth = data.month;
+                                this.currentYear = data.year;
+                                this.searchYearMonth = util.fillUp(this.currentYear, '0', 4) + '-' + util.fillUp(this.currentMonth, '0', 2);
+                            } else {
+                                this.currentMonth = '';
+                                this.currentYear = data.year;
+                                this.searchYearMonth = util.fillUp(this.currentYear, '0', 4);
+                            }
+
+                            // 回调函数
+                            if(selectCallback){
+                                selectCallback(this.currentYear, this.currentMonth);
+                            }
+                        }.bind(this));
+                        // 全局treeObj对象
+                        this.treeObj = this.$(treeId).jstree();
+
+                        // 将年月数据记录到全局，后面刷新树时需要使用
+                        this.yearMonth = data;
+
+                        // 回调函数
+                        if(buildCallback){
+                            buildCallback(this.treeObj);
+                        }
+                    } else {
+                        console.log(resp);
+                        util.showAlert(resp.message || '查询基础数据出错，请稍后重试！');
+                    }
+                }.bind(this),
+                error: function (xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('查询基础数据出错，请稍后重试！');
+                }.bind(this)
+            });
+        },
+
+        /**
+         * 初始化时被调用
+         */
+        onInit: function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+        },
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        onBack: function (data) {
+            this._super(data);
+        },
+
+        /**
+         * 窗口缩放事件
+         */
+        onResize: function () {
+            this._super();
+        },
+
+        /**
+         * 页面销毁
+         */
+        onDestroy: function () {
+            this._super();
+        }
+    });
+
+    module.exports = Module;
+});

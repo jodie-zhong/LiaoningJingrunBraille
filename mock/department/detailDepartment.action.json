@@ -1,0 +1,26 @@
+{
+  "message" : "查询部门详情成功",
+  "data" : {
+    "page" : null,
+    "departmentId" : "16",
+    "departmentName" : "蔬菜",
+    "departmentUserNum" : "0",
+    "departmentPhone" : "13322554455",
+    "departmentPrincipal" : null,
+    "departmentPrincipalName" : null,
+    "departmentLeader" : null,
+    "departmentLeaderName" : null,
+    "isUse" : null,
+    "createUserId" : null,
+    "createDatetime" : null,
+    "updateUserId" : null,
+    "updateDatetime" : null,
+    "searchDepartmentName" : null,
+    "searchDepartmentPhone" : null,
+    "isClick" : null,
+    "viewType" : null,
+    "productFlag" : null,
+    "count" : null
+  },
+  "code" : 0
+}

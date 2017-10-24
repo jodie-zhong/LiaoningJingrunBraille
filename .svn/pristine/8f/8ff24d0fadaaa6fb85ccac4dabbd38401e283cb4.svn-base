@@ -1,0 +1,286 @@
+<!--核红-->
+<% if(isEdit) { %>
+<div class="form-horizontal" id="formEdit">
+  <% if(info.mwHAuditRedList.length) { %>
+  <div class="row">
+  	<div class="col-xs-12">
+  		<div class="form-group">
+  			<label class="col-xs-2 control-label">漏改位置</label>
+  			<div class="col-xs-10">
+  				<table class="table table-striped">
+  					<thead>
+  						<tr>
+  							<th>序号</th>
+  							<th>页数(P)</th>
+  							<th>行号</th>
+  						</tr>
+  					</thead>
+  					<tbody>
+  						<% for(var i = 0; i < info.mwHAuditRedList.length; i++ ) { %>
+  						<tr>
+  							<td><%- i+1 %></td>
+  							<td><%- info.mwHAuditRedList[i].auditRedMissPage %></td>
+  							<td><%- info.mwHAuditRedList[i].auditRedMissLine %></td>
+  						</tr>
+  						<% } %>
+  					</tbody>
+  				</table>
+  			</div>
+  		</div>
+  	</div>
+  </div>
+  <% } %>
+  <div class="row">
+  	<div class="col-xs-12">
+  		<div class="form-group">
+  			<label class="col-xs-2 control-label">录排文件</label>
+  			<div class="col-xs-10">
+  				<table class="table table-striped">
+  					<thead>
+  						<tr>
+  							<th>序号</th>
+  							<th>分册书</th>
+  							<th>附件</th>
+  							<th>页数</th>
+  							<th style="width: 110px;">下载</th>
+  						</tr>
+  					</thead>
+  					<tbody>
+  						<% for(var j = 0; j < info.fascicleList.length; j++) { %>
+  						<tr data-area="page">
+  							<td>
+  								<%- j+1 %>
+  								<input type="hidden" value="<%- info.fascicleList[j].bookFascicleId %>" name="bookFascicleId" />
+  							</td>
+  							<td><%- info.fascicleList[j].bookFascicleBookName %></td>
+  							<td>
+  								<div class="input-group with-clear">
+										<input type="text" class="form-control" name="hBookFileName" value="<%- info.fascicleList[j].hBookFileName %>" data-value="<%- info.fascicleList[j].hBookFileAddress %>" placeholder="附件" readonly>
+										<span class="input-group-btn">
+                    	<button class="btn btn-clear" type="button" data-action="clear"><i class="fa fa-remove box"></i></button>
+                      <button class="btn btn-default" type="button" data-open="public/file/file-upload" data-data="{}"><i class="fa fa-file-o"></i></button>
+                    </span>
+									</div>
+  							</td>
+  							<td>
+  								<input type="text" class="form-control" name="hTaskPageNum" value="<%- info.fascicleList[j].hTaskPageNum %>" data-fv-notempty="true" data-fv-notempty-message=" " maxlength="8" pattern="^[0-9]*$" data-fv-regexp-message="请输入大于0的整数" />
+  							</td>
+  							<td><button data-down="down" class="btn btn-default btn-rounded btn-xs">下载</button></td>
+  						</tr>
+  						<% } %>
+  					</tbody>
+  				</table>
+  			</div>
+  		</div>
+  	</div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">录排备注</label>
+        <div class="col-xs-10">
+          <textarea class="form-control" name="remark" placeholder="录排备注(不超过1024字)" maxlength="1024"><%- info.mwHAuditProofread.remark %></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group ">
+        <label class="col-xs-2 control-label">是否打样</label>
+        <div class="col-xs-10">
+          <label class="radio-inline">
+            <% if(!info.mwHAuditProofread.isProofing || info.mwHAuditProofread.isProofing === '1') { %>
+            <input type="radio" name="isProofing" value="1" checked/>否
+            <% } else { %>
+            <input type="radio" name="isProofing" value="1"/>否
+            <% } %>
+          </label>
+          <label class="radio-inline">
+            <% if(info.mwHAuditProofread.isProofing === '2') { %>
+            <input type="radio" name="isProofing" value="2" checked/>是
+            <% } else { %>
+            <input type="radio" name="isProofing" value="2"/>是
+            <% } %>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" data-type = "proofingNum">
+  	<div class="col-xs-12">
+  		<div class="form-group">
+  			<label class="col-xs-2 control-label">打样张数</label>
+  			<div class="col-xs-4">
+  				<input type="text" class="form-control" name="proofingNum" value="<%- info.mwHAuditProofread.proofingNum %>" maxlength="8" pattern="^[0-9]*$" data-fv-regexp-message="请输入大于0的整数" />
+  			</div>
+  		</div>
+  	</div>
+  </div>
+  <% if(info.userTaskEntities) { %>
+  <% for(var i = 0; i < info.userTaskEntities.length; i++) { %>
+  <div class="row" data-flow="<%- info.userTaskEntities[i].flowId %>">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">下一流程</label>
+        <div class="col-xs-8">
+          <% if(!info.userTaskEntities[i].deptAndRoles) { %>
+          <p class="form-control-static"><%- info.userTaskEntities[i].flowName %></p>
+          <% } else { %>
+          <p class="form-control-static">
+            <%- info.userTaskEntities[i].flowName %>（<%- info.userTaskEntities[i].deptAndRoles %>）
+          </p>
+          <% } %>
+          <input type="hidden" name="flowId" value="<%- info.userTaskEntities[i].flowId %>">
+          <input type="hidden" name="flowName" value="<%- info.userTaskEntities[i].flowName %>">
+          <input type="hidden" name="nextCategory" value="<%- info.userTaskEntities[i].category %>">
+          <input type="hidden" name="deptIds" value="<%- info.userTaskEntities[i].deptIds %>">
+          <input type="hidden" name="roleIds" value="<%- info.userTaskEntities[i].roleIds %>">
+          <input type="hidden" name="taskId" value="<%- info.taskId %>">
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <% if(info.userTaskEntities[i].roleIds) { %>
+      <div class="form-group">
+        <label class="col-xs-4 control-label">任务人<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <div class="input-group with-clear">
+            <input type="text" class="form-control" name="taskUsers" title="<%- info.userTaskEntities[i].nextFlowTaskUserNames %>"
+                   value="<%- info.userTaskEntities[i].nextFlowTaskUserNames %>"
+                   data-value="<%- info.userTaskEntities[i].nextFlowTaskUserIds %>" placeholder="任务人" readonly
+                   data-data="{searchRoleId: '', searchDepartmentId: ''}" data-fv-notempty="true" data-fv-notempty-message="请选择下一任务人">
+            <span class="input-group-btn">
+              <button class="btn btn-clear" type="button" data-action="clear" ><i class="fa fa-remove box"></i></button>
+              <button class="btn btn-default" type="button" data-open="public/user/select-users" data-data='{"roleIds": "<%- info.userTaskEntities[i].roleIds %>", "deptIds": "<%- info.userTaskEntities[i].deptIds %>"}'>
+              	<i class="fa fa-user-o"></i></button>
+            </span>
+          </div>
+        </div>
+      </div>
+      <% } %>
+    </div>
+  </div>
+  <% } %>
+  <% } %>
+</div>
+<% } else { %>
+<div class="form-horizontal">
+	<% if(info.mwHAuditRedList.length) { %>
+	<div class="row">
+  	<div class="col-xs-12">
+  		<div class="form-group">
+  			<label class="col-xs-2 control-label">漏改位置</label>
+  			<div class="col-xs-10">
+  				<table class="table table-striped">
+  					<thead>
+  						<tr>
+  							<th>序号</th>
+  							<th>页数(P)</th>
+  							<th>行号</th>
+  						</tr>
+  					</thead>
+  					<tbody>
+  						<% for(var i = 0; i < info.mwHAuditRedList.length; i++ ) { %>
+  						<tr>
+  							<td><%- i+1 %></td>
+  							<td><%- info.mwHAuditRedList[i].auditRedMissPage %></td>
+  							<td><%- info.mwHAuditRedList[i].auditRedMissLine %></td>
+  						</tr>
+  						<% } %>
+  					</tbody>
+  				</table>
+  			</div>
+  		</div>
+  	</div>
+  </div>
+  <% } %> 
+  <div class="row">
+  	<div class="col-xs-12">
+  		<div class="form-group">
+  			<label class="col-xs-2 control-label">录排文件</label>
+  			<div class="col-xs-10">
+  				<table class="table table-striped">
+  					<thead>
+  						<tr>
+  							<th>序号</th>
+  							<th>分册书</th>
+  							<th>附件</th>
+  							<th>页数</th>
+  							<th style="width: 110px;">下载</th>
+  						</tr>
+  					</thead>
+  					<tbody>
+  						<% for(var j = 0; j < info.fascicleList.length; j++) { %>
+  						<tr>
+  							<td><%- j+1 %></td>
+  							<td><%- info.fascicleList[j].bookFascicleBookName %></td>
+  							<td><%- info.fascicleList[j].hBookFileName %></td>
+  							<td><%- info.fascicleList[j].hTaskPageNum %></td>
+  							<td><button data-down="down" class="btn btn-default btn-rounded btn-xs" data-address = "<%- info.fascicleList[j].hBookFileAddress %>">下载</button></td>
+  						</tr>
+  						<% } %>
+  					</tbody>
+  				</table>
+  			</div>
+  		</div>
+  	</div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">录排备注</label>
+        <div class="col-xs-10">
+          <pre class="form-control-static"><%- info.mwHAuditProofread.remark %></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group ">
+        <label class="col-xs-2 control-label">是否打样</label>
+        <div class="col-xs-10">
+        	<p class="form-control-static">
+        		<% if(info.mwHAuditProofread.isProofing === '1') { %>
+            否
+            <% } else { %>
+            是
+            <% } %>
+        	</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% if(info.mwHAuditProofread.isProofing === '2') { %>
+  <div class="row">
+  	<div class="col-xs-12">
+  		<div class="form-group">
+  			<label class="col-xs-2 control-label">打样张数</label>
+  			<div class="col-xs-4">
+  				<p class="form-control-static"><%- info.mwHAuditProofread.proofingNum %></p>
+  			</div>
+  		</div>
+  	</div>
+  </div>
+  <% } %>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">提交人</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitUserName %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">提交时间</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitDatetime %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>

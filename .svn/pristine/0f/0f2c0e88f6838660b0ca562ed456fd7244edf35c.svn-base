@@ -1,0 +1,89 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+
+    /**
+     * Workflow Item
+     */
+    module.exports = ItemBase.extend({
+        // 保存/提交接口
+        saveAction: 'tpr/saveOrSubmitTrpTask.action',
+        // 批量保存/提交接口
+        batchSaveAction: 'tpr/batchSaveOrSubmitTrpTask.action',
+        // 查询接口
+        detailAction: 'tpr/searchTrpDetail.action',
+
+        /**
+         * 添加行
+         */
+        addTableRow: function () {
+            var pt = this.$(".items");
+            // 添加行
+            pt.append(
+                "<div class='row'>" +
+                "      <div class='col-xs-2'></div>" +
+                "      <div class='col-xs-8'>" +
+                "        <div class='col-xs-6'>" +
+                "          <div class='form-group'>" +
+                "            <label class='col-xs-4 control-label'>页数（P）</label>" +
+                "            <div class='col-xs-8'>" +
+                "              <input class='form-control' value='' name='page' placeholder='页数（P）' maxlength='4' pattern='^[1-9][0-9]*$' data-fv-regexp-message='请输入大于0的整数' data-fv-notempty='true' data-fv-notempty-message='请填写页数'/>" +
+                "            </div>" +
+                "          </div>" +
+                "        </div>" +
+                "        <div class='col-xs-6'>" +
+                "          <div class='form-group'>" +
+                "            <label class='col-xs-4 control-label'>行号</label>" +
+                "            <div class='col-xs-8'>" +
+                "              <input class='form-control' value='' name='row' placeholder='行号' maxlength='3' pattern='^[1-9][0-9]*$' data-fv-regexp-message='请输入大于0的整数' data-fv-notempty='true' data-fv-notempty-message='请填写行'/>" +
+                "            </div>" +
+                "          </div>" +
+                "        </div>" +
+                "      </div>" +
+                "      <div class='col-xs-2'>" +
+                "        <button class='removeRow btn btn-xs btn-danger'><i class='fa fa-minus box'></i></button>" +
+                "      </div>" +
+                "    </div>"
+            );
+            this.addValidateField(pt.find("input[name='page']:last-child"));
+            this.addValidateField(pt.find("input[name='row']:last-child"));
+        },
+
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+            // 添加行
+            this.$container.on('click', '.addTableRow', this.addTableRow.bind(this));
+            // 删除行
+            this.$container.on('click', '.removeTableRow', function () {
+                $(this).parents('.row').remove();
+            });
+        },
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function (container, tpl) {
+            this._super(container, tpl);
+        },
+
+        /**
+         * 渲染页面
+         */
+        render: function () {
+            this._super();
+            this.initPageEvent();
+            this.initPageData();
+        }
+    });
+});

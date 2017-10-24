@@ -1,0 +1,123 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    var PageBase = require('../../../common/base-dialog');
+    var Module = PageBase.extend(new function () {
+        var that;
+        var info=null;
+
+
+        function onFlowSelectChange(){
+            var $select = $(this);
+            var deptIds = $select.val();
+
+            // 全部隐藏
+            $select.parents('tr').find('div[data-flow]').hide();
+            $select.parents('tr').find('div[data-flow="'+ deptIds +'"]').show();
+        }
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+            // 点击提交按钮
+            that.$container.on('click', '#btnConRegSubmit', function(){
+                var datas=[];
+                var $form = that.$('#formMeetingCreateEdit');
+                    $('.book-topic').each(function () {
+                        var $el=$(this);
+                        var params={};
+                        params.bookId=$el.find('td[data-bookId]').attr('data-bookId');
+                        params.operationType='2';
+                        params.bookTopicId=$el.attr('data-id');
+                        params.taskId='';
+                        params.taskUsers=$el.find('input').attr('data-value');
+                        params.deptIds=$el.find('select').val()
+                        params.roleIds=$el.find('input').attr('data-roleIds');
+                        params.flowId=$el.find('input').attr('data-flowId');
+                        params.flowName=$el.find('input').attr('data-flowName');
+                        datas.push(params);
+                    });
+                    console.log(datas);
+                    util.sendRequest({
+                        data:datas,
+                        action:'meeting/submitMeeting.action',
+                        success:function (resp) {
+                            util.hideLoading();
+                            if(resp.code===0){
+                                util.showAlert(resp.message || '提交会议成功！');
+                                that.close({refresh:true});
+                            }else{
+                                console.log(resp);
+                                util.showAlert(resp.message || '提交会议出错，请稍后重试！');
+                            }
+                        },
+                        error:function (xhr) {
+                            // XHR错误
+                            util.hideLoading();
+                            console.log(xhr);
+                            util.showAlert('提交会议出错，请稍后重试！');
+                        }
+                    });
+            });
+
+
+            // 下一流程选择切换事件
+            that.$container.on('change', 'select[name="deptIds"]',onFlowSelectChange);
+
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+            that.$('select[name="deptIds"]').each(onFlowSelectChange);
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            info=data;
+            console.log(info.records);
+            that.initTemplate(tpl, {list:data.records});
+            // that.initValidate(that.$('#formMeetingCreateEdit'));
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function(){
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+
+    module.exports = Module;
+});
+

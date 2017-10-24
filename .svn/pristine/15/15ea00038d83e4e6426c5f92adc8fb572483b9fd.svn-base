@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html style="font-size: 50px;">
+<head>
+  <meta charset="utf-8">
+  <title>盲人读物出版流程管理系统</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" href="../favicon.ico">
+  <link href="../assets/css/style.css" rel="stylesheet">
+  <link href="../assets/css/theme.css" rel="stylesheet">
+  <link href="../assets/css/ui.css" rel="stylesheet">
+  <link href="../assets/plugins/bootstrap-loading/lada.min.css" rel="stylesheet">
+  <link href="../css/common.css" rel="stylesheet">
+  <link href="../css/custom.css" rel="stylesheet">
+
+
+  <!--<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">-->
+  <!--<link rel="stylesheet" href="libs/bootstrap/css/bootstrap.min.css">-->
+  <!--<link rel="stylesheet" href="libs/font-awesome/css/font-awesome.min.css">-->
+  <!--<link rel="stylesheet" href="css/AdminLTE.min.css">-->
+  <!--<link rel="stylesheet" href="css/skin-blue.css">-->
+  <link rel="stylesheet" href="css/jquery-ui.min.css">
+  <link rel="stylesheet" href="css/editor.css">
+</head>
+<body class="skin-blue layout-top-nav" style="font-size: 14px;">
+<div class="wrapper" id="pageWrapper">
+  <header class="main-header bg-primary">
+    <nav class="navbar navbar-static-top">
+      <div class="navbar-header">
+        <span class="navbar-brand">盲人读物出版流程管理系统：封面设计</span>
+      </div>
+    </nav>
+  </header>
+
+  <div class="editor-container">
+    <div class="editor-container-inner" id="editorRoot">
+      <div class="editor-left">
+        <div id="widgetContainer">
+
+        </div>
+      </div>
+
+      <div class="editor-right">
+        <div class="relative-container">
+          <div id="propertyContainer">
+            <div class="relative-container">
+              <div class="container-header absolute-container-header">
+                属性面板
+              </div>
+              <div class="form-horizontal relative-container-body">
+                <div class="box-body" id="propertyPanel" style="padding-right: 15px;">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--<div class="editor-tools-container" id="editorToolsContainer">-->
+        <!--<div class="editor-left-tools">-->
+          <!--<div style="margin-bottom: 10px;">-->
+            <!--<button class="btn btn-default vbtn" title="页面属性设置" id="btnEditorPageSetting"><i-->
+                    <!--class="fa fa-gears"></i></button>-->
+          <!--</div>-->
+          <!--&lt;!&ndash;<div class="btn-group-vertical">&ndash;&gt;-->
+            <!--&lt;!&ndash;<button class="btn btn-default vbtn" title="向上滚动" id="btnEditorScrollUp"><i&ndash;&gt;-->
+                    <!--&lt;!&ndash;class="fa fa-arrow-up"></i></button>&ndash;&gt;-->
+            <!--&lt;!&ndash;<button class="btn btn-default vbtn" title="向下滚动" id="btnEditorScrollDown"><i&ndash;&gt;-->
+                    <!--&lt;!&ndash;class="fa fa-arrow-down"></i></button>&ndash;&gt;-->
+          <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--</div>-->
+        <!--<div class="editor-bottom-tools">-->
+          <!--<div style="margin-top: 10px;">-->
+            <!--<button class="btn btn-default vbtn" title="预览" id="btnEditorPreview"><i-->
+                    <!--class="fa fa-eye"></i></button>-->
+          <!--</div>-->
+          <!--<div style="margin-top: 10px;">-->
+            <!--<button class="btn btn-default vbtn" title="导出" id="btnEditorExport"><i-->
+                    <!--class="fa fa-sign-out"></i></button>-->
+          <!--</div>-->
+          <!--<div style="margin-top: 10px;">-->
+            <!--<button class="btn btn-default vbtn" title="保存" id="btnEditorSave"><i-->
+                    <!--class="fa fa-save"></i></button>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+      <div id="editorPanelContainer">
+        <div id="editorPanel">
+        </div>
+      </div>
+      <div id="widgetSelectMask">
+        <div>
+          <span class="dot" id="dotTopLeft"></span>
+          <span class="dot" id="dotTop"></span>
+          <span class="dot" id="dotTopRight"></span>
+          <span class="dot" id="dotRight"></span>
+          <span class="dot" id="dotBottomRight"></span>
+          <span class="dot" id="dotBottom"></span>
+          <span class="dot" id="dotBottomLeft"></span>
+          <span class="dot" id="dotLeft"></span>
+          <span id="widgetMaskClose"><i class="fa fa-close"></i></span>
+        </div>
+      </div>
+
+      <div class="subline subline-x" id="subLineX"></div>
+      <div class="subline subline-y" id="subLineY"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 提示信息对话框 -->
+<div class="modal" id="dialogAlert">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">提示</h4>
+      </div>
+      <div class="modal-body">
+        <p id="dialogMessage"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="cancelButton" class="btn btn-default pull-left" data-dismiss="modal">取消
+        </button>
+        <button type="button" id="okButton" class="btn btn-primary">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 进度对话框 -->
+<div class="modal" id="dialogProgress">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="progress active">
+          <div class="progress-bar progress-bar-primary progress-bar-striped" role="progressbar"
+               aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+          </div>
+        </div>
+        <p style="text-align: center;" id="progressMessage">加载中……</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="libs/jquery.min.js"></script>
+<script src="libs/jquery-ui.min.js"></script>
+<script src="libs/bootstrap/js/bootstrap.min.js"></script>
+<script src="libs/app.min.js"></script>
+<script src="libs/sea.js"></script>
+<script>
+    seajs.use('./js/editor');
+</script>
+
+</body>
+</html>

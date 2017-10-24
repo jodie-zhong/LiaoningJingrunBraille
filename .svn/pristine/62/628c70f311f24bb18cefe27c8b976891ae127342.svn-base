@@ -1,0 +1,73 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+    var util = require('../../../../../common/util.js');
+
+    /**
+     * Workflow Item
+     */
+    var Item = ItemBase.extend({
+        // 保存/提交接口
+        saveAction: 'cnCip/saveOrSubmitCNCip.action',
+
+        // 查询接口
+        detailAction: 'cnCip/searchCNCipFlowDetail.action',
+
+        onHandleChange: function (el) {
+            var price = el.val();
+            var bPrice=parseFloat(price).toFixed(2);
+            if(isNaN(bPrice)){
+                bPrice='';
+            }
+            el.val(bPrice);
+        },
+
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+            var that = this;
+            this.$container.on('change', 'input[name="bookFasciclePrice"],input[name="bookPrice"]',function () {
+                that.onHandleChange($(this));
+            });
+        },
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+            // 初始化日期组件
+            this.$('input.date-time').datetimepicker({
+                format: 'YYYY-MM-DD',
+                locale: 'zh-cn',
+                sideBySide: true
+            });
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function (container, tpl) {
+            this._super(container, tpl);
+
+        },
+        /**
+         * 渲染页面
+         */
+        render: function () {
+            this._super();
+
+            this.initPageEvent();
+
+            this.initPageData();
+        }
+
+    });
+
+
+    module.exports = Item;
+
+});

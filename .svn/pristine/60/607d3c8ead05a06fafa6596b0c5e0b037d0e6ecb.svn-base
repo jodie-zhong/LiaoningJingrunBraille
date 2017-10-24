@@ -1,0 +1,336 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../common/util');
+    var Base = require('../../common/base-page');
+    require('../../assets/plugins/CKEditor/ckeditor');
+
+    var Module = Base.extend(new function () {
+        var that;
+
+        var editor = null;
+        var CONTENT_WIDTH = 623;
+
+        var rows = 20, cols = 30;
+
+        var PROOFREAD_READ = 1;
+        var PROOFREAD_EDIT = 2;
+        // 审校模式（1：明眼人只读；2：盲人编辑）
+        var proofreadMode = 0;
+        // 数据同步间隔
+        var TIMER_INTERVAL = 2000;
+        // 数据同步定时器、出错计数
+        var timer = 0, errorCount = 0;
+        // 最大容错数
+        var MAX_ERROR = 3;
+
+        var lastContent = '';
+
+        /**
+         * 初始化CKEditor
+         */
+        function initEditor() {
+            editor = CKEDITOR.replace('brailleEditor', {
+                toolbar: [
+                    {name: 'document', items: ['Print']},
+                    {name: 'clipboard', items: ['Undo', 'Redo']},
+                    {
+                        name: 'paragraph',
+                        items: ['Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyBlock', 'JustifyRight']
+                    },
+                    {name: 'custom', items: ['InsertGraph']}
+                ],
+
+                extraPlugins: 'insertgraph',
+                // Make the editing area bigger than default.
+                height: $(window).height() - 308,
+                // An array of stylesheets to style the WYSIWYG area.
+                // Note: it is recommended to keep your own styles in a separate file in order to make future updates painless.
+                contentsCss: ['../assets/plugins/CKEditor/contents.css', '../css/braille-editor.css'],
+                // This is optional, but will let us define multiple different styles for multiple editors using the same CSS file.
+                bodyClass: 'document-editor',
+                extraAllowedContent: 'img[src];p(proofread-current)'
+            });
+
+            // 需要等待编辑器初始化完iframe和内容才能调用
+            editor.on('contentDom', function () {
+                util.hideLoading();
+                computeEditorFont();
+                // 默认只读
+                editor.setReadOnly(true);
+            });
+        }
+
+        /**
+         * 打开图形设计器
+         * 该函数将在模块初始化时被注入到全局window对象，由CKEditor内的插件调用
+         */
+        function openSharpDesigner() {
+            that.openPage('sharp-designer', {data: null});
+        }
+
+        /**
+         * 根据行、列数处理编辑器字号
+         */
+        function computeEditorFont() {
+            if (editor) {
+                // 开始处理编辑器样式
+                var fontSize = CONTENT_WIDTH / cols;
+                var doc = $(that.$('iframe')[0].contentDocument);
+                doc.find('body').css('font-size', fontSize);
+            }
+        }
+
+        /**
+         * 处理从服务器同步的内容
+         * @param data
+         */
+        function dealWithContent(data) {
+            // TODO: 初版只是简单的同步内容
+            // 只有数据变更了才重新设置，频繁设置会导致CKEditor闪烁
+            if (lastContent !== data.trpOnlineContent) {
+                lastContent = data.trpOnlineContent;
+                editor.setData(lastContent, {
+                    callback: function () {
+                        var element = editor.document.findOne('.proofread-current');
+                        if (element) {
+                            element.scrollIntoView();
+                        }
+                    }
+                });
+            }
+        }
+
+        /**
+         * 开始明眼人校对模式（只读，从服务器同步数据）
+         */
+        function startProofreadRead() {
+            clearTimeout(timer);
+            errorCount = 0;
+
+            timer = setTimeout(doGetContent, TIMER_INTERVAL);
+        }
+
+        /**
+         * 从服务器同步数据
+         */
+        function doGetContent() {
+            console.log('get content...');
+
+            // util.sendRequest({
+            //     action: '...',
+            //     data: {},
+            //     success: function (resp) {
+            //         if (resp.code === 0) {
+            //             // 同步数据成功
+            //             dealWithContent(resp.data);
+            //         } else {
+            //             console.log(resp);
+            //             errorCount++;
+            //             // 超过最大容错数，提示
+            //             if (errorCount > MAX_ERROR) {
+            //                 util.showAlert('从服务器同步内容出错，您可能已经与服务器断开连接，请稍后重新打开该窗口继续操作！');
+            //                 return;
+            //             }
+            //         }
+            //         // 继续下次数据同步
+            //         startProofreadRead();
+            //     },
+            //     error: function (xhr) {
+            //         console.log(xhr);
+            //         errorCount++;
+            //         // 超过最大容错数，提示
+            //         if (errorCount > MAX_ERROR) {
+            //             util.showAlert('从服务器同步内容出错，您可能已经与服务器断开连接，请稍后重新打开该窗口继续操作！');
+            //             return;
+            //         }
+            //         // 继续下次数据同步
+            //         startProofreadRead();
+            //     }
+            // });
+
+            // TODO: 离线测试用
+            var content = localStorage.getItem('content');
+            if (content) {
+                content = JSON.parse(content);
+                dealWithContent({trpOnlineContent: content.content});
+            }
+            startProofreadRead();
+        }
+
+        /**
+         * 开始盲人校对模式（可写，向服务器同步数据）
+         */
+        function startProofreadEdit() {
+            clearTimeout(timer);
+            errorCount = 0;
+
+            timer = setTimeout(doSendContent, TIMER_INTERVAL);
+        }
+
+        /**
+         * 向服务器发送数据
+         */
+        function doSendContent() {
+            console.log('send content...');
+            // util.sendRequest({
+            //     action: '...',
+            //     data: {},
+            //     success: function (resp) {
+            //         if (resp.code === 0) {
+            //             // 什么也不做
+            //         } else {
+            //             console.log(resp);
+            //             errorCount++;
+            //             // 超过最大容错数，提示
+            //             if (errorCount > MAX_ERROR) {
+            //                 util.showAlert('向服务器同步内容出错，您可能已经与服务器断开连接，请稍后重新打开该窗口继续操作！');
+            //                 return;
+            //             }
+            //         }
+            //         // 继续下次数据同步
+            //         startProofreadEdit();
+            //     },
+            //     error: function (xhr) {
+            //         console.log(xhr);
+            //         errorCount++;
+            //         // 超过最大容错数，提示
+            //         if (errorCount > MAX_ERROR) {
+            //             util.showAlert('向服务器同步内容出错，您可能已经与服务器断开连接，请稍后重新打开该窗口继续操作！');
+            //             return;
+            //         }
+            //         // 继续下次数据同步
+            //         startProofreadEdit();
+            //     }
+            // });
+
+            var range = editor.getSelection();
+            var element = range.getStartElement();
+            element.addClass('proofread-current');
+            var data = editor.getData();
+            element.removeClass('proofread-current');
+
+            localStorage.setItem('content', JSON.stringify({content: data, current: 0}));
+            startProofreadEdit();
+        }
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+            // 给CKEditor内的插件使用
+            window.openSharpDesinger = openSharpDesigner;
+
+            // 开始校对
+            that.$container.on('click', '#btnStartProofread', function () {
+                if (that.$('#inputProofread').prop('checked')) {
+                    // 明眼人只读模式
+                    proofreadMode = PROOFREAD_READ;
+                    startProofreadRead();
+                } else {
+                    // 盲人编辑模式
+                    proofreadMode = PROOFREAD_EDIT;
+                    // 编辑器变为非只读
+                    editor.setReadOnly(false);
+                    startProofreadEdit();
+                }
+
+                $(this).attr('disabled', 'disabled');
+                that.$('#inputProofread').attr('disabled', 'disabled');
+                that.$('#inputProofreadBraille').attr('disabled', 'disabled');
+            });
+
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+            //TODO: 接口联调前写死
+            util.showLoading();
+            // util.sendRequest({
+            //     action: '...',
+            //     data: {},
+            //     success: function (resp) {
+            //         util.hideLoading();
+            //         if (resp.code === 0) {
+            //             // 编辑的内容
+            //             that.$('#brailleEditor').val(resp.data.content);
+            //             // 行数、方数
+            //             rows = resp.data.rows || DEFAULT_ROWS;
+            //             cols = resp.data.cols || DEFAULT_COLS;
+            //             that.$('#textRows').val(rows);
+            //             that.$('#textCols').val(cols);
+            //             // 初始化CKEditor
+            //             initEditor();
+            //         } else {
+            //             console.log(resp);
+            //             util.showAlert(resp.message || '初始化译录内容出错，请稍后重试！', function () {
+            //                 window.close();
+            //             });
+            //         }
+            //     },
+            //     error: function (xhr) {
+            //         util.hideLoading();
+            //         console.log(xhr);
+            //         util.showAlert('初始化译录内容出错，请稍后重试！', function () {
+            //             window.close();
+            //         });
+            //     }
+            // });
+
+            that.$('#textRows').val(rows);
+            that.$('#textCols').val(cols);
+            // 初始化CKEditor
+            initEditor();
+
+
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            // 页面标题，此处特殊，是设置整个页面的顶部标题，而不是当前模块
+            $('#editorStage').text('——在线译录');
+
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            that.initTemplate(tpl, {});
+
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+        };
+
+        /**
+         * 返回时调用
+         * @param data
+         */
+        this.onBack = function (data) {
+            // 从图形设计器返回
+            if (data && data.image) {
+                if (editor) {
+                    var $image = $('<img>');
+                    $image.attr('src', data.image);
+                    editor.insertHtml($image[0].outerHTML, 'unfiltered_html');
+                }
+            }
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+
+            window.openSharpDesinger = null;
+        };
+
+
+    });
+
+    module.exports = Module;
+});

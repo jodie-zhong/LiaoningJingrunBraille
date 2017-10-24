@@ -1,0 +1,25 @@
+<% if(list.length > 0) { %>
+<% for(var i = 0; i < list.length; i++) { %>
+<tr data-bookId="<%- list[i].bookId %>" data-bookTopicId="<%- list[i].bookTopicId %>" data-deploy="<%- list[i].bookDeploymentKey %>" data-taskState="<%- list[i].taskState %>"
+    data-flowId="<%- list[i].flowId %>" data-taskId="<%- list[i].taskId %>" data-urgent="<%- list[i].bookIsUrgent %>" data-users="<%- list[i].taskUsers %>">
+  <td><%- (i + 1) %></td>
+  <td data-check="true"><i class="fa fa-square-o" data-action="check"></i></td>
+  <td><%- list[i].bookName %></td>
+  <td><%- list[i].dutyDditor %></td>
+  <td><%- list[i].bookIsbn %></td>
+  <% if(list[i].mChangeFileItem === '1') { %>
+  <td>图书信息</td>
+  <% } else if(list[i].mChangeFileItem === '2') { %>
+  <td>终止出版</td>	
+  <% } else { %>
+  <td></td>	
+  <% } %>
+  <td><%- list[i].taskUserNames %></td>
+  <td><%- list[i].bookStageState %></td>
+</tr>
+<% } %>
+<% } else { %>
+<tr data-noselect="true">
+  <td colspan="7"><p class="empty-tips">没有符合指定条件的数据</p></td>
+</tr>
+<% } %>

@@ -1,0 +1,104 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+
+    /**
+     * Workflow Item
+     */
+    module.exports = ItemBase.extend({
+        // 保存/提交接口
+        saveAction: 'CNQuality/saveOrSubmitCNQuality.action',
+        // 批量保存/提交接口
+        batchSaveAction: '',
+        // 查询接口
+        detailAction: 'CNQuality/searchCNQualityDetail.action',
+
+        /**
+         * 添加行
+         */
+        addRow: function (that) {
+            var $parentDiv = $(this).parents(".items");
+            var $child = $parentDiv.children().first().clone();
+            $child.find('input').val('');
+            $child.find(".has-error").removeClass("has-error");
+            $child.find("small").remove();
+            $parentDiv.append($child);
+            that.changeAddAndRemoveButton();
+        },
+
+        /**
+         * 处理意见切换
+         */
+        onStateChange: function (that) {
+            if (that.$("input[name='handleState']:checked").val() === '1') {
+                that.$("div[name='editArea']").show();
+            } else {
+                that.$("div[name='editArea']").hide();
+            }
+        },
+
+        /**
+         * 判断添加删除按钮显示
+         */
+        changeAddAndRemoveButton: function () {
+            this.$(".changeableRow").each(function () {
+                var length = $(this).children().length;
+                if (length === 1) {
+                    $(this).find("button[name='removeRow']").hide();
+                    $(this).find("button[name='addRow']").show();
+                } else {
+                    $(this).find("button[name='removeRow']").show();
+                    $(this).find("button[name='addRow']").hide();
+                    $(this).find("button[name='addRow']").last().show();
+                }
+            });
+        },
+
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+            var that = this;
+            // 添加行
+            this.$container.on('click', '.addTableRow', function () {
+                that.addRow(that);
+            });
+            // 删除行
+            this.$container.on('click', '.removeTableRow', function () {
+                $(this).parents('.row').remove();
+                that.changeAddAndRemoveButton();
+            });
+            // 处理意见切换
+            this.$container.on("click", "input[name='handleState']", function () {
+                that.onStateChange(that);
+            });
+        },
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+            // 处理意见初始化时显示切换
+            this.onStateChange(this);
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function (container, tpl) {
+            this._super(container, tpl);
+        },
+
+        /**
+         * 渲染页面
+         */
+        render: function () {
+            this._super();
+            this.initPageEvent();
+            this.initPageData();
+        }
+    });
+});

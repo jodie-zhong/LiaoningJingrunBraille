@@ -1,0 +1,233 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+    var util = require('../../../../../common/util.js');
+
+    /**
+     * Workflow Item
+     */
+    var Item = ItemBase.extend({
+        // 保存/提交接口
+        saveAction: 'production/modifyProductionDetail.action',
+        // 批量保存/提交接口
+        batchSaveAction: 'examine/batchReview.action',
+        // 查询接口
+        detailAction: 'production/searchProductionDetail.action',
+        
+        onChange: function (el) {
+            var price = el.val();
+            var bPrice=parseFloat(price).toFixed(2);
+            if(isNaN(bPrice)){
+                bPrice='0.00';
+            }
+            el.val(bPrice);
+        },
+
+        /**
+         * 初始化装订方式、封面装订后处理
+         */
+        searchSelect: function() {
+        	// 装订方式
+        	util.showLoading();
+        	util.sendRequest({
+				data: {
+					'code': '0025'
+				},
+				action: 'common/searchCodeValue.action',
+				success: function(resp) {
+					util.hideLoading();
+					if(resp.code === 0) {
+						var $typeOneElement = this.$('#bindingStyle'),
+							$dom;
+						for(var i in resp.data) {
+							if(resp.data.hasOwnProperty(i)) {
+								$dom = $('<option></option>');
+								$dom.text(resp.data[i]);
+								$dom.val(i);
+								if(i === this.data.info.bindingStyle) {
+									$dom.attr('selected', 'selected');
+								}
+								$typeOneElement.append($dom);
+							}
+						}
+					} else {
+						console.log(resp);
+						util.showAlert(resp.message || '查询装订方式出错，请稍后重试！');
+					}
+				}.bind(this),
+				error: function(xhr) {
+					console.log(xhr);
+					util.showAlert(resp.message || '查询装订方式出错，请稍后重试！');
+				}
+			});
+			// 封面装订处理
+        	util.showLoading();
+        	util.sendRequest({
+				data: {
+					'code': '0026'
+				},
+				action: 'common/searchCodeValue.action',
+				success: function(resp) {
+					util.hideLoading();
+					if(resp.code === 0) {
+						var $typeOneElement = this.$('#usePaperBinding'),
+							$dom;
+						for(var i in resp.data) {
+							if(resp.data.hasOwnProperty(i)) {
+								$dom = $('<option></option>');
+								$dom.text(resp.data[i]);
+								$dom.val(i);
+								if(i === this.data.info.usePaperBinding) {
+									$dom.attr('selected', 'selected');
+								}
+								$typeOneElement.append($dom);
+							}
+						}
+					} else {
+						console.log(resp);
+						util.showAlert(resp.message || '查询封面装订处理出错，请稍后重试！');
+					}
+				}.bind(this),
+				error: function(xhr) {
+					console.log(xhr);
+					util.showAlert(resp.message || '查询封面装订处理出错，请稍后重试！');
+				}
+			});
+        },
+        
+        /**
+         * 验收入库 新增
+         */
+        onCheckPlus: function() {
+        	var check;
+        	check = this.$('tr[data-area = "contrat"]').eq(0).clone();
+        	check.find('input').val('');
+        	check.appendTo('tbody[data-wrap = "contrat"]');
+        	this.$('input.date-time-all').datetimepicker({
+				format: 'YYYY-MM-DD',
+				locale: 'zh-cn',
+				sideBySide: true
+			});
+			this.onNum();
+        	this.searchButtonNum();
+        	this.addValidateField(this.$('input[name="hInStorageDate"]'));
+        	this.addValidateField(this.$('input[name="hInStorageContent"]'));
+        },
+        
+        /**
+         * 验收入库 删除
+         */
+        onCheckMinus: function($btn) {
+        	$btn.parents('tr[data-area = "contrat"]').remove();
+        	this.onNum();
+        	this.searchButtonNum();
+        },
+        
+        /**
+         * 验收入库序号
+         */
+        onNum: function() {
+			var i = 1;
+			this.$('tr[data-area = "contrat"]').each(function() {
+				$(this).find('td[data-type = "number"]').text(i++);
+			});
+		},
+		
+		/**
+		 * 判断有几个验收入库
+		 */
+		searchButtonNum: function() {
+			var dayLength = this.$('tr[data-area = "contrat"]').length;
+			if(dayLength !== 1) {
+				this.$('button[data-type="contract-minus"]').show();
+				this.$('button[data-type="contract-plus"]').hide();
+				this.$('button[data-type="contract-plus"]').last().show();
+			} else {
+				this.$('button[data-type="contract-minus"]').hide();
+				this.$('button[data-type="contract-plus"]').show();
+			}
+		},
+        
+        /**
+		 * 保存或提交工作流
+		 */
+		getFormData: function() {
+			var $form = this.$('#formEdit');
+			// 先调用父类生成基本的数据结构
+			var params = this._super();
+			// 处理封面部份数据结构
+			params.checkList = []; // 封面信息
+			var $tr;
+			$form.find('tr[data-area="contrat"]').each(function() {
+				$tr = $(this);
+				params.checkList.push({
+					hInStorageDate: $tr.find('input[name="hInStorageDate"]').val(),
+					hInStorageContent: $tr.find('input[name="hInStorageContent"]').val()
+				});
+			});
+			return params;
+		},
+        
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+            var that = this;
+            this.$container.on('change', 'input[name="pricing"]',function () {
+                that.onChange($(this));
+            });
+            // 验收入库 新增
+            this.$container.on('click', 'button[data-type="contract-plus"]', this.onCheckPlus.bind(this));
+            // 验收入库 删除
+    		this.$container.on('click', 'button[data-type="contract-minus"]', function() {
+				that.onCheckMinus($(this));
+			});
+        },
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+			// 初始化日期组件
+			this.$('input.date-time').datetimepicker({
+				format: 'YYYY-MM',
+				locale: 'zh-cn',
+				sideBySide: true
+			});
+			this.$('input.date-time-all').datetimepicker({
+				format: 'YYYY-MM-DD',
+				locale: 'zh-cn',
+				sideBySide: true
+			});
+        	this.searchSelect();
+        	this.onNum();
+        	this.searchButtonNum();
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function (container, tpl) {
+            this._super(container, tpl);
+        },
+
+        /**
+         * 渲染页面
+         */
+        render: function () {
+            this._super();
+
+            this.initPageEvent();
+
+            this.initPageData();
+        }
+
+    });
+
+
+    module.exports = Item;
+
+});

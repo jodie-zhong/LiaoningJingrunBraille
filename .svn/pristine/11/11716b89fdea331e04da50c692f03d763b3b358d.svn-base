@@ -1,0 +1,155 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var Class = require('../../../../common/class');
+    var util = require('../../../../common/util.js');
+
+    /**
+     * Workflow Item基类
+     */
+    var ItemBase = Class.extend({
+        $container: null,
+
+        tpl: null,
+
+        data: null,
+
+        workflowDialog: null,
+
+        init: function(container, tpl, parentWindow){
+            this.$container = container;
+            this.tpl = tpl;
+        },
+
+        /**
+         * 选择容器内对象
+         * @param selector
+         */
+        $: function (selector) {
+            return this.$container.find(selector);
+        },
+
+        /**
+         * 设置表单数据
+         * @param data
+         */
+        setData: function(data){
+            this.data = data;
+            this.$container.html(util.template(this.tpl, data));
+
+            this.render();
+        },
+
+        /**
+         * 动态添加表单校验项
+         * @param field
+         */
+        addValidateField: function(field){
+            this.workflowDialog.addValidateField(this.workflowDialog.$('#panelWorkflow'), field);
+        },
+
+        /**
+         * 动态删除表单校验项
+         * @param field
+         */
+        removeValidateField: function(field){
+            this.workflowDialog.removeValidateField(this.workflowDialog.$('#panelWorkflow'), field);
+        },
+
+        /**
+         * 销毁表单校验
+         */
+        destroyValidate: function(){
+            this.workflowDialog.destroyValidate(this.workflowDialog.$('#panelWorkflow'));
+        },
+
+        /**
+         * 初始化表单校验
+         */
+        initValidate: function(){
+            this.workflowDialog.initValidate(this.workflowDialog.$('#panelWorkflow'));
+        },
+
+        /**
+         * 根据Form内输入框生成请求参数
+         * @param $els
+         */
+        getFormData: function () {
+            var $els = this.$('input, textarea, select');
+
+            var params = {}, $el;
+            $els.each(function () {
+                $el = $(this);
+                if($el.parents('.row').is(':hidden')){
+                    return;
+                }
+                switch (this.nodeName) {
+                    case 'INPUT':
+                        if ($el.attr('name')) {
+                            if (this.type === 'text' || this.type === 'email' || this.type === 'number' || this.type === 'password' || this.type === 'hidden') {
+                                params[$el.attr('name')] = $el.attr('data-value') ? $el.attr('data-value') : $el.val();
+                                // 如果是文件，需要提交文件名字段时会带有该属性
+                                if($el.attr('data-file')){
+                                    params[$el.attr('data-file')] = $el.val();
+                                }
+                            } else if (this.type === 'radio') {
+                                if ($el.prop('checked')) {
+                                    params[$el.attr('name')] = $el.val();
+                                    // 审核结果特殊处理
+                                    if($el.attr('name') === 'handleState'){
+                                        params.handleStateName = $el.parent().text().trim();
+                                    }
+                                }
+                            } else if (this.type === 'checkbox') {
+                                if ($el.prop('checked')) {
+                                    params[$el.attr('name')] = params[$el.attr('name')] || [];
+                                    params[$el.attr('name')].push($el.val());
+                                }
+                            }
+                        }
+                        break;
+                    case 'SELECT':
+                        if ($el.attr('name')) {
+                            params[$el.attr('name')] = $el.val();
+                        }
+                        break;
+                    case 'TEXTAREA':
+                        if ($el.attr('name')) {
+                            params[$el.attr('name')] = $el.attr('data-value') ? $el.attr('data-value') : $el.val();
+                        }
+                        break;
+                    default:
+                }
+            });
+
+            // 重新整理
+            for (var i in params) {
+                if (params.hasOwnProperty(i) && typeof params[i] === 'object') {
+                    params[i] = params[i].join(',');
+                }
+            }
+
+            return params;
+        },
+
+        /**
+         * 渲染界面
+         */
+        render: function(){
+
+        },
+
+        /**
+         * 从弹窗返回
+         * @param data
+         */
+        back: function(data){
+
+        }
+
+    });
+
+
+    module.exports = ItemBase;
+
+});

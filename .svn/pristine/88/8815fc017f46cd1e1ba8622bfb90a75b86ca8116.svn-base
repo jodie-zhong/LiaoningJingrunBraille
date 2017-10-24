@@ -1,0 +1,241 @@
+define(function(require, exports, module) {
+	"use strict";
+
+	var util = require('../../../common/util');
+	var DialogBase = require('../../../common/base-dialog');
+
+	var Module = DialogBase.extend(new function() {
+		var that;
+		var info = null;
+		
+		/**
+		 * 添加
+		 */
+		function contractPlus() {
+			var enclosure = that.$('tr[data-area = "contract"]').eq(0).clone();
+			enclosure.find('input').val('');
+			enclosure.find('input').attr('data-value','');
+			enclosure.appendTo('tbody[data-type = "edit"]');
+			contractNum();
+			searchButton();
+		}
+		
+//		/**
+//		 * 删除
+//		 */
+//		function contractMinus() {
+//			
+//		}
+		
+		/**
+		 * 数量
+		 */
+		function contractNum() {
+			var i = 1;
+			that.$('tr[data-area = "contract"]').each(function() {
+				$(this).find('td[data-value="number"]').text(i++);
+			})
+		}
+		
+		/**
+		 * 按钮
+		 */
+		function searchButton() {
+			var contractLength = that.$('tr[data-area = "contract"]').length;
+			if(contractLength !== 1) {
+				that.$('button[data-type="contract-minus"]').show();
+				that.$('button[data-type="contract-plus"]').hide();
+				that.$('button[data-type="contract-plus"]').last().show();
+			} else {
+				that.$('button[data-type="contract-minus"]').hide();
+				that.$('button[data-type="contract-plus"]').show();
+			}
+		}
+		
+		/**
+		 * 保存数据
+		 */
+		function saveRenewInfo() {
+			// 表单验证
+			var $form = that.$('#formContractEdit');
+			// 没有错误开始处理
+			if(that.validate($form) === true) {
+				var params = {};				
+				params.operationType = '1';
+				params.contractId = $form.find('input[name="contractId"]').val();
+				params.contractSignId = $form.find('input[name="contractSignId"]').val();
+				params.contractSignEndDate = $form.find('input[name="contractSignEndDate"]').val();
+				params.remark = $form.find('textarea[name="remark"]').val();
+				params.contractFileEntities = [];
+				var $tr;
+				$form.find('tr[data-area = "contract"]').each(function() {
+					$tr = $(this);
+					params.contractFileEntities.push({
+						contractFileName: $tr.find('input[name="contractFileName"]').val(),
+						contractFilePath: $tr.find('input[name="contractFileName"]').attr('data-value')
+					});
+				});
+				// 下发请求
+				util.showLoading();
+				util.sendRequest({
+					type: 'POST',
+					data: params,
+					action: 'copyright/saveOrsubmitContract.action',
+					success: function(resp) {
+						util.hideLoading();
+						if(resp.code === 0) {
+							// 业务执行成功
+							util.showAlert('数据保存成功!', function() {
+								// 关闭页面
+								that.close({
+									refresh: true
+								});
+							});
+						} else {
+							// 业务执行失败
+							util.showAlert(resp.message);
+						}
+					},
+					error: function(xhr) {
+						// XHR错误
+						util.hideLoading();
+						console.log(xhr);
+						util.showAlert("操作失败");
+					}
+				});
+			}
+		}
+		
+		/**
+		 * 提交数据
+		 */
+		function SubmitRenewInfo() {
+			// 表单验证
+			var $form = that.$('#formContractEdit');
+			// 没有错误开始处理
+			if(that.validate($form) === true) {
+				var params = {};				
+				params.operationType = '2';
+				params.contractId = $form.find('input[name="contractId"]').val();
+				params.contractSignId = $form.find('input[name="contractSignId"]').val();
+				params.contractSignEndDate = $form.find('input[name="contractSignEndDate"]').val();
+				params.remark = $form.find('textarea[name="remark"]').val();
+				params.contractFileEntities = [];
+				var $tr;
+				$form.find('tr[data-area = "contract"]').each(function() {
+					$tr = $(this);
+					params.contractFileEntities.push({
+						contractFileName: $tr.find('input[name="contractFileName"]').val(),
+						contractFilePath: $tr.find('input[name="contractFileName"]').attr('data-value')
+					});
+				});
+				// 下发请求
+				util.showLoading();
+				util.sendRequest({
+					type: 'POST',
+					data: params,
+					action: 'copyright/saveOrsubmitContract.action',
+					success: function(resp) {
+						util.hideLoading();
+						if(resp.code === 0) {
+							// 业务执行成功
+							util.showAlert('数据保存成功!', function() {
+								// 关闭页面
+								that.close({
+									refresh: true
+								});
+							});
+						} else {
+							// 业务执行失败
+							util.showAlert(resp.message);
+						}
+					},
+					error: function(xhr) {
+						// XHR错误
+						util.hideLoading();
+						console.log(xhr);
+						util.showAlert("操作失败");
+					}
+				});
+			}
+		}
+
+		/**
+		 * 初始化页面事件
+		 */
+		function initPageEvent() {
+			// 保存
+			that.$container.on('click', '#btnContractSave', saveRenewInfo);
+			// 提交
+			that.$container.on('click', '#btnContractSubmit', SubmitRenewInfo);
+			
+			// 合同附件添加
+			that.$container.on('click', 'button[data-type="contract-plus"]', contractPlus);
+			// 合同附件删除
+			that.$container.on('click', 'button[data-type="contract-minus"]', function() {
+				var conmi = $(this).parent().parent();
+				conmi.remove();
+				contractNum();
+				searchButton();
+			});
+		}
+
+		/**
+		 * 初始化页面数据
+		 */
+		function initPageData() {
+			// 直接从前一个页面传送数据，所以此处不需要查询数据
+			that.$('input.date-time').datetimepicker({
+				format: 'YYYY-MM-DD',
+				locale: 'zh-cn',
+				sideBySide: true,
+				minDate:info.contractEndDate
+			});
+			that.initValidate(that.$('#formContractEdit'));
+			// 数量
+			contractNum();
+			// 按钮
+			searchButton();
+		}
+
+		/**
+		 * 初始化时被调用
+		 */
+		this.onInit = function($el, tpl, data, indexRef) {
+			this._super($el, tpl, data, indexRef);
+			that = this;
+			info = data;
+			that.initTemplate(tpl, {info: data});
+			// 初始化页面事件
+			initPageEvent();
+			// 初始化页面数据
+			initPageData();
+		};
+
+		/**
+		 * 页面返回事件
+		 * @param data
+		 */
+		this.onBack = function(data) {
+			this._super(data);
+
+		};
+
+		/**
+		 * 窗口缩放事件
+		 */
+		this.onResize = function() {
+			this._super();
+		};
+
+		/**
+		 * 页面销毁
+		 */
+		this.onDestroy = function() {
+			this._super();
+		};
+
+	}());
+
+	module.exports = Module;
+});

@@ -1,0 +1,294 @@
+<div class="modal-dialog dialog-container">
+  <div class="modal-content" style="overflow-x: auto">
+    <div class="panel">
+      <div class="panel-content">
+        <div class="table-10">
+          <table class="table table-striped table-nowrap table-hover" data-multi="true">
+            <thead>
+            <tr>
+              <th style="width: 150px">选题类型</th>
+              <th style="width: 150px">选题备案文号</th>
+              <th style="width: 150px">本社选题编号</th>
+              <th style="width: 150px">本社选题种类</th>
+              <th style="width: 150px">重大选题备案号</th>
+              <th style="width: 150px">初审人员</th>
+              <th style="width: 150px">复审人员</th>
+              <th style="width: 150px">终审人员</th>
+              <th style="width: 150px">三审意见</th>
+              <th style="width: 150px">ISBN号</th>
+              <th style="width: 150px">书名（正书名）</th>
+              <th style="width: 150px">副书名及说明文字</th>
+              <th style="width: 150px">并列书名</th>
+              <th style="width: 150px">第一作者</th>
+              <th style="width: 150px">第一著作方式</th>
+              <th style="width: 150px">其他作者</th>
+              <th style="width: 150px">其他著作方式</th>
+              <th style="width: 150px">正文文种</th>
+              <th style="width: 150px">正文文字</th>
+              <th style="width: 150px">装订形式</th>
+              <th style="width: 150px">全书页数</th>
+              <th style="width: 150px">字数(千字)</th>
+              <th style="width: 150px">图幅数</th>
+              <th style="width: 150px">附件类型</th>
+              <th style="width: 150px">附件数量</th>
+              <th style="width: 150px">责任编辑</th>
+              <th style="width: 150px">电话</th>
+              <th style="width: 150px">内容提要</th>
+              <th style="width: 150px">作者简介</th>
+              <th style="width: 150px">建议主题词</th>
+              <th style="width: 150px">图书类型</th>
+              <th style="width: 150px">图书分类</th>
+              <th style="width: 150px">指导分类</th>
+              <th style="width: 150px">发行范围</th>
+              <th style="width: 150px">读者对象</th>
+              <th style="width: 150px">版次</th>
+              <th style="width: 150px">印次</th>
+              <th style="width: 150px">成品尺寸</th>
+              <th style="width: 150px">印张数</th>
+              <th style="width: 150px">本次印量</th>
+              <th style="width: 150px">本次起始印数</th>
+              <th style="width: 150px">累计印量</th>
+              <th style="width: 150px">定价(本册)</th>
+              <th style="width: 150px">价格变更次数</th>
+              <th style="width: 150px">出版方式</th>
+              <th style="width: 150px">合作出版者</th>
+              <th style="width: 150px">出版地（申领者所在地）</th>
+              <th style="width: 150px">印刷单位</th>
+              <th style="width: 150px">计划出版时间</th>
+              <th style="width: 150px">实际出版时间</th>
+              <th style="width: 150px">丛书名</th>
+              <th style="width: 150px">附属丛书名</th>
+              <th style="width: 150px">并列丛书名</th>
+              <th style="width: 150px">丛书著作责任者 </th>
+              <th style="width: 150px">分(辑)册号</th>
+              <th style="width: 150px">定价(本套) </th>
+              <th style="width: 150px">数量</th>
+              <th style="width: 150px">套书名</th>
+              <th style="width: 150px">套书著作责任者</th>
+              <th style="width: 150px">引进版图书原书名</th>
+              <th style="width: 150px">版权合同登记号</th>
+              <th style="width: 150px">原出版地</th>
+              <th style="width: 150px">引进版图书原书出版者</th>
+              <th style="width: 150px">教材目录文件号</th>
+              <th style="width: 150px">目录（章节）信息</th>
+              <th style="width: 150px">备注</th>
+              <th style="width: 150px">封面设计者</th>
+              <th style="width: 150px">出版社名称</th>
+            </tr>
+            </thead>
+            <tbody id="reportListTable">
+            <% for(var i = 0; i < list.length; i++) { %>
+            <tr class="form-horizontal">
+              <td>
+                <p class="form-control-static"><%- list[i].bookTopicType %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookTopicFileNo %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookTopicNo %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookTopicClasses %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].importantTopicCode %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].firstInstanceOfficer %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].secondInstanceOfficer %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].lastInstanceOfficer %></p>
+              </td>
+              <td>
+                <pre class="form-control-static"><%- list[i].threeOpinions%></pre>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookIsbn %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookName %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookSubtitle %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookTieName %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookDetailAuthor %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookDetailWorkWay %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookDetailOtherAuthor %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookDetailOtherWorkWay %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookTextLanguage %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookTextWords %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bindingWay %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookPageNum %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookDetailWordsNum %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookDetailSheetNum %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookFileType %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookFileNum %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].dutyEditor %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].phone %></p>
+              </td>
+              <td>
+                <pre class="form-control-static"><%- list[i].bookDetailSketched %></pre>
+              </td>
+              <td>
+                <pre class="form-control-static"><%- list[i].bookDetailAuthorMsg %></pre>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookSubjectHeadings %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookType %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookDetailKind %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookDetailGuideKind %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookDetailPublishScope %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookDetailReader %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookDetailEdition %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookDetailLayoutOrder %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].finishedSize %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].printPaperNum %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].printRuns %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].currentlyPrintsRuns %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookTotalVolume %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookPrice %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].priceChangeNum %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookPublishMode %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].cooperativePublisher %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].placePublication %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].printingUnit %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].planPublishDatetime %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].actualPublishDatetime %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].seriesBookName %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].accessorySeriesBookName %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].paratacticSeriesBookName %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].seriesBookAuthor %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookFascicleNum %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookPrice %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].packageBooksName %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].counts %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].packageBooksAuthor %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookOriginalName %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].copyrightContractNum %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].pristinePlacePublication %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].directoryFileNumber %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].catalogInformation %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].author %></p>
+              </td>
+              <td>
+                <pre class="form-control-static"><%- list[i].remarks %></pre>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].coverLayoutUser %></p>
+              </td>
+              <td>
+                <p class="form-control-static"><%- list[i].bookPressName %></p>
+              </td>
+            </tr>
+            <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

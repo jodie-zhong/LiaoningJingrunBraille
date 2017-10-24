@@ -1,0 +1,13 @@
+<% if(list.length > 0) { %>
+<% for(var i = 0; i < list.length; i++) { %>
+<tr data-id="<%- list[i].topicId %>" data-name="<%- list[i].topicDetailName %>">
+    <td class="w-table"><%- (i + 1) %></td>
+    <td style="width: 25%;" title="<%- list[i].bookOneKind %>"><%- list[i].bookOneKind %></td>
+    <td style="width: 25%;" title="<%- list[i].bookName %>"><%- list[i].bookName %></td>
+</tr>
+<% } %>
+<% } else { %>
+<tr data-noselect="true">
+    <td colspan="3"><p class="empty-tips">没有符合指定条件的数据</p></td>
+</tr>
+<% } %>

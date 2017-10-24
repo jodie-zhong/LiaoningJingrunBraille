@@ -1,0 +1,139 @@
+define(function(require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    // 工作流类窗口继承自工作流Base
+    var Base = require('../../other/base/book-base');
+    var tpl = require('./first-list.tpl');
+
+    var Module = Base.extend(new function () {
+        var that;
+
+        // 查询任务树中未完成任务数的接口
+        // this.untreatedTaskAction = 'topic/unreadTopicCount.action';
+
+        this.deployKey = 'BrailleEditingProofreading';
+
+        // 与我相关
+        // this.searchTaskAbout = '1';
+
+        // 其他搜索选项
+        this.searchParams = {
+            searchBookOneKind:''
+        };
+
+
+        this.flowInfoAction='common/searchBookFlowList.action';
+
+        /**
+         * 搜索任务列表的接口(覆盖父级)
+         */
+        this.taskListAction= 'editing/searchEditingAndProofreadingAllList.action';
+
+        this.treeName='统计';
+
+        /**
+         * 查询列表
+         */
+        // function searchReportList() {
+        //     var params = {
+        //         createYear:'2017',
+        //         createMonth:''
+        //     };
+        //     util.showLoading();
+        //     util.sendRequest({
+        //         data: params,
+        //         action: 'editing/searchEditingAndProofreadingAllList.action',
+        //         success: function(resp) {
+        //             util.hideLoading();
+        //             console.log(resp);
+        //             if (resp.code === 0) {
+        //                 // that.$('#staticFirst').html(util.template(listTpl, {
+        //                 //     list: resp.data.bookEntitiesEditing
+        //                 // }));
+        //             } else{
+        //                 util.showAlert(resp.message || '查询上报列表出错，请稍后重试！');
+        //             }
+        //         },
+        //         error: function(xhr) {
+        //             // XHR错误
+        //             util.hideLoading();
+        //             console.log(xhr);
+        //             util.showAlert('查询上报列表出错，请稍后重试！');
+        //         }
+        //     });
+        // }
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+            that.$container.on('click', '#btnAdd', function () {
+                var info={
+                    statisticsType:'1',
+                    createYear:'',
+                    createMonth:''
+                }
+                that.openPage('braille/braille-statistical/statistical-add', info);
+            });
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            // that.initTemplate(tpl, {});
+
+            // 初始化数据前需要设置列表模板
+            this.baseTpl = tpl;
+
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+
+            // TODO: 测试
+            // that.openPage('public/workflow/workflow-dialog', {});
+            // that.openPage('public/file/file-upload', {});
+        };
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function(data) {
+            this._super(data);
+
+            // if(data && data.refresh === true) {
+            //
+            // }
+
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function() {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function() {
+            this._super();
+        };
+
+    }());
+
+    module.exports = Module;
+});

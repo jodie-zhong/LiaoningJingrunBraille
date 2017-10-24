@@ -1,0 +1,102 @@
+<!-- 选题征集 -->
+<div class="row">
+    <div class="col-xs-3">
+        <!-- 左侧树 -->
+        <div class="panel">
+            <div class="panel-header custom-panel-header">
+                <h3><i class="fa fa-braille"></i>书号和CIP号申请</h3>
+            </div>
+            <!--<div class="panel-content border-bottom">-->
+            <!--<div class="search-header" id="taskTreeSearchHeader">-->
+            <!--<div class="search-inputs">-->
+            <!--<select class="form-control form-white">-->
+            <!--<option>全部</option>-->
+            <!--<option>非社推荐选题</option>-->
+            <!--<option>社推荐选题</option>-->
+            <!--</select>-->
+            <!--</div>-->
+            <!--<div class="search-buttons">-->
+            <!--<button class="btn btn-default btn-icon" type="button" id="btnTaskTreeSearch"><i class="fa fa-search"></i>-->
+            <!--</button>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <div class="panel-content panel-height-1">
+                <div id="monthTree">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-9">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="panel">
+                    <div class="panel-header custom-panel-header">
+                        <h3>申请列表
+                            <span class="icheck-inline task-about" id="taskAboutArea"></span>
+                        </h3>
+                        <div class="control-btn">
+                            <button class="btn btn-xs btn-primary" data-auth="0351" id="btnCipSingle" disabled>处理</button>
+                            <button class="btn btn-xs btn-primary" data-auth="0352" id="btnCipBatch" disabled>批量处理</button>
+                            <button class="btn btn-xs btn-default" data-auth="0353" id="btnCipSearch" disabled>查看</button>
+                        </div>
+                    </div>
+                    <div class="panel-content">
+                        <div class="table-10">
+                            <table class="table table-striped table-hover" data-multi="true" id="workListTable">
+                                <thead>
+                                <tr>
+                                    <th style="width: 50px">序号</th>
+                                    <th style="width: 50px">
+                                        <i class="fa fa-square-o" data-action="check"></i>
+                                    </th>
+                                    <th>图书名称</th>
+                                    <th>责任编辑</th>
+                                    <th>CIP号</th>
+                                    <th>申请状态</th>
+                                </tr>
+                                </thead>
+                                <tbody id="workListTBody">
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="pagination-container" id="workListPaging">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="panel">
+                    <div class="panel-header custom-panel-header">
+                        <h3>流程查看</h3>
+                    </div>
+                    <div class="panel-content">
+                        <div class="table-5-static">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                <tr>
+                                    <th>序号</th>
+                                    <th>状态</th>
+                                    <th>负责人</th>
+                                    <th>起始时间</th>
+                                    <th>完成时间</th>
+                                    <th>审核结果</th>
+                                    <th>详细信息</th>
+                                </tr>
+                                </thead>
+                                <tbody id="taskWorkflowTable">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

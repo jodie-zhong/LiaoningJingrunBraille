@@ -1,0 +1,298 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var config = {defaultModule: 'editor-translate'};
+    var util = require('../../common/util');
+
+    var dialogIndex = 1001;
+
+    var targetPage = null;
+
+    /**
+     * 单页面框架
+     * 非基于Angular、VUE等，目前基于VUE的管理平台框架太少，而且本身经验不足所以暂时使用简单自研框架
+     */
+    var Index = {
+        // 模块脚本根路径
+        moduleBase: './editorModules/',
+        /* 下面内容子类不要覆盖 */
+        // 已经加载的子模块对象
+        loadModules: {},
+
+        /**
+         * 保存并获取已经初始化的模块
+         * @param Module 模块，需要为构造器函数
+         * @param hash 模块hash
+         * @returns {*}
+         */
+        getModule: function (hash, Module) {
+            // 如果模块未初始化，且存在，则初始化模块
+            if (!this.loadModules[hash] && Module) {
+                this.loadModules[hash] = new Module();
+            }
+            return this.loadModules[hash];
+        },
+
+        /**
+         * 释放模块
+         * @param hash
+         */
+        destroyModule: function (hash, fast) {
+            hash = hash || targetPage || this.defaultModule;
+            var module = this.getModule(hash);
+            // 如果存在且模块有销毁方法则调用
+            if (module && typeof module.onDestroy === 'function') {
+                try {
+                    module.onDestroy();
+                } catch (e) {
+                    console.error('Destroy module error: %s', module);
+                }
+            }
+
+            //  销毁DOM
+            if (!fast && module.isDialog) {
+                // 如果是对话框则展示渐变效果
+                $('#page_' + hash.replace(/\//g, '_')).modal('hide');
+                setTimeout(function () {
+                    $('#page_' + hash.replace(/\//g, '_')).remove();
+                }, 300);
+            } else {
+                // 非对话框直接销毁
+                $('#page_' + hash.replace(/\//g, '_')).remove();
+            }
+
+            // 移除对象引用
+            delete this.loadModules[hash];
+        },
+
+        /**
+         * 销毁所有模块
+         */
+        destroyAllModules: function () {
+            for (var i in this.loadModules) {
+                // 没有id说明是正在初始化的module
+                if (this.loadModules.hasOwnProperty(i) && this.loadModules[i].id) {
+                    this.destroyModule(this.loadModules[i].id, true);
+                }
+            }
+        },
+
+        /**
+         * 根据hash加载模块
+         * @param hash
+         */
+        loadModule: function (hash) {
+            // 禁止在模块加载时加载模块
+            if (this.loadingModule) {
+                return false;
+            }
+            // 找不到则默认加载首页
+            var moduleName = hash || targetPage || this.defaultModule;
+            var isForceLoad = this.forceLoad;
+            this.forceLoad = false;
+            var $el = $('#page_' + moduleName.replace(/\//g, '_'));
+            // 如果forceLoad则强制重新加载
+            if ($el.length > 0) {
+                if (!isForceLoad) {
+                    // 已经存在则尝试调用onBack
+                    if (this.closePageData) {
+                        var module = this.getModule(moduleName);
+                        if (module && module.onBack) {
+                            try {
+                                module.onBack(this.closePageData);
+                            } catch (e) {
+                                console.log(e);
+                            }
+                        }
+                    }
+                    this.closePageData = null;
+                    return;
+                } else {
+                    this.destroyAllModules();
+                }
+            }
+
+
+            // 不存在则动态加载
+            // 重新动态加载
+            util.showLoading();
+            this.loadingModule = true;
+            var modules = [this.moduleBase + moduleName + '.tpl', this.moduleBase + moduleName + '.js'];
+            var that = this;
+            seajs.use(modules, function (html, obj) {
+                that.loadingModule = false;
+                // dismissDelay可以延时隐藏Loading，避免模块内初始化时查询数据再次显示Loading造成闪烁
+                util.hideLoading();
+
+                //实例化模块对象参数
+                // 兼容AMD写法
+                var module = that.getModule(moduleName, obj);
+
+                // 不是对话框则销毁所有已经加载的模块
+                if (!module.isDialog) {
+                    that.destroyAllModules();
+                }
+
+                // 生成容器
+                var $el = $('<div class="page-container"></div>');
+                // 如果是对话框则使用对话框模式
+                if (module.isDialog) {
+                    $el.addClass('page-dialog modal fade').css('z-index', dialogIndex++).attr({
+                        'data-backdrop': 'static',
+                        'data-keyboard': false
+                    });
+                    $el.find('div[data-resize="dialogContent"]').height($(window).height() - 200);
+                }
+
+                // 设置容器ID并添加到DOM树
+                module.id = moduleName;
+                $el.attr('id', 'page_' + moduleName.replace(/\//g, '_'));
+                $('#pageContainer').append($el);
+                // document.body.scrollTop = 0;
+
+                var data = that.openPageData || undefined;
+                that.openPageData = undefined;
+
+                // 如果是对话框并且没有传递任何数据，则回到首页
+                if (module.isDialog && !data) {
+                    location.href = "page-editor.html?t=" + (new Date()).getTime();
+                }
+
+                if (typeof module.onInit === 'function') {
+                    // 如果有onInit方法，由onInit生成界面
+                    try {
+                        module.onInit($el, html, data, that);
+                    } catch (e) {
+                        console.error(e);
+                    }
+
+                } else {
+                    // 没有onInit方法则由框架生成界面
+                    $el.append(html);
+                }
+
+                if (module.isDialog) {
+                    $el.modal('show');
+                } else {
+                    $el.show();
+                }
+
+            });
+        },
+
+        /**
+         * 替换history状态
+         */
+        replaceState: function (page) {
+            // 很老版本的Android上会不支持history.replaceState，所以使用location.replace替代
+            if (history.replaceState) {
+                history.replaceState({}, '', '#' + page);
+            } else {
+                // iOS9上location.replace会有问题，但是iOS9不会进入该分支
+                var url = location.href;
+                var newUrl = url.split('#')[0] + '#' + page;
+                location.replace(newUrl);
+            }
+        },
+
+        /**
+         * 通过脚本方式打开一个页面并传递参数
+         * @param page  路由表中配置的模块ID
+         * @param data  传递给新模块的数据
+         * @param silence   静默方式加载，使用静默方式加载将不产生页面栈，后退后直接退回前一页
+         */
+        openPage: function (page, data, silence, force) {
+            this.openPageData = data || null;
+            this.forceLoad = force || false;
+            if (silence) {
+                this.replaceState(page);
+                this.loadModule(page);
+            } else {
+                // 如果相同且强制刷新
+                if (location.hash.replace('#', '') === page && force) {
+                    this.loadModule(page);
+                } else {
+                    location.hash = page;
+                }
+            }
+        },
+
+        pushPage: function (page, data) {
+
+        },
+
+        /**
+         * 关闭对话框页面
+         * @param page 关闭的页面
+         * @param data 返回给前页的数据
+         */
+        closeDialog: function (page, data) {
+            this.destroyModule(page);
+
+            if (data) {
+                this.closePageData = data;
+            }
+            history.back();
+        },
+
+        /**
+         * hash改变，进行页面跳转
+         * @param e
+         */
+        onHashChange: function (e) {
+            var hash = location.hash.replace('#', '');
+            // // hash切换说明页面跳转
+            // this.destroyAllModules();
+
+            this.loadModule(hash || targetPage || config.defaultModule);
+        },
+
+        /**
+         * 初始化函数，父类会调用
+         */
+        init: function () {
+            // 初始化必要的数据
+            this.openPageData = undefined;
+            this.closePageData = undefined;
+            this.loadingModule = false;
+
+            targetPage = util.getUrlParameters().page;
+
+            // 初始化时重置页面hash
+            // this.replaceState('');
+            // 如果权限已经加载完毕则初始化页面，否则等待权限加载
+            var hash = location.hash.replace('#', '');
+            this.loadModule(hash || targetPage || config.defaultModule);
+
+            // 监听hashchange事件，在hashchange时进行页面切换
+            var onHashChange = this.onHashChange.bind(this);
+            setTimeout(function () {
+                $(window).bind('hashchange', onHashChange);
+            }, 0);
+
+            util.index = this;
+
+            // 缩放
+            var resizeTimer = null;
+            $(window).on('resize', function () {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(this.onWindowResize, 200);
+            }.bind(this));
+
+            this.onWindowResize();
+        },
+
+        onWindowResize: function () {
+            // 处理自定义缩放窗口
+            var $style = $('<style>').attr('id', 'resizeStyle');
+            var content = '.dialog-resize {';
+            content += '  max-height: ' + ($(window).height() - 240 < 300 ? 300 : $(window).height() - 240) + 'px;';
+            content += '}';
+            $style.html(content);
+            $('head').find('#resizeStyle').remove();
+            $('head').append($style);
+        }
+    };
+
+    module.exports = Index.init();
+});

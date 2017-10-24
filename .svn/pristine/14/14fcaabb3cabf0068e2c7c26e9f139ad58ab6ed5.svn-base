@@ -1,0 +1,119 @@
+{
+  "code": 0,
+  "message": "查询列表成功",
+  "data": {
+    "records": [
+      {
+        "departmentId": "23",
+        "departmentName": "FKDDMG",
+        "departmentUserNum": "0",
+        "departmentPhone": "FGFDGD",
+        "departmentPrincipal": "2",
+        "departmentPrincipalName": "测试用户",
+        "departmentLeader": "1",
+        "departmentLeaderName": "管理员"
+      },
+      {
+        "departmentId": "21",
+        "departmentName": "颜廷宇的部门5",
+        "departmentUserNum": "0",
+        "departmentPhone": "021-55555555",
+        "departmentPrincipal": "2",
+        "departmentPrincipalName": "测试用户",
+        "departmentLeader": "1",
+        "departmentLeaderName": "管理员"
+      },
+      {
+        "departmentId": "22",
+        "departmentName": "颜廷宇的部门6",
+        "departmentUserNum": "0",
+        "departmentPhone": "021-66666666",
+        "departmentPrincipal": "2",
+        "departmentPrincipalName": "测试用户",
+        "departmentLeader": "",
+        "departmentLeaderName": ""
+      },
+      {
+        "departmentId": "20",
+        "departmentName": "颜廷宇的部门4",
+        "departmentUserNum": "0",
+        "departmentPhone": "021-55555555",
+        "departmentPrincipal": "",
+        "departmentPrincipalName": "",
+        "departmentLeader": "",
+        "departmentLeaderName": ""
+      },
+      {
+        "departmentId": "19",
+        "departmentName": "颜廷宇的部门3",
+        "departmentUserNum": "0",
+        "departmentPhone": "021-44444444",
+        "departmentPrincipal": "",
+        "departmentPrincipalName": "",
+        "departmentLeader": "",
+        "departmentLeaderName": ""
+      },
+      {
+        "departmentId": "18",
+        "departmentName": "颜廷宇的部门2",
+        "departmentUserNum": "0",
+        "departmentPhone": "021-22222222",
+        "departmentPrincipal": "1",
+        "departmentPrincipalName": "管理员",
+        "departmentLeader": "2",
+        "departmentLeaderName": "测试用户"
+      },
+      {
+        "departmentId": "13",
+        "departmentName": "材料供应部",
+        "departmentUserNum": "0",
+        "departmentPhone": "021-11111111",
+        "departmentPrincipal": "1",
+        "departmentPrincipalName": "管理员",
+        "departmentLeader": "2",
+        "departmentLeaderName": "测试用户"
+      },
+      {
+        "departmentId": "17",
+        "departmentName": "颜廷宇的部门",
+        "departmentUserNum": "0",
+        "departmentPhone": "024-11111111",
+        "departmentPrincipal": "1",
+        "departmentPrincipalName": "管理员",
+        "departmentLeader": "",
+        "departmentLeaderName": ""
+      },
+      {
+        "departmentId": "10",
+        "departmentName": "出版部",
+        "departmentUserNum": "0",
+        "departmentPhone": "",
+        "departmentPrincipal": "",
+        "departmentPrincipalName": "",
+        "departmentLeader": "",
+        "departmentLeaderName": ""
+      },
+      {
+        "departmentId": "11",
+        "departmentName": "发行部",
+        "departmentUserNum": "0",
+        "departmentPhone": "",
+        "departmentPrincipal": "",
+        "departmentPrincipalName": "",
+        "departmentLeader": "",
+        "departmentLeaderName": ""
+      }
+    ],
+    "pageindex": {
+      "startindex": 1,
+      "endindex": 3
+    },
+    "pageCount": 3,
+    "pageSize": 10,
+    "pageNow": 1,
+    "rowCount": 22,
+    "startPage": 0,
+    "pagecode": 5,
+    "firstResult": 0
+  }
+}

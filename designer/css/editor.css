@@ -1,0 +1,439 @@
+html, body {
+    font-family: "microsoft yahei", "微软雅黑", "simsun", "宋体";
+    height: 100%;
+    position: relative;
+    overflow-y: auto;
+}
+
+body::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+.relative-container-body::-webkit-scrollbar-track-piece {
+    background-color: #fff;
+    border-radius: 0;
+}
+
+.relative-container-body::-webkit-scrollbar-thumb:vertical {
+    height: 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 0;
+}
+
+.relative-container-body::-webkit-scrollbar-thumb:horizontal {
+    width: 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 0;
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: "microsoft yahei", "微软雅黑", "simsun", "宋体";
+}
+
+.col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.form-horizontal .form-group {
+    position: relative;
+}
+
+.editor-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 50px;
+    box-sizing: border-box;
+}
+
+.editor-container-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 500px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.editor-container-inner::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+.editor-left {
+    width: 140px;
+    flex: 0 0 auto;
+    background-color: #fff;
+    z-index: 9;
+}
+
+.editor-right {
+    width: 400px;
+    flex: 0 0 auto;
+    background-color: #fff;
+    z-index: 9;
+}
+
+/* 组件列表 */
+.ui-accordion .ui-accordion-content {
+    padding: 5px;
+    border-radius: 0;
+}
+
+.ui-accordion .ui-accordion-header {
+    border-radius: 0;
+    margin: 0;
+}
+
+.ui-accordion .ui-accordion-header.ui-state-active {
+    background-color: #319DB5;
+    border-color: #357CA5;
+}
+
+#widgetContainer {
+    height: 100%;
+}
+
+#widgetContainer ul {
+    margin: 0;
+    padding: 0;
+}
+
+#widgetContainer ul li {
+    float: left;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.widget-item {
+    width: 80px;
+    margin: 10px;
+    cursor: pointer;
+}
+
+.widget-item .widget-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto;
+    display: block;
+}
+
+.widget-item .widget-title {
+    margin: 0;
+    font-size: 12px;
+    line-height: 20px;
+    color: #666;
+    text-align: center;
+}
+
+.widget-drag-preview {
+    z-index: 100;
+}
+
+/* 页面列表 */
+/*#pageContainer {*/
+    /*position: relative;*/
+    /*background-color: #fff;*/
+    /*margin-top: 2px;*/
+    /*border: 1px solid #ddd;*/
+    /*height: 200px;*/
+/*}*/
+
+#propertyContainer {
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+}
+
+.container-header {
+    background-color: #319DB5;
+    border: 1px solid #357CA5;
+    line-height: 30px;
+    font-size: 14px;
+    color: #fff;
+    text-align: center;
+}
+
+.absolute-container-header {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 9;
+}
+
+.relative-container {
+    position: relative;
+    height: 100%;
+}
+
+.relative-container-body {
+    padding-top: 32px;
+    overflow-y: auto;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.relative-container-body::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.relative-container-body::-webkit-scrollbar-track-piece {
+    background-color: #fff;
+    border-radius: 5px;
+}
+
+.relative-container-body::-webkit-scrollbar-thumb:vertical {
+    height: 5px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+}
+
+.relative-container-body::-webkit-scrollbar-thumb:horizontal {
+    width: 5px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+}
+
+/* 编辑区 */
+#editorPanelContainer {
+    position: relative;
+    width: 21cm;
+    height: 29.7cm;
+    margin: 20px auto;
+    background-color: #fff;
+    box-shadow: 2px 2px 2px 2px #ddd;
+    box-sizing: border-box;
+    /*overflow-y: auto;*/
+}
+
+
+#editorPanelContainer::-webkit-scrollbar, #editorPanelInner::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+.editor-tools-container {
+    position: fixed;
+    width: 0;
+    height: 400px;
+    top: 70px;
+    left: 50%;
+    transform: translate(-187px, 0);
+    -webkit-transform: translate(-187px, 0);
+    box-sizing: border-box;
+    z-index: 100;
+}
+
+#editorPanelInner {
+    position: relative;
+    width: 21cm;
+    height: 29.7cm;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    box-sizing: border-box;
+}
+
+#editorPanel {
+    position: relative;
+    width: 21cm;
+    height: 29.7cm;
+    min-height: 100%;
+    background-color: #fff;
+    cursor: default;
+}
+
+.drop-placeholder {
+    height: 50px;
+    border: 1px dashed #aaa;
+    background-color: #efefef;
+}
+
+#widgetSelectMask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 1px dashed #357CA5;
+    display: none;
+    z-index: 99;
+    box-sizing: border-box;
+    /*pointer-events:none;*/
+}
+
+#widgetSelectMask div {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#widgetSelectMask .dot {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border: 1px solid #357CA5;
+    background-color: #fff;
+}
+
+#dotTopLeft {
+    top: -3px;
+    left: -3px;
+    cursor: nw-resize;
+}
+
+#widgetSelectMask.freeze #dotTopLeft, #widgetSelectMask.relative #dotTopLeft {
+    cursor: not-allowed;
+}
+
+#dotTop {
+    top: -3px;
+    left: 50%;
+    margin-left: -3px;
+    cursor: n-resize;
+}
+
+#widgetSelectMask.freeze #dotTop, #widgetSelectMask.relative #dotTop {
+    cursor: not-allowed;
+}
+
+#dotTopRight {
+    top: -3px;
+    right: -3px;
+    cursor: ne-resize;
+}
+
+#widgetSelectMask.freeze #dotTopRight, #widgetSelectMask.relative #dotTopRight {
+    cursor: not-allowed;
+}
+
+#dotRight {
+    top: 50%;
+    margin-top: -3px;
+    right: -3px;
+    cursor: e-resize;
+}
+
+#widgetSelectMask.freeze #dotRight {
+    cursor: not-allowed;
+}
+
+#dotBottomRight {
+    bottom: -3px;
+    right: -3px;
+    cursor: nw-resize;
+}
+
+#widgetSelectMask.freeze #dotBottomRight {
+    cursor: not-allowed;
+}
+
+#dotBottom {
+    bottom: -3px;
+    left: 50%;
+    margin-left: -3px;
+    cursor: n-resize;
+}
+
+#widgetSelectMask.freeze #dotBottom {
+    cursor: not-allowed;
+}
+
+#dotBottomLeft {
+    bottom: -3px;
+    left: -3px;
+    cursor: ne-resize;
+}
+
+#widgetSelectMask.freeze #dotBottomLeft, #widgetSelectMask.relative #dotBottomLeft {
+    cursor: not-allowed;
+}
+
+#dotLeft {
+    top: 50%;
+    margin-top: -3px;
+    left: -3px;
+    cursor: e-resize;
+}
+
+#widgetSelectMask.freeze #dotLeft, #widgetSelectMask.relative #dotLeft {
+    cursor: not-allowed;
+}
+
+.widget-container {
+    position: relative;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+#widgetMaskClose {
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: #357CA5;
+    font-size: 12px;
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.subline-x {
+    /* 因为内容超长会向下滚，所以subline需要fixed，但是横向如果fixed就无法相对编辑区了，所以只有纵向的fixed */
+    position: fixed;
+    width: 3px;
+    height: 100%;
+    border-left: 1px dashed rgba(53, 124, 165, 0.5);
+    left: 335px;
+    top: 0;
+    cursor: w-resize;
+}
+
+.subline-y {
+    position: absolute;
+    width: 100%;
+    height: 3px;
+    border-top: 1px dashed rgba(53, 124, 165, 0.5);
+    left: 0;
+    top: 20px;
+    cursor: s-resize;
+}
+
+/* 富文本属性 */
+.richText-editor-container {
+    height: 150px;
+}
+
+/* 工具条 */
+.editor-left-tools {
+    width: 50px;
+    position: absolute;
+    left: -50px;
+    top: 0;
+}
+
+.editor-bottom-tools {
+    width: 50px;
+    position: absolute;
+    left: -50px;
+    bottom: 0;
+}
+
+.vbtn {
+    width: 42px !important;
+}
+
+body.full-size {
+    height: 2000px;
+}

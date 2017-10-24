@@ -1,0 +1,115 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var Class = require('../../../../common/class');
+    var util = require('../../../../common/util.js');
+
+    /**
+     * Workflow Item基类
+     */
+    var ItemBase = Class.extend({
+        $container: null,
+
+        tpl: null,
+
+        data: null,
+
+        init: function(container, tpl){
+            this.$container = container;
+            this.tpl = tpl;
+        },
+
+        /**
+         * 选择容器内对象
+         * @param selector
+         */
+        $: function (selector) {
+            return this.$container.find(selector);
+        },
+
+        /**
+         * 设置表单数据
+         * @param data
+         */
+        setData: function(data){
+            this.data = data;
+            this.$container.html(util.template(this.tpl, data));
+
+            this.render();
+        },
+
+        /**
+         * 根据Form内输入框生成请求参数
+         * @param $els
+         */
+        getFormData: function () {
+            var $els = this.$('input, textarea, select');
+
+            var params = {}, $el;
+            $els.each(function () {
+                $el = $(this);
+                if($el.parents('.row').is(':hidden')){
+                    return;
+                }
+                switch (this.nodeName) {
+                    case 'INPUT':
+                        if ($el.attr('name')) {
+                            if (this.type === 'text' || this.type === 'email' || this.type === 'number' || this.type === 'password' || this.type === 'hidden') {
+                                params[$el.attr('name')] = $el.attr('data-value') ? $el.attr('data-value') : $el.val();
+                            } else if (this.type === 'radio') {
+                                if ($el.prop('checked')) {
+                                    params[$el.attr('name')] = $el.val();
+                                }
+                            } else if (this.type === 'checkbox') {
+                                if ($el.prop('checked')) {
+                                    params[$el.attr('name')] = params[$el.attr('name')] || [];
+                                    params[$el.attr('name')].push($el.val());
+                                }
+                            }
+                        }
+                        break;
+                    case 'SELECT':
+                        if ($el.attr('name')) {
+                            params[$el.attr('name')] = $el.val();
+                        }
+                        break;
+                    case 'TEXTAREA':
+                        if ($el.attr('name')) {
+                            params[$el.attr('name')] = $el.attr('data-value') ? $el.attr('data-value') : $el.val();
+                        }
+                        break;
+                    default:
+                }
+            });
+
+            // 重新整理
+            for (var i in params) {
+                if (params.hasOwnProperty(i) && typeof params[i] === 'object') {
+                    params[i] = params[i].join(',');
+                }
+            }
+
+            return params;
+        },
+
+        /**
+         * 渲染界面
+         */
+        render: function(){
+
+        },
+
+        /**
+         * 从弹窗返回
+         * @param data
+         */
+        back: function(data){
+
+        }
+
+    });
+
+
+    module.exports = ItemBase;
+
+});

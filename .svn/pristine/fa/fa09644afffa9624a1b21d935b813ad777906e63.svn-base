@@ -1,0 +1,33 @@
+<!--流程状态-->
+<div class="form-horizontal">
+    <div class="row">
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label class="col-xs-4 control-label">印制方式</label>
+                <div class="col-xs-8">
+                    <p class="form-control-static"><%- info.submitUserName %></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label class="col-xs-4 control-label">所在流程</label>
+                <div class="col-xs-8">
+                    <p class="form-control-static"><%- info.submitUserName %></p>
+                </div>
+            </div>
+        </div>
+        <% if(){%>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label class="col-xs-4 control-label">任务人</label>
+                <div class="col-xs-8">
+                    <p class="form-control-static"><%- info.submitDatetime %></p>
+                </div>
+            </div>
+        </div>
+        <% } %>
+    </div>
+</div>

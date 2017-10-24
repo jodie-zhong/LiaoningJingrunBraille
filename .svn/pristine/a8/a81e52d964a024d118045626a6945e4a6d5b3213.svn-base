@@ -1,0 +1,89 @@
+<!--译校通读-任务分配-->
+<% if(isEdit) { %>
+<div class="form-horizontal">
+    <div class="row">
+        <div class="col-xs-6 form-group">
+            <label class="col-xs-4 control-label">图书名称</label>
+            <div class="col-xs-8">
+                <p class="form-control-static">图书名称，待修改</p>
+            </div>
+        </div>
+        <div class="col-xs-6 form-group">
+            <label class="col-xs-4 control-label">任务阶段</label>
+            <div class="col-xs-8">
+                <p class="form-control-static">任务阶段，待修改</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 form-group">
+            <label class="col-xs-2 control-label">任务简介</label>
+            <div class="col-xs-10">
+                    <textarea class="form-control" name="bookDetailAuthorResult" placeholder="任务简介" maxlength="256"
+                              data-fv-field="bookDetailAuthorResult"></textarea>
+                <small class="help-block" data-fv-validator="stringLength" data-fv-for="bookDetailAuthorResult"
+                       data-fv-result="NOT_VALIDATED" style="display: none;">请输入符合长度限制的值
+                </small>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6 form-group">
+            <label class="col-xs-4 control-label">是否接受</label>
+            <div class="col-xs-8">
+                <label class="radio-inline">
+                    <% if(!info.bookTopicRecommendType || info.bookTopicRecommendType === '2') { %>
+                    <input type="radio" name="bookTopicRecommendType" value="2" data-fv-notempty="true"
+                           data-fv-notempty-message="请选择是否接受" checked/>接受
+                    <% } else { %>
+                    <input type="radio" name="bookTopicRecommendType" value="2" data-fv-notempty="true"
+                           data-fv-notempty-message="请选择是否接受"/>拒绝
+                    <% } %>
+                </label>
+                <label class="radio-inline">
+                    <% if(info.bookTopicRecommendType && info.bookTopicRecommendType === '1') { %>
+                    <input type="radio" name="bookTopicRecommendType" value="1" data-fv-notempty="true"
+                           data-fv-notempty-message="请选择是否接受" checked/>接受
+                    <% } else { %>
+                    <input type="radio" name="bookTopicRecommendType" value="1" data-fv-notempty="true"
+                           data-fv-notempty-message="请选择是否接受"/>拒绝
+                    <% } %>
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+<% } else { %>
+<div class="form-horizontal">
+    <div class="row">
+        <div class="col-xs-6 form-group">
+            <label class="col-xs-4 control-label">图书名称</label>
+            <div class="col-xs-8">
+                <p class="form-control-static">图书名称，待修改</p>
+            </div>
+        </div>
+        <div class="col-xs-6 form-group">
+            <label class="col-xs-4 control-label">任务阶段</label>
+            <div class="col-xs-8">
+                <p class="form-control-static">任务阶段，待修改</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 form-group">
+            <label class="col-xs-2 control-label">任务简介</label>
+            <div class="col-xs-10">
+                <p class="form-control-static">任务阶段，待修改</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6 form-group">
+            <label class="col-xs-4 control-label">是否接受</label>
+            <div class="col-xs-8">
+                <p class="form-control-static">是否接受，待修改</p>
+            </div>
+        </div>
+    </div>
+</div>
+<% } %>

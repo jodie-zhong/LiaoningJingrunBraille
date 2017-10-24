@@ -1,0 +1,204 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+
+    /**
+     * Workflow Item
+     */
+    module.exports = ItemBase.extend({
+        // 保存/提交接口
+        saveAction: 'quality/saveOrSubmitQuality.action',
+        // 批量保存/提交接口
+        batchSaveAction: 'quality/batchQuality.action',
+        // 查询接口
+        detailAction: 'quality/searchQualityTestDetail.action',
+
+        /**
+         * 计算差错
+         */
+        calculateDiff: function () {
+            var that = this;
+            var diffInfo = [];
+            for (var i = 0; i < that.data.info.bookFascicleEntities.length; i++) {
+                var obj = that.data.info.bookFascicleEntities[i];
+                diffInfo.push({
+                    fasciculeId: obj.bookFascicleId,
+                    fasciculeName: obj.bookFascicleBookName,
+                    totalCount: obj.bookFascicleWords ? obj.bookFascicleWords : that.data.info.bookDetailWordsNum,
+                    diffCount: 0
+                });
+            }
+            this.$("tbody[data-name='trueOrFalseTb']").children().each(function () {
+                var checked = that.data.isEdit ? $(this).find("input[name='confirmSelection']").prop('checked') : ($(this).attr('data-is-confirm') === '1');
+                if (checked) {
+                    var fasciculeId = $(this).attr("data-fascicule-id");
+                    var exist = false;// 正常情况下肯定会存在，不存在应该是数据返错了
+                    for (var k = 0; k < diffInfo.length; k++) {
+                        if (diffInfo[k].fasciculeId === fasciculeId) {
+                            diffInfo[k].diffCount++;
+                            exist = true;
+                            break;
+                        }
+                    }
+                    if (!exist) {
+                        diffInfo.push({fasciculeId: fasciculeId, fasciculeName: '', totalCount: 0, diffCount: 1});
+                    }
+                }
+            });
+            var diffTbHtml = "";
+            for (var m = 0; m < diffInfo.length; m++) {
+                diffTbHtml +=
+                    "<tr  data-fascicule-id='" + diffInfo[m].fasciculeId + "'>" +
+                    "   <td>" + (m + 1) + "</td>" +
+                    "   <td>" + diffInfo[m].fasciculeName + "</td>" +
+                    "   <td data-name='diffCount'>" + diffInfo[m].diffCount + "</td>" +
+                    "   <td data-name='diffRate'>" + (diffInfo[m].diffCount / diffInfo[m].totalCount * 1000).toFixed(4) + "</td>" +
+                    "</tr>";
+            }
+            this.$("tbody[data-name='diffTb']").html(diffTbHtml);
+        },
+
+        /**
+         * 生成参数
+         */
+        getFormData: function () {
+            var params = {qualityRightWrongEntities: this.data.info.qualityRightWrongEntities, bookWrongEntities: []};// 译校通读要求原样返回qualityRightWrongEntities，这里顺便也改了
+            // 正误表数据
+            this.$("tbody[data-name='trueOrFalseTb']").children().each(function () {
+                var rightWrongId = $(this).attr("data-right-wrong-id");
+                for (var i = 0; i < params.qualityRightWrongEntities.length; i++) {
+                    if (params.qualityRightWrongEntities[i].rigthWrongId === rightWrongId) {
+                        params.qualityRightWrongEntities[i].isConfirm = $(this).find("input[name='confirmSelection']").prop('checked') ? "1" : "2";
+                        params.qualityRightWrongEntities[i].confirmCause = $(this).find("input[name='disConfirmReason']").val();
+                    }
+                }
+            });
+            // 差错表数据
+            this.$("tbody[data-name='diffTb']").children().each(function () {
+                params.bookWrongEntities.push({
+                    bookFascicleId: $(this).attr("data-fascicule-id"),
+                    bookWrongNum: $(this).find("td[data-name='diffCount']").text(),
+                    bookWrongRate: $(this).find("td[data-name='diffRate']").text()
+                });
+            });
+            params.handleContentOne = this.$("textarea[name='handleContentOne']").val();
+            params.taskUsers = this.$("input[name='taskUsers']").attr('data-value');
+            params.flowId = this.$("input[name='flowId']").val();
+            params.flowName = this.$("input[name='flowName']").val();
+            return params;
+        },
+
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+            var that = this;
+            // 是否确认监听
+            this.$container.on('change', 'input[name="confirmSelection"]', function () {
+                var selectionRow = $(this).parents('tr');
+                // 确认
+                if ($(this).prop('checked')) {
+                    // 判断全选
+                    var allChecked = true;
+                    selectionRow.parent().find('input[name="confirmSelection"]').each(function () {
+                        if (!$(this).prop('checked')) {
+                            allChecked = false;
+                            return false;
+                        }
+                    });
+                    if (allChecked) {
+                        $(this).parents('table').find('input[name="confirmSelectionBatch"]').prop('checked', 'checked');
+                        // 没有输入框不显示必填星号
+                        that.$(".uncheckMust").hide();
+                    }
+                    // 隐藏输入框
+                    selectionRow.find("input[name='disConfirmReason']").parent().hide();
+                }
+                // 不确认
+                else {
+                    // 去掉全选
+                    $(this).parents('table').find('input[name="confirmSelectionBatch"]').removeProp('checked');
+                    // 有输入框显示必填星号
+                    that.$(".uncheckMust").show();
+                    // 显示输入框
+                    selectionRow.find("input[name='disConfirmReason']").parent().show();
+                }
+                // 计算差错率
+                that.calculateDiff();
+            });
+            // 是否批量确认
+            this.$container.on('change', 'input[name="confirmSelectionBatch"]', function () {
+                var table = $(this).parents('table');
+                // 确认
+                if ($(this).prop('checked')) {
+                    // 设置复选框选中
+                    table.find('input[name="confirmSelection"]').prop('checked', 'checked');
+                    // 没有输入框不显示必填星号
+                    that.$(".uncheckMust").hide();
+                    // 隐藏输入框
+                    table.find("input[name='disConfirmReason']").parent().hide();
+                }
+                // 不确认
+                else {
+                    $(this).parents('table').find('input[name="confirmSelection"]').removeProp('checked');
+                    // 有输入框显示必填星号
+                    that.$(".uncheckMust").show();
+                    // 显示输入框
+                    table.find("input[name='disConfirmReason']").parent().show();
+                }
+                // 计算差错率
+                that.calculateDiff();
+            });
+        },
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+            this.calculateDiff();
+            var that = this;
+            // 判断全选
+            var allChecked = true;
+            this.$('input[name="confirmSelection"]').each(function () {
+                // 确认
+                if ($(this).prop('checked')) {
+                    // 没有输入框不显示必填星号
+                    that.$(".uncheckMust").hide();
+                    // 隐藏输入框
+                    $(this).parents('tr').find("input[name='disConfirmReason']").parent().hide();
+                }
+                // 不确认
+                else {
+                    // 去掉全选
+                    allChecked = false;
+                    // 有输入框显示必填星号
+                    that.$(".uncheckMust").show();
+                    // 显示输入框
+                    $(this).parents('tr').find("input[name='disConfirmReason']").parent().show();
+                }
+            });
+            if (allChecked) {
+                this.$('input[name="confirmSelectionBatch"]').prop('checked', 'checked');
+            }
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function (container, tpl) {
+            this._super(container, tpl);
+        },
+
+        /**
+         * 渲染页面
+         */
+        render: function () {
+            this._super();
+            this.initPageEvent();
+            this.initPageData();
+        }
+    });
+});

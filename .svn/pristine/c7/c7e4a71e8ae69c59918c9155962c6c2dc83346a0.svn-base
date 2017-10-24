@@ -1,0 +1,29 @@
+<!--领用人领取样书-->
+<% if(isEdit) { %>
+<div class="form-horizontal">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">领用备注</label>
+        <div class="col-xs-10">
+          <textarea class="form-control" maxlength="2048" placeholder="（不超过2048字）" name="handleContentOne"><%- info.handleContentOne
+            %></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% } else { %>
+<div class="form-horizontal">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">领用备注</label>
+        <div class="col-xs-10">
+          <pre class="form-control-static"><%- info.handleContentOne %></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>

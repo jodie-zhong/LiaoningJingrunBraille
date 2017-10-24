@@ -1,0 +1,153 @@
+<!--会议提交-->
+<div class="modal-dialog dialog-container">
+  <div class="modal-content">
+    <div class="panel">
+      <div class="panel-header border-bottom">
+        <h3><i class="fa fa-user-o"></i>会议提交</h3>
+        <div class="control-btn">
+          <a class="panel-close btn-close"><i class="fa fa-close"></i></a>
+        </div>
+      </div>
+      <div class="panel-content">
+        <div id="formMeetingCreateEdit" class="dialog-resize">
+          <div>
+            <div>
+              <table class="table table-bordered table-nowrap">
+                <thead>
+                <tr>
+                  <th class="w-100">参会选题名称</th>
+                  <th class="w-50">讨论结果</th>
+                  <th class="w-50">选题类型</th>
+                  <th class="w-200">下一流程</th>
+                  <th class="w-100">下一流程任务人</th>
+                </tr>
+                </thead>
+                <tbody id="conSubListTable">
+                <% if(list.length > 0) { %>
+                <% for(var i = 0; i < list.length; i++) { %>
+                <% var topic = list[i]; %>
+                <% for(var j = 0; j < topic.meetingBookEntities.length; j++) { %>
+                <% var topicType = topic.meetingBookEntities[j] %>
+                <tr class="book-topic<%- (i) %>" data-id="<%- topic.topicId %>" data-taskId="<%- topic.taskId %>"
+                    data-name="<%- topic.topicDetailName %>">
+                  <% if(j === 0) { %>
+                  <td title="<%- topic.topicDetailName %>" rowspan="<%- topic.meetingBookEntities.length %>"><%- topic.topicDetailName %></td>
+                  <td rowspan="<%- topic.meetingBookEntities.length %>">通过</td>
+                  <% } %>
+                  <td data-bookId="<%- topicType.bookId %>"><%- topicType.bookTypeName %></td>
+                  <% if(topicType.userTaskEntities) { %>
+                  <% if(topicType.bookType === "1") { %>
+                  <td>
+                    <div class="form-group" style="margin-bottom: 0">
+                        <% for(var z= 0; z < topicType.userTaskEntities.length; z++) { %>
+                          <% if(!topicType.userTaskEntities[z].deptAndRoles) { %>
+                          <p class="form-control-static text-center" style="word-break: break-all;white-space: normal;">
+                            <%- topicType.userTaskEntities[z].flowName %>
+                          </p>
+                          <% } else { %>
+                          <p class="form-control-static text-center" style="word-break: break-all;white-space: normal;">
+                            <%- topicType.userTaskEntities[z].flowName %>（<%- topicType.userTaskEntities[z].deptAndRoles %>）
+                          </p>
+                          <% } %>
+                        <% } %>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="form-group" style="margin-bottom: 0">
+                      <% for(var w= 0; w < topicType.userTaskEntities.length; w++) { %>
+                      <div data-flow="<%- topicType.userTaskEntities[w].deptIds %>" data-area="nextFlow">
+                        <% if(topicType.userTaskEntities[w].roleIds) { %>
+                        <div class="input-group with-clear">
+                          <input title="<%- topicType.userTaskEntities[w].nextFlowTaskUserNames %>" type="text" class="form-control" name="taskUsers"
+                                 value="<%- topicType.userTaskEntities[w].nextFlowTaskUserNames %>"
+                                 data-v="<%- topicType.userTaskEntities[w].roleIds %>" placeholder="任务人"
+                                 data-rs="<%- topicType.userTaskEntities[w].roleIds %>"
+                                 readonly
+                                 data-flowId="<%- topicType.userTaskEntities[w].flowId %>"
+                                 data-ds="<%- topicType.userTaskEntities[w].deptIds %>"
+                                 data-flowName="<%- topicType.userTaskEntities[w].flowName %>"
+                                 data-data="{roleIds: '<%- topicType.userTaskEntities[w].roleIds %>', searchDepartmentId: '<%- topicType.userTaskEntities[w].deptIds %>'}"  data-fv-notempty="true"
+                                 data-fv-notempty-message="请选择下一任务人">
+                          <span class="input-group-btn">
+                            <button class="btn btn-clear" type="button" data-action="clear" ><i class="fa fa-remove box"></i></button>
+                            <button class="btn btn-default" type="button" data-open="public/user/select-users"
+                                    data-data='{"roleIds": "<%- topicType.userTaskEntities[w].roleIds %>", "deptIds": "<%- topicType.userTaskEntities[w].deptIds %>"}'><i
+                                    class="fa fa-user-o"></i>
+                            </button>
+                          </span>
+                        </div>
+                        <% } %>
+                      </div>
+                      <% } %>
+                    </div>
+                  </td>
+                  <% }else{%>
+                  <td>
+                    <div class="form-group" style="margin-bottom: 0">
+                      <select class="form-control" name="deptIds" data-fv-notempty="true">
+                        <% for(var z= 0; z < topicType.userTaskEntities.length; z++) { %>
+                        <option value="<%- topicType.userTaskEntities[z].deptIds %>">
+                          <% if(!topicType.userTaskEntities[z].deptAndRoles) { %>
+                          <%- topicType.userTaskEntities[z].flowName %>
+                          <% } else { %>
+                          <%- topicType.userTaskEntities[z].flowName %>（<%- topicType.userTaskEntities[z].deptAndRoles %>）
+                          <% } %>
+                        </option>
+                        <% } %>
+                      </select>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="form-group" style="margin-bottom: 0">
+                      <% for(var w= 0; w < topicType.userTaskEntities.length; w++) { %>
+                      <div data-flow="<%- topicType.userTaskEntities[w].deptIds %>" data-area="nextFlow"
+                           style="display: none;">
+                        <% if(topicType.userTaskEntities[w].roleIds) { %>
+                        <div class="input-group with-clear">
+                          <input title="<%- topicType.userTaskEntities[w].nextFlowTaskUserNames %>" type="text" class="form-control" name="taskUsers"
+                                 value="<%- topicType.userTaskEntities[w].nextFlowTaskUserNames %>"
+                                 data-v="<%- topicType.userTaskEntities[w].roleIds %>" placeholder="任务人"
+                                 data-rs="<%- topicType.userTaskEntities[w].roleIds %>"
+                                 readonly
+                                 data-flowId="<%- topicType.userTaskEntities[w].flowId %>"
+                                 data-ds="<%- topicType.userTaskEntities[w].deptIds %>"
+                                 data-flowName="<%- topicType.userTaskEntities[w].flowName %>"
+                                 data-data="{roleIds: '<%- topicType.userTaskEntities[w].roleIds %>', searchDepartmentId: '<%- topicType.userTaskEntities[w].deptIds %>'}"  data-fv-notempty="true"
+                                 data-fv-notempty-message="请选择下一任务人">
+                          <span class="input-group-btn">
+                            <button class="btn btn-clear" type="button" data-action="clear" ><i class="fa fa-remove box"></i></button>
+                            <button class="btn btn-default" type="button" data-open="public/user/select-users"
+                                    data-data='{"roleIds": "<%- topicType.userTaskEntities[w].roleIds %>", "deptIds": "<%- topicType.userTaskEntities[w].deptIds %>"}'><i
+                                    class="fa fa-user-o"></i>
+                            </button>
+                          </span>
+                        </div>
+                        <% } %>
+                      </div>
+                      <% } %>
+                    </div>
+                  </td>
+                  <% }%>
+                  <% } %>
+                </tr>
+                <% } %>
+                <% } %>
+                <% } else { %>
+                <tr>
+                  <td colspan="5"><p class="empty-tips">没有符合指定条件的数据</p></td>
+                </tr>
+                <% } %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <% if(list.length > 0) { %>
+          <div class="dialog-options">
+            <button type="button" class="btn btn-primary" id="btnConRegSubmit">提交</button>
+          </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

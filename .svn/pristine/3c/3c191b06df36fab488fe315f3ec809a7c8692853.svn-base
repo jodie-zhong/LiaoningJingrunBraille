@@ -1,0 +1,316 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    // 工作流类窗口继承自工作流Base
+    var Base = require('../../other/base/task-base');
+
+    var topicManageListTpl = require('./topic-manage-list.tpl');
+
+    var FLOW_DECLARE = 'brailleTopicDeclare';                   // 选题申报
+    var FLOW_EDITOR_TRIAL = 'brailleEditorialTrial';            // 部门负责人审核
+    var FLOW_CHIEF_EDITOR_TRIAL = 'brailleChiefEditorTrial';	// 总编辑/副总编辑审批意见
+    var FLOW_REPORT = 'brailleTopicReport';	                    // 选题上报信息
+    var FLOW_CONFERENCE = 'brailleTopicConference';	            // 选题大会信息
+    var FLOW_PEND = 'braillePend';	                            // 待定确认(盲文)
+
+
+    var Module = Base.extend(new function () {
+        var that;
+        var selectedTaskNextUserIds = "";
+
+        // 查询任务树中未完成任务数的接口
+        // this.untreatedTaskAction = 'topic/unreadTopicCount.action';
+        // // 选题任务列表接口
+        // this.taskListActoin = 'topic/topicList.action';
+
+        this.deployKey = 'BrailleTopic';
+
+        // 与我相关
+        this.searchTaskAbout = '1';
+        // 其他搜索选项
+        this.searchParams = {};
+
+        /**
+         * 树节点变更事件
+         */
+        this.onTreeNodeChanged = function () {
+            var date = new Date();
+            this.$('#btnTopicAdd').attr('disabled', 'disabled');
+            if (this.currentYear === date.getFullYear()) {
+                if (!this.currentMonth || this.currentMonth === (date.getMonth() + 1)) {
+                    this.$('#btnTopicAdd').removeAttr('disabled');
+                }
+            }
+        };
+
+        /**
+         * 选择行变更事件回调
+         */
+        this.onSelectRowChanged = function () {
+            // 暂时啥也不做
+        };
+
+        /**
+         * 勾选行变更事件
+         */
+        this.onCheckRowChanged = function () {
+            // 默认全部禁用
+            // brailleTopicDeclare	选题申报
+            // brailleEditorialTrial	部门负责人审核
+            // brailleChiefEditorTrial	总编辑/副总编辑审批意见
+            // brailleTopicReport	选题上报信息
+            // brailleTopicConference	选题大会信息
+            // braillePend	待定确认(盲文)
+
+            this.$('#btnTopicDelete').attr('disabled', 'disabled');// 删除
+            this.$('#btnTopicModify').attr('disabled', 'disabled');// 修改
+            this.$('#btnTopicView').attr('disabled', 'disabled');// 查看
+            this.$('#btnTopicSubmit').attr('disabled', 'disabled');// 申报
+            this.$('#btnTopicSubmitBatch').attr('disabled', 'disabled');// 批量申报
+            this.$('#btnTopicHandle').attr('disabled', 'disabled');// 处理
+            this.$('#btnTopicBatch').attr('disabled', 'disabled');// 批量处理
+
+            var count = 0, flowId = null, users = null, topicIds = [], taskIds = [];
+            var allDeclared = true, allEditor = true, allChief = true, allPend = true, allMe = true,
+                allUnfinished = true;
+            var userId = util.getUserInfo().userId;
+            selectedTaskNextUserIds = "";
+            that.$('#workListTBody').find('tr[checked]').each(function () {
+                flowId = $(this).attr('data-flowId');
+                users = $(this).attr('data-users') || '';
+                selectedTaskNextUserIds += (selectedTaskNextUserIds.length > 0 ? "-" : "") + $(this).attr("data-taskNextUserId");
+                users = users ? users.split(',') : [];
+                // 包含非选题上报状态
+                if (flowId === FLOW_DECLARE) {
+                    allDeclared = false;
+                }
+                // 包含非部门负责人审核状态
+                if (flowId !== FLOW_EDITOR_TRIAL) {
+                    allEditor = false;
+                }
+                // 包含非主编审核状态
+                if (flowId !== FLOW_CHIEF_EDITOR_TRIAL) {
+                    allChief = false;
+                }
+                // 包含非待定确认状态
+                if (flowId !== FLOW_PEND) {
+                    allPend = false;
+                }
+                // 待我处理
+                if (users.indexOf(userId) < 0) {
+                    allMe = false;
+                }
+                // 任务状态未完成
+                if ($(this).attr('data-taskState') === '2') {
+                    allUnfinished = false;
+                }
+
+                topicIds.push($(this).attr('data-topicId'));
+                taskIds.push($(this).attr('data-taskId'));
+                count++;
+            });
+
+            this.currentTopicId = topicIds.join(',');
+            this.currentTaskId = taskIds.join(',');
+
+            // 没有数据时，没有符合指定条件的数据的提示也当作child了，需要区分一下
+            if (flowId === undefined) {
+                return;
+            }
+            // 只选择了一条，查看可用
+            if (count === 1) {
+                // 查看
+                if (allDeclared) {
+                    this.$('#btnTopicView').removeAttr('disabled');
+                }
+                // 处理按钮可用
+                if ((allEditor || allChief || allPend) && allMe && allUnfinished && allDeclared) {
+                    this.$('#btnTopicHandle').removeAttr('disabled');
+                }
+                // 只有新增未提交的选题可以删除、修改、申报
+                if (!allDeclared && allMe && allUnfinished) {
+                    this.$('#btnTopicModify, #btnTopicSubmit,#btnTopicDelete').removeAttr('disabled');
+                }
+            }
+            // 选择一条或多条
+            if (count > 1) {
+                // 批量申报按钮
+                if (!allDeclared) {
+                    this.$('#btnTopicSubmitBatch').removeAttr('disabled');
+                }
+                // 全部是部门负责人审核
+                if (allEditor && allMe && allUnfinished) {
+                    this.$('#btnTopicBatch').removeAttr('disabled');
+                }
+            }
+        };
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+            // 新建选题
+            that.$container.on('click', '#btnTopicAdd', function () {
+                // 选题新建步骤
+                that.openPage('public/workflow/workflow-dialog', {
+                    topicId: '',
+                    taskId: ''
+                });
+            });
+
+            // 申报、主管、主编、待定
+            that.$container.on('click', '#btnTopicModify,#btnTopicSubmit,#btnTopicHandle,#btnTopicBatch', function () {
+                that.openPage('public/workflow/workflow-dialog', {
+                    topicId: that.currentTopicId,
+                    taskId: that.currentTaskId,
+                    deployId: that.deployKey
+                });
+            });
+
+            // 批量申报
+            that.$container.on('click', '#btnTopicSubmitBatch', function () {
+                util.showConfirm('确定要提交么？', function () {
+                    // 参数
+                    var params = {
+                        operationType: "2",
+                        topicId: that.currentTopicId,
+                        topicIds: that.currentTopicId,
+                        taskId: that.currentTaskId,
+                        taskIds: that.currentTaskId,
+                        deployId: that.deployKey,
+                        currentFlowId: FLOW_DECLARE,
+                        currentFlowName: "选题申报",
+                        flowId: "brailleEditorialTrial",
+                        flowName: "部门负责人审核",
+                        taskNextUserId: selectedTaskNextUserIds
+                    };
+                    // 下发请求
+                    util.showLoading('正在提交数据...');
+                    util.sendRequest({
+                        action: "topic/batchSubmitTopic.action",
+                        data: params,
+                        success: function (resp) {
+                            util.hideLoading();
+                            if (resp.code === 0) {
+                                util.showAlert('操作成功！', function () {
+                                    that.searchUntreatedTask();
+                                });
+                            } else {
+                                console.log(resp);
+                                util.showAlert(resp.message || '操作失败，请稍后重试！');
+                            }
+                        },
+                        error: function (xhr) {
+                            util.hideLoading();
+                            console.log(xhr);
+                            util.showAlert('操作失败，请稍后重试！');
+                        }
+                    });
+                });
+            });
+
+            // 查看
+            that.$container.on('click', '#btnTopicView', function () {
+                that.openPage('public/workflow/workflow-dialog', {
+                    topicId: that.currentTopicId,
+                    taskId: that.currentTaskId,
+                    deployId: that.deployKey,
+                    isView: true
+                });
+            });
+
+            // 删除
+            that.$container.on('click', '#btnTopicDelete', function () {
+                util.showConfirm('确定要删除所选的选题吗？', function () {
+                    // 删除选题
+                    util.showLoading();
+                    util.sendRequest({
+                        action: 'topic/batchRemoveTopic.action',
+                        data: {
+                            topicIds: that.currentTopicId
+                        },
+                        success: function (resp) {
+                            util.hideLoading();
+                            if (resp && resp.code === 0) {
+                                util.showAlert('删除选题成功！', function () {
+                                    that.searchUntreatedTask();
+                                });
+                            } else {
+                                console.log(resp);
+                                util.showAlert(resp.message || '删除选题出错，请稍后重试！');
+                            }
+                        },
+                        error: function (xhr) {
+                            // XHR错误
+                            util.hideLoading();
+                            console.log(xhr);
+                            util.showAlert('删除选题出错，请稍后重试！');
+                        }
+                    });
+                });
+            });
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+            // that.openPage('public/workflow/workflow-dialog', {
+            //     debug: true,
+            //     flowTemplate: 'topic-manage/topic-manage-hold',
+            //     isEdit: true
+            // });
+
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            // that.initTemplate(tpl, {});
+
+            // 初始化数据前需要设置列表模板
+            this.listTpl = topicManageListTpl;
+
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+
+            // TODO: 测试
+            // that.openPage('public/workflow/workflow-dialog', {});
+            // that.openPage('public/file/file-upload', {});
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function () {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+
+    module.exports = Module;
+});

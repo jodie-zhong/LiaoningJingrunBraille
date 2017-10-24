@@ -1,0 +1,99 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+    var util = require('../../../../../common/util.js');
+    var that;
+
+    /**
+     * Workflow Item
+     */
+    module.exports = ItemBase.extend({
+        // 保存/提交接口
+        saveAction: 'tpr/saveOrSubmitTaskAllocation.action',
+        // 批量保存/提交接口
+        batchSaveAction: 'bookTopic/batchReview.action',
+        // 查询接口
+        detailAction: 'tpr/searchBookTrpDetail.action',
+
+        /**
+         * 添加行
+         */
+        addTableRow: function () {
+            // 添加行
+            var tb = that.$("#trueOrFalseTb");
+            tb.append(
+                "<tr>" +
+                "   <td>" + (tb.children().length + 1) + "</td>" +
+                "   <td>" +
+                "      <input type='text' class='form-control' name='pageNum' placeholder='页码' maxlength='10'/>" +
+                "   </td>" +
+                "   <td>" +
+                "      <input type='text' class='form-control' name='rowNum' placeholder='行' maxlength='10'/>" +
+                "   </td>" +
+                "   <td>" +
+                "       <input type='text' class='form-control' name='wrongInfo' placeholder='内容' maxlength='128'/>" +
+                "   </td>" +
+                "   <td>" +
+                "      <button class='removeTableRow btn btn-xs btn-danger'>" +
+                "          <i class='fa fa-minus box'></i>" +
+                "      </button>" +
+                "   </td>" +
+                "</tr>"
+            );
+            that.recalculateDiff();
+        },
+
+        /**
+         * 删除行
+         */
+        removeTableRow: function () {
+            that.$(this).parent().parent().remove();
+            that.recalculateDiff();
+        },
+
+        /**
+         * 重新计算差错
+         */
+        recalculateDiff: function () {
+            var rowCount = that.$("#trueOrFalseTb").children().length;
+            that.$("input[name='diffCount']").val(rowCount);
+            that.$("input[name='diffRate']").val(rowCount / that.data.info.totalCount);
+        },
+
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+            // 添加行
+            this.$container.on('click', '.addTableRow', this.addTableRow);
+            // 删除行
+            this.$container.on('click', '.removeTableRow', this.removeTableRow);
+        },
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+            that = this;
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function (container, tpl) {
+            this._super(container, tpl);
+        },
+
+        /**
+         * 渲染页面
+         */
+        render: function () {
+            this._super();
+            this.initPageEvent();
+            this.initPageData();
+        }
+    });
+});

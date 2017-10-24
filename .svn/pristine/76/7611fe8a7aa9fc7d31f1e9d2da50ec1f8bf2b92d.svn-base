@@ -1,0 +1,262 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+    var util = require('../../../../../common/util.js');
+
+    /**
+     * Workflow Item
+     */
+    var Item = ItemBase.extend({
+        // 保存/提交接口
+        saveAction: 'cipApply/saveOrSubmitApply.action',
+
+        // 查询接口
+        detailAction: 'cipApply/searchApplyDetail.action',
+
+        levelTwo: {},
+        /**
+         * 初始化图书种类
+         */
+        searchBookType: function() {
+            util.sendRequest({
+                data: {
+                    'code': '0012'
+                },
+                action: 'common/searchCodeValue.action',
+                success: function(resp) {
+                    util.hideLoading();
+                    if(resp.code === 0) {
+                        var $typeOneElement = this.$('select[data-type = "machineBook"]'),
+                            $dom;
+                        for(var i in resp.data) {
+                            if(resp.data.hasOwnProperty(i)) {
+                                $dom = $('<option></option>');
+                                $dom.text(resp.data[i]);
+                                $dom.val(i);
+                                $typeOneElement.append($dom);
+                            }
+                        }
+                    } else {
+                        console.log(resp);
+                        util.showAlert(resp.message || '查询图书种类出错，请稍后重试！');
+                    }
+                }.bind(this),
+                error: function(xhr) {
+
+                }
+            });
+        },
+
+        /**
+         * 初始化封面工艺(特殊?)
+         */
+        searchCoverProcess: function() {
+            util.sendRequest({
+                data: {
+                    'code': '0013'
+                },
+                action: 'common/searchCodeValue.action',
+                success: function(resp) {
+                    util.hideLoading();
+                    if(resp.code === 0) {
+                        this.levelTwo = resp.data.twoLevel;
+                        var levelOne = resp.data.oneLevel;
+                        var $typeOneElement = this.$('#bookTopicOne'), $dom;
+                        for (var i in levelOne) {
+                            if (levelOne.hasOwnProperty(i)) {
+                                $dom = $('<option></option>');
+                                $dom.text(levelOne[i]);
+                                $dom.val(i);
+                                if (i === that.data.info.bookTopicOneKind) {
+                                    $dom.attr('selected', 'selected');
+                                }
+                                $typeOneElement.append($dom);
+                            }
+                        }
+                        this.buildLevel2Type();
+                    } else {
+                        console.log(resp);
+                        util.showAlert(resp.message || '查询封面工艺出错，请稍后重试！');
+                    }
+                }.bind(this),
+                error: function(xhr) {
+
+                }
+            });
+        },
+
+        /**
+         * 生成选题类型子类
+         */
+        buildLevel2Type: function () {
+            // 先清空二级分类
+            var $typeTwoElement = this.$('#coverProcessTwo');
+            $typeTwoElement.empty();
+            var $dom;
+            // 当前选择的一级分类
+            var levelOne = this.$('#coverProcessOne').val();
+            if (this.levelTwo[levelOne]) {
+                // 重新添加二级分类
+                for (var i in this.levelTwo[levelOne]) {
+                    if (this.levelTwo[levelOne].hasOwnProperty(i)) {
+                        $dom = $('<option></option>');
+                        $dom.text(this.levelTwo[levelOne][i]);
+                        $dom.val(i);
+                        if (i === that.data.info.bookTopicTwoKind) {
+                            $dom.attr('selected', 'selected');
+                        }
+                        $typeTwoElement.append($dom);
+                    }
+                }
+            }
+        },
+        /**
+         * 初始化封面用纸种类
+         */
+        searchCoverPaper: function() {
+            util.sendRequest({
+                data: {
+                    'code': '0014'
+                },
+                action: 'common/searchCodeValue.action',
+                success: function(resp) {
+                    util.hideLoading();
+                    if(resp.code === 0) {
+                        var $typeOneElement = this.$('select[data-type = "machinePaper"]'),
+                            $dom;
+                        for(var i in resp.data) {
+                            if(resp.data.hasOwnProperty(i)) {
+                                $dom = $('<option></option>');
+                                $dom.text(resp.data[i]);
+                                $dom.val(i);
+                                $typeOneElement.append($dom);
+                            }
+                        }
+                    } else {
+                        console.log(resp);
+                        util.showAlert(resp.message || '查询封面用纸出错，请稍后重试！');
+                    }
+                }.bind(this),
+                error: function(xhr) {
+
+                }
+            });
+        },
+
+        /**
+         * 初始化正文用纸种类
+         */
+        searchPaperType: function() {
+            util.sendRequest({
+                data: {
+                    'code': '0015'
+                },
+                action: 'common/searchCodeValue.action',
+                success: function(resp) {
+                    util.hideLoading();
+                    if(resp.code === 0) {
+                        var $typeOneElement = this.$('select[data-type = "machineMain"]'),
+                            $dom;
+                        for(var i in resp.data) {
+                            if(resp.data.hasOwnProperty(i)) {
+                                $dom = $('<option></option>');
+                                $dom.text(resp.data[i]);
+                                $dom.val(i);
+                                $typeOneElement.append($dom);
+                            }
+                        }
+                    } else {
+                        console.log(resp);
+                        util.showAlert(resp.message || '查询正文用纸出错，请稍后重试！');
+                    }
+                }.bind(this),
+                error: function(xhr) {
+
+                }
+            });
+        },
+
+        /**
+         * 初始化装订方式
+         */
+        searchBindingWay: function() {
+            util.sendRequest({
+                data: {
+                    'code': '0016'
+                },
+                action: 'common/searchCodeValue.action',
+                success: function(resp) {
+                    util.hideLoading();
+                    if(resp.code === 0) {
+                        var $typeOneElement = this.$('select[data-type = "machineBinding"]'),
+                            $dom;
+                        for(var i in resp.data) {
+                            if(resp.data.hasOwnProperty(i)) {
+                                $dom = $('<option></option>');
+                                $dom.text(resp.data[i]);
+                                $dom.val(i);
+                                $typeOneElement.append($dom);
+                            }
+                        }
+                    } else {
+                        console.log(resp);
+                        util.showAlert(resp.message || '查询装订方式出错，请稍后重试！');
+                    }
+                }.bind(this),
+                error: function(xhr) {
+
+                }
+            });
+        },
+
+
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+            var that = this;
+// 选题类型子类
+            this.$container.on('change', '#coverProcessOne', this.buildLevel2Type.bind(this));
+
+        },
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+            // this.onHandleChange();
+            this.searchBookType();
+            this.searchCoverProcess();
+            this.searchCoverPaper();
+            this.searchPaperType();
+            this.searchBindingWay();
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function (container, tpl) {
+            this._super(container, tpl);
+
+        },
+        /**
+         * 渲染页面
+         */
+        render: function () {
+            this._super();
+
+            this.initPageEvent();
+
+            this.initPageData();
+        }
+
+    });
+
+
+    module.exports = Item;
+
+});
+

@@ -1,0 +1,386 @@
+define(function(require, exports, module) {
+	"use strict";
+
+	var util = require('../../../common/util');
+	var PageBase = require('../../../common/base-dialog');
+	var listTpl = require('./select-users-list.tpl');
+
+	var Module = PageBase.extend(new function() {
+		var that;
+		var searchParams = {};
+		var currentPage = 1;
+		var searchDepartId = '';
+		var ids = [],names = [];
+		var departId = '', rodeId = '', excludedUserId = '';
+
+		/**
+		 * 搜索部门列表
+		 */
+		function searchDepartmentList() {
+			var params = {
+				searchDepartmentName: ""
+			};
+			util.sendRequest({
+				type: 'POST',
+				action: 'department/listDepartmentNoPage.action',
+				data: params,
+				success: function(resp) {
+					if(resp.code === 0) {
+						var $select = that.$('#selUserOptionDept');
+						var $option;
+						if (departId) {
+							for (var i = 0; i < resp.data.length; i++) {
+								if (departId.indexOf(resp.data[i].departmentId) >= 0 ) {
+									$option = $('<option></option>');
+									$option.text(resp.data[i].departmentName);
+									$option.attr('value', resp.data[i].departmentId);
+									$select.append($option);
+								}
+							}
+						} else{
+							$option = $('<option></option>');
+							$option.text('全部');
+							$option.attr('value', '');
+							$select.append($option);
+							for(var i = 0; i < resp.data.length; i++) {
+								$option = $('<option></option>');
+								$option.text(resp.data[i].departmentName);
+								$option.attr('value', resp.data[i].departmentId);
+								$select.append($option);
+							
+							}	
+						}
+					} else {
+						console.log(resp);
+					}
+				},
+				error: function(xhr) {
+					// XHR错误
+					console.log(xhr);
+				}
+			});
+		}
+
+		/**
+		 * 搜索角色列表
+		 */
+		function searchRoleList() {
+			var params = {};
+			params.searchDepartmentId = searchDepartId;
+			util.sendRequest({
+				type: 'POST',
+				action: 'role/listRoleNoPage.action',
+				data: params,
+				success: function(resp) {
+					if(resp.code === 0) {
+						var $select = that.$('#selUserOptionRole');
+						var $option;
+						if (rodeId) {
+							for (var i = 0; i < resp.data.length; i++) {
+								if (rodeId.indexOf(resp.data[i].roleId) >= 0 ) {
+									$option = $('<option></option>');
+									$option.text(resp.data[i].roleName);
+									$option.attr('value', resp.data[i].roleId);
+									$select.append($option);
+								}
+							}
+						} else{
+							$option = $('<option></option>');
+							$option.text('全部');
+							$option.attr('value', '');
+							$select.append($option);
+							for(var i = 0; i < resp.data.length; i++) {
+								$option = $('<option></option>');
+								$option.text(resp.data[i].roleName);
+								$option.attr('value', resp.data[i].roleId);
+								$select.append($option);
+							}
+						}
+					} else {
+						console.log(resp);
+					}
+				},
+				error: function(xhr) {
+					// XHR错误
+					console.log(xhr);
+				}
+			});
+		}
+
+		/**
+		 * 搜索人员列表
+		 */
+		function searchUserList() {
+			// 生成搜索条件
+			var params = $.extend({}, searchParams);
+			params.excludedUserId = excludedUserId;
+			params.page = currentPage;
+			params.searchIsUse = '1';
+			util.showLoading('正在查询人员列表……');
+			util.sendRequest({
+				type: 'POST',
+				data: params,
+				action: 'user/listUser.action',
+				success: function(resp) {
+					util.hideLoading();
+					if(resp.code === 0) {
+						that.$('#selectUsersTable').html(util.template(listTpl, {
+							list: resp.data.records,
+							ids: ids
+						}));
+						// 判断全选状态
+						if(that.$('tbody').find('i[data-action="check"]:not(.fa-check-square-o)').length === 0) {
+							that.$('table').find('thead i[data-action="check"]').removeClass('fa-square-o').addClass('fa-check-square-o');
+						} else {
+							that.$('table').find('thead i[data-action="check"]').removeClass('fa-check-square-o').addClass('fa-square-o');
+						}
+						// 分页数据
+						that.$('#userManagePaging').html(that.buildPagination(resp.data.pageNow, resp.data.pageCount));
+						// 查看是否为全选
+						searchCheck();
+					} else {
+						util.showAlert(resp.message || '查询人员列表出错，请稍后重试！');
+					}
+				},
+				error: function(xhr) {
+					// XHR错误
+					util.hideLoading();
+					console.log(xhr);
+					util.showAlert('查询人员列表出错，请稍后重试！');
+				}
+			});
+		}
+
+		/**
+		 * 跳转页面
+		 */
+		function jumpPage() {
+			var $el = $(this);
+			var page = $el.attr('data-page');
+			if(page) {
+				// 修改页面后重新刷新页面数据
+				currentPage = page;
+				searchUserList();
+			}
+		}
+
+		/**
+		 * 查看是否为全选
+		 * */
+		function searchCheck() {
+			var trL;
+			trL = that.$('#selectUsersTable').find('i[data-action="check"]:not(.fa-check-square-o)').length;
+			if(trL === 0) {
+				that.$('th[data-type="check"]').find('i[data-action="check"]').removeClass('fa-square-o').addClass('fa-check-square-o');
+			}
+		}
+
+		/**
+		 * 从勾选列表中删除部门
+		 */
+		function delDepartsCheck($ids) {
+			var delid = [],
+				delname = [];
+			delid.push($ids.attr('data-id'));
+			delname.push($ids.attr('data-name'));
+			ids = ids.filter(function(e) {return delid.indexOf(e) < 0;});
+			names = names.filter(function(e) {return delname.indexOf(e) < 0;});
+			console.log(ids);
+		}
+
+		/**
+		 * 添加部门id到勾选列表中
+		 */
+		function addDepartsCheck($ids) {
+			ids.push($ids.attr('data-id'));
+			names.push($ids.attr('data-name'));
+			console.log(ids);
+		}
+		
+		/**
+		 * 全部添加
+		 */
+		function allAddCheck() {
+			var $row;
+			that.$('#selectUsersTable tr').each(function() {
+				$row = $(this);
+				if($row.find('i[data-action="check"]').hasClass('fa-check-square-o')) {
+					ids.push($row.attr('data-id'));
+					names.push($row.attr('data-name'));
+				}
+			});
+			console.log(ids);
+		}
+
+		/**
+		 * 全部删除
+		 */
+		function allDelCheck() {
+			var $row;
+			var delid = [],
+				delname = [];
+			that.$('#selectUsersTable tr').each(function() {
+				$row = $(this);
+				if($row.find('i[data-action="check"]').hasClass('fa-square-o')) {
+					delid.push($row.attr('data-id'));
+					delname.push($row.attr('data-name'));
+				}
+			});
+			ids = ids.filter(function(e) {
+				return delid.indexOf(e) < 0;
+			});
+			names = names.filter(function(e) {
+				return delname.indexOf(e) < 0;
+			});
+			console.log(delid);
+			console.log(ids);
+		}
+		
+		/**
+		 * 确定选择部门
+		 */
+		function selectUserCheck() {
+			// 返回给前一个页面
+			var data = {
+				id: ids.join(','),
+				name: names.join(',')
+			};
+			that.close(data);
+		}
+
+		/**
+		 * 初始化页面事件
+		 */
+		function initPageEvent() {
+			// 分页
+			that.$container.on('click', '#userManagePaging a', jumpPage);
+			// 选择按钮
+			that.$container.on('click', '#btnUserCheckSelect', selectUserCheck);
+
+			// 列头全选按钮
+			that.$container.on('click', '#selectUsersTableContainer thead i[data-action="check"]', function() {
+				var $el = $(this);
+				if($el.hasClass('fa-check-square-o')) {
+					// 取消全选
+					$el.removeClass('fa-check-square-o').addClass('fa-square-o');
+					$el.parents('table').find('tbody tr i[data-action="check"]').removeClass('fa-check-square-o').addClass('fa-square-o');
+					allDelCheck();
+				} else {
+					// 全选
+					$el.removeClass('fa-square-o').addClass('fa-check-square-o');
+					$el.parents('table').find('tbody tr i[data-action="check"]').removeClass('fa-square-o').addClass('fa-check-square-o');
+					allAddCheck();
+				}
+			});
+
+			// 勾选行
+			that.$container.on('click', '#selectUsersTableContainer tbody tr', function() {
+				var $el = $(this);
+				// 设置选择状态
+				if($el.find('i[data-action="check"]').hasClass('fa-check-square-o')) {
+					$el.find('i[data-action="check"]').removeClass('fa-check-square-o').addClass('fa-square-o');
+					// 从勾选列表中删除部门id
+					delDepartsCheck($(this));
+				} else {
+					$el.find('i[data-action="check"]').removeClass('fa-square-o').addClass('fa-check-square-o');
+					// 添加部门id到勾选列表中
+					addDepartsCheck($(this));
+				}
+
+				// 判断全选状态
+				if($el.parents('tbody').find('i[data-action="check"]:not(.fa-check-square-o)').length === 0) {
+					$el.parents('table').find('thead i[data-action="check"]').removeClass('fa-square-o').addClass('fa-check-square-o');
+				} else {
+					$el.parents('table').find('thead i[data-action="check"]').removeClass('fa-check-square-o').addClass('fa-square-o');
+				}
+			});
+			// 搜索按钮
+			that.$container.on('click', '#btnSearchUser', function() {
+				that.$('#selectUsersTableContainer thead i[data-action="check"]').removeClass('fa-check-square-o').addClass('fa-square-o');
+				searchParams = that.buildSearchParams($('#formSearchUser input[data-search],select[data-search]'));
+				currentPage = 1;
+				searchUserList();
+			});
+			// 根据部门搜索角色
+			that.$container.on('change', '#selUserOptionDept', function() {
+				that.$('#selUserOptionRole option').remove();
+				that.$('#selUserOptionRole').append('<option value="">全部</option>');
+				searchDepartId = that.$('#selUserOptionDept').val();
+				searchRoleList();
+			});
+		}
+
+		/**
+		 * 初始化页面数据
+		 */
+		function initPageData() {
+			// 搜索默认的人员列表
+			searchUserList();
+
+			// 搜索部门列表
+			searchDepartmentList();
+			searchRoleList();
+		}
+
+		/**
+		 * 初始化时被调用
+		 */
+		this.onInit = function($el, tpl, data, indexRef) {
+			this._super($el, tpl, data, indexRef);
+			that = this;
+			that.initTemplate(tpl, {});
+			// 初始化变量
+			searchParams = $.extend({}, data);
+			currentPage = 1;
+
+			// 如果传了部门和角色，控制搜索条件
+			if(!util.showAll && (data.deptIds || data.roleIds)) {
+                searchParams.searchDepartmentId = data.deptIds;
+                searchParams.searchRoleId = data.roleIds;
+                departId = data.deptIds;
+                rodeId = data.roleIds;
+			}
+			// 如果传了排除人员id
+			if(data.excludedUserId) {
+                searchParams.excludedUserId = data.excludedUserId;
+                excludedUserId = data.excludedUserId;
+			}
+
+			// 获取已经选择的ID
+			ids = data.id ? data.id.split(',') : [];
+			names = data.name ? data.name.split(',') : [];
+
+			// 初始化页面事件
+			initPageEvent();
+
+			// 初始化页面数据
+			initPageData();
+		};
+
+		/**
+		 * 页面返回事件
+		 * @param data
+		 */
+		this.onBack = function(data) {
+			this._super(data);
+
+		};
+
+		/**
+		 * 窗口缩放事件
+		 */
+		this.onResize = function() {
+			this._super();
+		};
+
+		/**
+		 * 页面销毁
+		 */
+		this.onDestroy = function() {
+			this._super();
+		};
+
+	}());
+
+	module.exports = Module;
+});

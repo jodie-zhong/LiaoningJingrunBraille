@@ -1,0 +1,260 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+    var util = require('../../../../../common/util.js');
+    var that;
+
+    /**
+     * Workflow Item
+     */
+    var Item = ItemBase.extend({
+        // 保存/提交接口
+        saveAction: 'topic/saveOrSubmitTopic.action',
+        // 查询接口
+        detailAction: 'topic/detailTopic.action',
+
+        levelTwo: {},
+
+        /**
+         * 初始化图书类别
+         */
+        searchBookType: function () {
+            util.sendRequest({
+                data: {},
+                action: 'topic/bookType.action',
+                success: function (resp) {
+                    util.hideLoading();
+                    if (resp.code === 0) {
+                        this.levelTwo = resp.data.twoLevel;
+                        var levelOne = resp.data.oneLevel;
+                        var $typeOneElement = this.$('#bookTopicOne'), $dom;
+                        for (var i in levelOne) {
+                            if (levelOne.hasOwnProperty(i)) {
+                                $dom = $('<option></option>');
+                                $dom.text(levelOne[i]);
+                                $dom.val(i);
+                                if (i === that.data.info.topicDetailOneKind) {
+                                    $dom.attr('selected', 'selected');
+                                }
+                                $typeOneElement.append($dom);
+                            }
+                        }
+                        this.buildLevel2Type();
+                    } else {
+                        console.log(resp);
+                        util.showAlert(resp.message || '查询图书分类出错，请稍后重试！');
+                    }
+                }.bind(this),
+                error: function (xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('查询图书分类出错，请稍后重试！');
+                }
+            });
+        },
+
+        /**
+         * 选题查重
+         */
+        searchSimilarName: function () {
+            var topicName = this.$('input[name="topicDetailName"]').val();
+            if (!topicName) {
+                util.showAlert('请输入选题名称！');
+                return;
+            }
+
+            util.showLoading();
+            util.sendRequest({
+                action: 'topic/searchSimilarName.action',
+                data: {
+                    topicDetailName: topicName
+                },
+                success: function (resp) {
+                    util.hideLoading();
+                    if (resp.code === 0) {
+                        // 业务执行成功
+                        if (resp.data && resp.data.length === 0) {
+                            util.showAlert('没有重复的选题！');
+                        } else {
+                            var list = resp.data;
+                            var html = '';
+                            for (var i = 0; i < list.length; i++) {
+                                html += '<p>《' + util.htmlEncode(list[i].topicDetailName) + '》</p>';
+                            }
+                            util.showAlert(html, null, '相似选题');
+                        }
+                    } else {
+                        // 业务执行失败
+                        util.showAlert(resp.message || '选题查重出错，请稍后重试！');
+                    }
+                },
+                error: function (xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('选题查重出错，请稍后重试！');
+                }
+            });
+        },
+
+        /**
+         * 生成选题类型子类
+         */
+        buildLevel2Type: function () {
+            // 先清空二级分类
+            var $typeTwoElement = this.$('#bookTopicTwo');
+            $typeTwoElement.empty();
+            var $dom;
+            // 当前选择的一级分类
+            var levelOne = this.$('#bookTopicOne').val();
+            if (this.levelTwo[levelOne]) {
+                // 重新添加二级分类
+                for (var i in this.levelTwo[levelOne]) {
+                    if (this.levelTwo[levelOne].hasOwnProperty(i)) {
+                        $dom = $('<option></option>');
+                        $dom.text(this.levelTwo[levelOne][i]);
+                        $dom.val(i);
+                        if (i === that.data.info.topicDetailTwoKind) {
+                            $dom.attr('selected', 'selected');
+                        }
+                        $typeTwoElement.append($dom);
+                    }
+                }
+            }
+        },
+
+        /**
+         * 确认结果变更
+         */
+        onHandleChange: function () {
+            var handle = this.$('input[name="handleState"]:checked').val();
+            this.$('div[data-area="nextFlow"]').hide();
+            this.$('div[data-area="edit"]').hide();
+            if (handle === '2') {
+                // 修改再上报
+                this.$('div[data-area="edit"]').show();
+                this.$('div[data-flow="brailleEditorialTrial"]').show();
+            } else if (handle === '1') {
+                this.$('div[data-flow="abandoned"]').show();
+            }
+        },
+
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+            that = this;
+            // 选题查重
+            this.$container.on('click', '#btnTopicSimilar', this.searchSimilarName.bind(this));
+
+            // 选题类型子类
+            this.$container.on('change', '#bookTopicOne', this.buildLevel2Type.bind(this));
+
+            // 处理状态变更
+            this.$container.on('change', 'input[name="handleState"]', this.onHandleChange.bind(this));
+
+            // 盲文读物选中状态改变
+            this.$container.on('change', '.topicType1', this.checkTopicType1.bind(this));
+        },
+
+        /**
+         * 盲文读物选中状态改变
+         */
+        checkTopicType1: function () {
+            if (this.$(".topicType1").prop("checked")) {
+                this.$(".oldBookNormal").hide();
+                this.$(".oldBookMust").show();
+            } else {
+                this.$(".oldBookNormal").show();
+                this.$(".oldBookMust").hide();
+            }
+        },
+
+        /**
+         * 生成参数
+         */
+        getFormData: function () {
+            var params = this._super();
+            if (this.$('input[name="handleState"]:checked').val() !== '2') {
+                params.topicDetailName = this.data.info.topicDetailName;
+                params.topicDetailSeriesName = this.data.info.topicDetailSeriesName;
+                params.topicDetailType = this.data.info.topicDetailType;
+                params.topicDetailRecommendType = this.data.info.topicDetailRecommendType;
+                params.topicDetailOneKind = this.data.info.topicDetailOneKind;
+                params.topicDetailTwoKind = this.data.info.topicDetailTwoKind;
+                params.topicDetailOldAuthor = this.data.info.topicDetailOldAuthor;
+                params.topicDetailWorkWay = this.data.info.topicDetailWorkWay;
+                params.topicDetailAuthorEducation = this.data.info.topicDetailAuthorEducation;
+                params.topicDetailWords = this.data.info.topicDetailWords;
+                params.topicDetailAuthorTitles = this.data.info.topicDetailAuthorTitles;
+                params.topicDetailSubmitDatetime = this.data.info.topicDetailSubmitDatetime;
+                params.topicDetailAuthorSpeciality = this.data.info.topicDetailAuthorSpeciality;
+                params.topicDetailAuthorResult = this.data.info.topicDetailAuthorResult;
+                params.topicDetailAuthorContactWay = this.data.info.topicDetailAuthorContactWay;
+                params.topicDetailOldName = this.data.info.topicDetailOldName;
+                params.topicDetailOldEdition = this.data.info.topicDetailOldEdition;
+                params.topicDetailOldPublishingHouse = this.data.info.topicDetailOldPublishingHouse;
+                params.topicDetailOldPublicationDate = this.data.info.topicDetailOldPublicationDate;
+                params.topicDetailBackground = this.data.info.topicDetailBackground;
+                params.topicDetailSellingPoints = this.data.info.topicDetailSellingPoints;
+                params.topicDetailSameBook = this.data.info.topicDetailSameBook;
+            }
+            if (this.$(".topicType1").prop("checked")) {
+                params.topicDetailOldName = params.topicDetailOldNameM;
+                params.topicDetailOldEdition = params.topicDetailOldEditionM;
+                params.topicDetailOldPublishingHouse = params.topicDetailOldPublishingHouseM;
+                params.topicDetailOldPublicationDate = params.topicDetailOldPublicationDateM;
+            } else {
+                params.topicDetailOldName = params.topicDetailOldNameN;
+                params.topicDetailOldEdition = params.topicDetailOldEditionN;
+                params.topicDetailOldPublishingHouse = params.topicDetailOldPublishingHouseN;
+                params.topicDetailOldPublicationDate = params.topicDetailOldPublicationDateN;
+            }
+            return params;
+        },
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+            // 初始化日期组件
+            this.$('input.date-time').datetimepicker({
+                format: 'YYYY-MM-DD',
+                locale: 'zh-cn',
+                sideBySide: true
+            });
+
+            this.searchBookType();
+
+            this.onHandleChange();
+
+            this.checkTopicType1();
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function (container, tpl) {
+            this._super(container, tpl);
+        },
+
+        /**
+         * 渲染页面
+         */
+        render: function () {
+            this._super();
+
+            this.initPageEvent();
+
+            this.initPageData();
+        }
+    });
+
+
+    module.exports = Item;
+
+});

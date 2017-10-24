@@ -1,0 +1,72 @@
+<div class="form-horizontal">
+  <div class="row">
+    <div class="col-xs-8">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">发起人所在部门</label>
+        <div class="col-xs-4">
+          <p class="form-control-static" id="sponsorDept">
+            <%- info.sponsorDept %>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <div class="col-xs-11 col-xs-offset-1">
+          <table class="table table-nowrap table-striped table-hover">
+            <thead>
+            <tr>
+              <th style="width: 50px">序号</th>
+              <th style="width: 150px">图书名称</th>
+              <th style="width: 100px">所需数量</th>
+              <th>发起原因</th>
+            </tr>
+            </thead>
+            <tbody id="selectBookTable">
+            <% for(var i = 0; i < info.bookList.length; i++) { %>
+            <tr>
+              <td><%- (i + 1) %></td>
+              <td title="<%- info.bookList[i].bookName %>"><%- info.bookList[i].bookName %></td>
+              <% if(info.sponsorDept==='典藏借阅部') {%>
+              <td title="<%- info.bookList[i].libraryNeedNum %>">
+                <%- info.bookList[i].libraryNeedNum %>
+              </td>
+              <% }else {%>
+              <td title="<%- info.bookList[i].readersServiceNeedNum %>">
+                <%- info.bookList[i].readersServiceNeedNum %>
+              </td>
+              <% } %>
+              <td title="<%- info.bookList[i].launchReason %>"><%- info.bookList[i].launchReason %></td>
+            </tr>
+            <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">提交人</label>
+        <div class="col-xs-8">
+          <p class="form-control-static">
+            <%- info.submitUserName %>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">提交时间</label>
+        <div class="col-xs-8">
+          <p class="form-control-static">
+            <%- info.submitDatetime %>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

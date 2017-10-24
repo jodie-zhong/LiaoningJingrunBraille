@@ -1,0 +1,35 @@
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>enter</title>
+		<script language="javascript">
+
+			function keypress2() //textarea输入长度处理 
+			{
+				var text1 = document.getElementById("myarea").value;
+				var len; //记录剩余字符串的长度 
+				if(text1.length > 30) //textarea控件不能用maxlength属性，就通过这样显示输入字符数了 
+				{
+					document.getElementById("myarea").value = text1.substr(0, 30);
+					len = 30;
+				} else {
+					len = text1.length;
+				}
+				var show = len + "/300";
+				document.getElementById("pinglun").innerText = show;
+			}
+		</script>
+	</head>
+
+	<body>
+		<center>
+			<div style="text-align:left;">
+				<h3>评论内容:</h3><br>
+				<textarea id="myarea" style="height:100px;width:200px;overflow-x:hidden;overflow-y:hidden" onKeyUp="keypress2()" onblur="keypress2()"></textarea>
+				<font color="gray"><label id="pinglun">0/30</label></font>
+			</div>
+		</center>
+	</body>
+
+</html>

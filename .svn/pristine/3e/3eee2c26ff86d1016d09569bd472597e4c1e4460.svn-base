@@ -1,0 +1,247 @@
+define(function(require, exports, module) {
+	"use strict";
+
+	var util = require('../../../common/util');
+	// 工作流类窗口继承自工作流Base
+	var Base = require('../../other/base/book-base');
+	
+	var FLOW_CNFIRST = 'cnFirst' 							// 初审
+    var FLOW_REWIRTE = 'cnFirstRewirte'    					// 初审改稿
+    var FLOW_FIRSTNUCLEUS = 'cnFirstRedNucleus'    			// 初审核红
+    var FLOW_FIRSTPROOF = 'cnFirstRedOrProof'     			// 初审核红改稿或打样
+    var FLOW_SECONDBUTION = 'cnSecondDistribution'   		// 复审任务分配
+    var FLOW_CNSECOND = 'cnSecond'    						// 复审
+    var FLOW_CNRESECOND = 'cnReSecond'    					// 再次复审
+    var FLOW_SECONDREWRITE = 'cnSecondRewrite'   			// 复审改稿
+    var FLOW_SECONDNUCLEUS = 'cnSecondRedNucleus'  		 	// 复审核红
+    var FLOW_SECONDPROOF = 'cnSecondRedOrProof'   			// 复审核红改稿或打样
+    var FLOW_SECONDOPINION = 'cnSecondOpinionProcessing'    // 复审意见处理
+    var FLOW_FINALBUTION = 'cnFinallDistribution'    		// 终审任务分配
+    var FLOW_CNFINALL = 'cnFinall'   						// 终审
+    var FLOW_CNREFINALL = 'cnReFinall'   					// 再次终审
+    var FLOW_CNFINALREWRITE = 'cnFinallRewrite'   			// 终审改稿
+    var FLOW_FINALNUCLEUS = 'cnFinallRedNucleus'   			// 终审核红
+    var FLOW_FINALPROOF = 'cnFinallRedOrProof'   			// 终审核红改稿或打样
+
+	var Module = Base.extend(new function() {
+		var that;
+
+		this.deployKey = 'CNReviewers';
+		// 与我相关
+		this.searchTaskAbout = '1';
+		// 其他搜索选项
+		this.searchParams = {};
+		
+		this.searchFlowListId = 'searchBookId';
+
+		/**
+		 * 选择行变更事件回调
+		 */
+		this.onSelectRowChanged = function() {
+			// 暂时啥也不做
+		};
+
+		this.onCheckRowChanged = function() {
+			this.$('#btnReviewHandle').attr('disabled', 'disabled'); // 处理
+			this.$('#btnReviewBatch').attr('disabled', 'disabled'); // 批量处理
+			this.$('#btnReviewCheck').attr('disabled', 'disabled'); // 查看
+
+			var count = 0, flowId = null, users = null, bookIds = [], bookTopicIds = [], taskIds = [];
+			var allFirst = true, allFirstRewirte = true, allFirstRedNucleus = true, allFirstRedOrProof = true, allSecondDistribution = true,
+				allSecond = true, allReSecond = true, allSecondRewrite = true, allSecondRedNucleus = true, allSecondRedOrProof = true,
+				allSecondOpinionProcessing = true, allFinallDistribution = true, allFinall = true,
+				allReFinall = true, allFinallRewrite = true, allFinallRedNucleus = true, allFinallRedOrProof = true,
+				allMe = true,
+				allUnfinished = true;
+			var userId = util.getUserInfo().userId;
+			that.$('#workListTBody').find('tr[checked]').each(function() {
+				flowId = $(this).attr('data-flowId');
+				users = $(this).attr('data-users') || '';
+				users = users ? users.split(',') : [];
+				// 包含非初审
+				if(flowId !== FLOW_CNFIRST) {
+					allFirst = false;
+				}
+				// 包含非初审改稿
+				if(flowId !== FLOW_REWIRTE) {
+					allFirstRewirte = false;
+				}
+				// 包含非初审核红
+				if(flowId !== FLOW_FIRSTNUCLEUS) {
+					allFirstRedNucleus = false;
+				}
+				// 包含非初审核红改稿或打样
+				if(flowId !== FLOW_FIRSTPROOF) {
+					allFirstRedOrProof = false;
+				}
+				// 包含非复审任务分配
+				if(flowId !== FLOW_SECONDBUTION) {
+					allSecondDistribution = false;
+				}
+				// 包含非复审
+				if(flowId !== FLOW_CNSECOND) {
+					allSecond = false;
+				}
+				// 包含非再次复审
+				if(flowId !== FLOW_CNRESECOND) {
+					allReSecond = false;
+				}
+				// 包含非复审改稿
+				if(flowId !== FLOW_SECONDREWRITE) {
+					allSecondRewrite = false;
+				}
+				// 包含非复审核红
+				if(flowId !== FLOW_SECONDNUCLEUS) {
+					allSecondRedNucleus = false;
+				}
+				// 包含非复审核红改稿或打样
+				if(flowId !== FLOW_SECONDPROOF) {
+					allSecondRedOrProof = false;
+				}
+				// 包含非复审意见处理
+				if(flowId !== FLOW_SECONDOPINION) {
+					allSecondOpinionProcessing = false;
+				}
+				// 包含非终审任务分配
+				if(flowId !== FLOW_FINALBUTION) {
+					allFinallDistribution = false;
+				}
+				// 包含非终审
+				if(flowId !== FLOW_CNFINALL) {
+					allFinall = false;
+				}
+				// 包含非再次终审
+				if(flowId !== FLOW_CNREFINALL) {
+					allReFinall = false;
+				}
+				// 包含非终审改稿
+				if(flowId !== FLOW_CNFINALREWRITE) {
+					allFinallRewrite = false;
+				}
+				// 包含非终审核红
+				if(flowId !== FLOW_FINALNUCLEUS) {
+					allFinallRedNucleus = false;
+				}
+				// 包含非终审核红改稿或打样
+				if(flowId !== FLOW_FINALPROOF) {
+					allFinallRedOrProof = false;
+				}			
+				// 待我处理
+				if(users.indexOf(userId) < 0) {
+					allMe = false;
+				}
+				// 任务状态未完成
+				if($(this).attr('data-taskState') === '2') {
+					allUnfinished = false;
+				}
+
+				bookIds.push($(this).attr('data-bookId'));
+				bookTopicIds.push($(this).attr('data-bookTopicId'));
+				taskIds.push($(this).attr('data-taskId'));
+				count++;
+			});
+
+			this.currentBookId = bookIds.join(',');
+			this.currentBookTopicId = bookTopicIds.join(',');
+			this.currentTaskId = taskIds.join(',');
+
+			// 只选择了一条，查看可用
+			if(count === 1) {
+				// 查看可用
+				if (!allFirst) {
+					this.$('#btnReviewCheck').removeAttr('disabled');
+				}
+				// 初审、复审、终审、上传电子书稿可用
+				if(allMe && allUnfinished && (allFirst || allFirstRewirte || allFirstRedNucleus || allFirstRedOrProof || allSecondDistribution || allSecond ||allReSecond ||allSecondRewrite ||allSecondRedNucleus ||allSecondRedOrProof ||
+				allSecondOpinionProcessing ||allFinallDistribution ||allFinall || allReFinall || allFinallRewrite || allFinallRedNucleus || allFinallRedOrProof)) {
+					this.$('#btnReviewHandle').removeAttr('disabled');
+				}
+			}
+		};
+
+		/**
+		 * 初始化页面事件
+		 */
+		function initPageEvent() {
+
+//			that.openPage('public/workflow/workflow-dialog', {
+//				debug: true,
+//				flowTemplate: 'chinese-review/chinese-review-first',
+//				isEdit: true
+//			});
+
+			// 部门负责人下发
+			that.$container.on('click', '#btnReviewHandle,#btnReviewBatch', function() {
+				that.openPage('public/workflow/workflow-dialog', {
+					flowInfoAction: 'common/searchBookFlowList.action',
+					bookId: that.currentBookId,
+					bookTopicId: that.currentBookTopicId,
+					taskId: that.currentTaskId,
+					deployId: that.deployKey
+				});
+			});
+
+			// 查看
+			that.$container.on('click', '#btnReviewCheck', function() {
+				that.openPage('public/workflow/workflow-dialog', {
+					flowInfoAction: 'common/searchBookFlowList.action',
+					bookId: that.currentBookId,
+					taskId: that.currentTaskId,
+					deployId: that.deployKey,
+					isView: true
+				});
+			});
+		}
+
+		/**
+		 * 初始化页面数据
+		 */
+		function initPageData() {
+
+		}
+
+		/**
+		 * 初始化时被调用
+		 */
+		this.onInit = function($el, tpl, data, indexRef) {
+			this._super($el, tpl, data, indexRef);
+			that = this;
+			// that.initTemplate(tpl, {});
+
+			//      	初始化数据前需要设置列表模板
+			//          this.listTpl = topicManageListTpl;
+
+			// 初始化页面事件
+			initPageEvent();
+
+			// 初始化页面数据
+			initPageData();
+		};
+
+		/**
+		 * 页面返回事件
+		 * @param data
+		 */
+		this.onBack = function(data) {
+			this._super(data);
+
+		};
+
+		/**
+		 * 窗口缩放事件
+		 */
+		this.onResize = function() {
+			this._super();
+		};
+
+		/**
+		 * 页面销毁
+		 */
+		this.onDestroy = function() {
+			this._super();
+		};
+
+	}());
+
+	module.exports = Module;
+});

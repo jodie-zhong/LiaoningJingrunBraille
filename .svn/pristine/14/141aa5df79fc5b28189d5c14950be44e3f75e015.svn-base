@@ -1,0 +1,94 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+    var util = require('../../../../../common/util.js');
+
+    /**
+     * Workflow Item
+     */
+    var Item = ItemBase.extend({
+        // 保存/提交接口
+        saveAction: 'cover/saveOrSubmitCover.action',
+
+        // 查询接口
+        detailAction: 'cover/searchCoverDetail.action',
+
+
+        getFormData:function () {
+            var $form = this.$('#formEdit');
+            // 先调用父类生成基本的数据结构
+//      	var params = {};
+            var params = this._super();
+            // 处理上传部份数据结构
+            var arr=[];
+            $form.find('tr[data-type="ebook"]').each(function(){
+                var $el=$(this);
+                var obj={};
+                obj.bookFileId=$el.attr('data-bookFileId');
+                obj.bookFileName=$el.find('.bookFileName').html();
+                obj.bookFileAddress=$el.find('button.address').attr('data-address');
+                obj.bookFascicleId=$el.attr('data-bookFascicleId');
+                obj.bookFascicleBookName=$el.find('.bookFileName').html();
+                obj.bookFileType=$el.attr('data-bookFileType');
+                obj.createDatetime=$el.find('.createDatetime').html();
+                obj.createUserId=$el.attr('data-createUserId');
+                arr.push(obj);
+            });
+            params.coverInfoEntities=arr;
+            return params;
+        },
+
+
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+            var that = this;
+            this.$container.on('change','input.bookAddress',function () {
+                var $el=$(this);
+                var $parent=$el.parents('tr');
+                var ads=$el.attr('data-value');
+                var adsName=$el.val();
+                $parent.find('.address').attr('data-address',ads);
+                $parent.find('.bookFileName').html(adsName);
+            })
+        },
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+            this.$container.on('click','.btn-download',function () {
+                var $el=$(this);
+                window.open(util.getServerBase() + 'common/downloadFile.action?path=' + encodeURIComponent($el.attr('data-download')), '_blank');
+            })
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function (container, tpl) {
+            this._super(container, tpl);
+
+        },
+        /**
+         * 渲染页面
+         */
+        render: function () {
+            this._super();
+
+            this.initPageEvent();
+
+            this.initPageData();
+        }
+
+    });
+
+
+    module.exports = Item;
+
+});
+

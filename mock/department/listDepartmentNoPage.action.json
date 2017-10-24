@@ -1,0 +1,111 @@
+{
+  "code": 0,
+  "message": "查询列表成功",
+  "data": [
+    {
+      "departmentId": "1",
+      "departmentName": "社长/总编辑",
+      "departmentUserNum": "0"
+    },
+    {
+      "departmentId": "2",
+      "departmentName": "副总编辑",
+      "departmentUserNum": "0"
+    },
+    {
+      "departmentId": "3",
+      "departmentName": "副社长",
+      "departmentUserNum": "0"
+    },
+    {
+      "departmentId": "4",
+      "departmentName": "总编室",
+      "departmentUserNum": "0"
+    },
+    {
+      "departmentId": "5",
+      "departmentName": "盲文编译部",
+      "departmentUserNum": "0"
+    },
+    {
+      "departmentId": "6",
+      "departmentName": "汉文一编室",
+      "departmentUserNum": "0"
+    },
+    {
+      "departmentId": "7",
+      "departmentName": "汉文二编室",
+      "departmentUserNum": "0"
+    },
+    {
+      "departmentId": "8",
+      "departmentName": "汉文三编室",
+      "departmentUserNum": "0"
+    },
+    {
+      "departmentId": "9",
+      "departmentName": "有声读物事业部",
+      "departmentUserNum": "0"
+    },
+    {
+      "departmentId": "10",
+      "departmentName": "出版部",
+      "departmentUserNum": "0"
+    },
+    {
+      "departmentId": "11",
+      "departmentName": "发行部",
+      "departmentUserNum": "0"
+    },
+    {
+      "departmentId": "12",
+      "departmentName": "读者服务部",
+      "departmentUserNum": "0"
+    },
+    {
+      "departmentId": "13",
+      "departmentName": "盲文印制部",
+      "departmentUserNum": "0"
+    },
+    {
+      "departmentId": "14",
+      "departmentName": "盲文印制部",
+      "departmentUserNum": "0"
+    },
+    {
+      "departmentId": "15",
+      "departmentName": "典藏借阅部",
+      "departmentUserNum": "0"
+    },
+    {
+      "departmentId": "17",
+      "departmentName": "颜廷宇的部门",
+      "departmentUserNum": "0"
+    },
+    {
+      "departmentId": "18",
+      "departmentName": "颜廷宇的部门2",
+      "departmentUserNum": "0"
+    },
+    {
+      "departmentId": "19",
+      "departmentName": "颜廷宇的部门3",
+      "departmentUserNum": "0"
+    },
+    {
+      "departmentId": "20",
+      "departmentName": "颜廷宇的部门4",
+      "departmentUserNum": "0"
+    },
+    {
+      "departmentId": "21",
+      "departmentName": "颜廷宇的部门5",
+      "departmentUserNum": "0"
+    },
+    {
+      "departmentId": "22",
+      "departmentName": "颜廷宇的部门6",
+      "departmentUserNum": "0"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "message" : "查询列表成功",
+  "data" : {
+    "records" : [ {
+      "trainId" : "1",
+      "trainName" : "培训名称",
+      "trainUnit" : "培训单位",
+      "trainDatetime" : "2017-05-12 10:02:27",
+      "trainContent" : "培训内容",
+      "trainForm" : "未知",
+      "trainHour" : "3",
+      "trainIntegral" : "3"
+    } ]
+  },
+  "code" : "0"
+}

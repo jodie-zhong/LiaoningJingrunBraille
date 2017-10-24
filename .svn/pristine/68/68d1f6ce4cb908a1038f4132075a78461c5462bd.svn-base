@@ -1,0 +1,174 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+    var that;
+
+    /**
+     * Workflow Item
+     */
+    module.exports = ItemBase.extend({
+        // 保存/提交接口
+        saveAction: 'tpr/saveOrSubmitTrpTask.action',
+        // 批量保存/提交接口
+        batchSaveAction: 'tpr/batchSaveOrSubmitTrpTask.action',
+        // 查询接口
+        detailAction: 'tpr/searchTrpDetail.action',
+
+        /**
+         * 是否同意切换
+         */
+        confirmChange: function () {
+            var selectionRow = that.$(this).parents('tr');
+            var inputEm = selectionRow.find("input[name='disAgreeReason']");
+            // 同意
+            if (that.$(this).attr('checked') === 'checked') {
+                inputEm.removeAttr('data-fv-notempty');
+                inputEm.removeAttr('data-fv-notempty-message');
+                // 判断全选
+                var allChacked = true;
+                selectionRow.parent().find('input[name="agreeSelection"]').each(function () {
+                    if (that.$(this).attr('checked') !== 'checked') {
+                        allChacked = false;
+                        return false;
+                    }
+                });
+                if (allChacked) {
+                    that.$(this).parents('table').find('input[name="agreeSelectionBatch"]').attr('checked', 'checked');
+                }
+            }
+            // 不同意
+            else {
+                inputEm.attr('data-fv-notempty', 'true');
+                inputEm.attr('data-fv-notempty-message', '请填写不同意原因');
+                // 去掉全选
+                that.$(this).parents('table').find('input[name="agreeSelectionBatch"]').removeAttr('checked');
+            }
+            // 计算差错率
+            that.calculateDiff();
+        },
+
+        /**
+         * 批量同意
+         */
+        confirmChangeBatch: function () {
+            // 同意
+            if (that.$(this).attr('checked') === 'checked') {
+                that.$(this).parents('table').find('input[name="agreeSelection"]').each(function () {
+                    that.$(this).attr('checked', 'checked');
+                    var inputEm = that.$(this).parents('tr').find("input[name='disAgreeReason']");
+                    inputEm.removeAttr('data-fv-notempty');
+                    inputEm.removeAttr('data-fv-notempty-message');
+                    // 计算差错率
+                    that.calculateDiff();
+                });
+            }
+            // 不同意
+            else {
+                that.$(this).parents('table').find('input[name="agreeSelection"]').removeAttr('checked');
+                that.$("tbody[data-name='diffTb']").html('');
+            }
+        },
+
+        /**
+         * 计算差错
+         */
+        calculateDiff: function () {
+            var diffInfo = [];
+            that.$("tbody[data-name='trueOrFalseTb']").children().each(function () {
+                var agreeCheckbox = that.$(this).find("input[name='agreeSelection']");// 没有是否同意的选项表示当前是查看状态，用data-check-result来判断
+                var checked = agreeCheckbox === undefined ? (that.$(this).attr('data-check-result') === '1') : (agreeCheckbox.attr('checked') === 'checked');
+                if (that.$(this).attr('data-is-confirm') === '1' || !checked) {
+                    var fasciculeId = that.$(this).attr("data-fascicule-id");
+                    var idx = -1;
+                    for (var i = 0; i < diffInfo.length; i++) {
+                        if (diffInfo[i].fasciculeId === fasciculeId) {
+                            idx = i;
+                            break;
+                        }
+                    }
+                    if (idx < 0) {
+                        diffInfo.push({fasciculeId: fasciculeId, fasciculeName: that.$(this).attr("data-fascicule-name"), diffCount: 1});
+                    } else {
+                        diffInfo[idx].diffCount++;
+                    }
+                }
+            });
+            var diffTbHtml = "";
+            for (var i = 0; i < diffInfo.length; i++) {
+                diffTbHtml +=
+                    "<tr  data-fascicule-id='" + diffInfo[i].fasciculeId + "'>" +
+                    "   <td>" + (i + 1) + "</td>" +
+                    "   <td>" + diffInfo[i].fasciculeName + "</td>" +
+                    "   <td data-name='diffCount'>" + diffInfo[i].diffCount + "</td>" +
+                    "   <td data-name='diffRate'>" + (diffInfo[i].diffCount / that.data.info.tprQualityWordNum) + "</td>" +
+                    "</tr>";
+            }
+            that.$("tbody[data-name='diffTb']").html(diffTbHtml);
+        },
+
+        /**
+         * 生成参数
+         */
+        getFormData: function () {
+            var params = {qualityRightWrongEntities: [], bookWrongEntities: []};
+            // 正误表数据
+            that.$("tbody[data-name='trueOrFalseTb']").children().each(function () {
+                params.qualityRightWrongEntities.push({
+                    rigthWrongId: that.$(this).attr("data-right-wrong-id"),
+                    checkResult: that.$(this).find("input[name='agreeSelection']").attr('checked') === 'checked' ? "1" : "2",
+                    checkIdea: that.$(this).find("input[name='disAgreeReason']").val()
+                });
+            });
+            // 差错表数据
+            that.$("tbody[data-name='diffTb']").children().each(function () {
+                params.bookWrongEntities.push({
+                    bookFascicleId: that.$(this).attr("data-fascicule-id"),
+                    bookWrongNum: that.$(this).find("td[data-name='diffCount']").text(),
+                    bookWrongRate: that.$(this).find("td[data-name='diffRate']").text()
+                });
+            });
+            params.handleContentOne = that.$("textarea[name='handleContentOne']").val();
+            params.taskUsers = that.$("input[name='taskUsers']").attr('data-value');
+            params.flowId = that.$("input[name='flowId']").val();
+            params.flowName = that.$("input[name='flowName']").val();
+            return params;
+        },
+
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+            // 是否同意监听
+            this.$container.on('change', 'input[name="agreeSelection"]', this.confirmChange);
+            // 是否批量同意
+            this.$container.on('change', 'input[name="agreeSelectionBatch"]', this.confirmChangeBatch);
+        },
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+            this.calculateDiff();
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function (container, tpl) {
+            this._super(container, tpl);
+        },
+
+        /**
+         * 渲染页面
+         */
+        render: function () {
+            this._super();
+            that = this;
+            this.initPageEvent();
+            this.initPageData();
+        }
+    });
+});

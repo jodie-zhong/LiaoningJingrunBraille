@@ -1,0 +1,32 @@
+<div class="modal-dialog dialog-container" style="width: 500px;">
+  <div class="modal-content">
+    <div class="panel file-upload">
+      <div class="panel-header">
+        <h3><i class="fa fa-file-o"></i> 文件上传</h3>
+        <div class="control-btn">
+          <a class="panel-close btn-close"><i class="fa fa-close"></i></a>
+        </div>
+      </div>
+      <div class="panel-content">
+        <div style="margin-bottom: 10px;">
+          <img id="uploadPreview" class="image-preview" style="display:none;">
+        </div>
+        <div class="form-horizontal" id="formSearchUser">
+          <div class="form-group">
+            <label class="col-xs-3 control-label">选择文件</label>
+            <div class="col-xs-9">
+              <input type="file" class="form-control" name="file" id="inputFileUpload" style="border: none;">
+            </div>
+          </div>
+          <div class="dialog-options">
+            <div class="progress progress-striped active progress-bar-large" id="progressFileUpload" style="display: none;">
+              <div class="progress-bar progress-bar-primary" style="width: 0%;"></div>
+              <span>0%</span>
+            </div>
+              <button class="btn btn-primary" id="btnFileUpload">确定上传</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

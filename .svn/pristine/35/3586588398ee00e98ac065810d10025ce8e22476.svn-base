@@ -1,0 +1,145 @@
+<!-- 选题征集 -->
+<div class="row">
+  <div class="col-xs-3">
+    <!-- 左侧树 -->
+    <div class="panel">
+      <div class="panel-header custom-panel-header">
+        <h3><i class="fa fa-braille"></i>书号和CIP号版署申请</h3>
+      </div>
+      <!--<div class="panel-content border-bottom">-->
+      <!--<div class="search-header" id="taskTreeSearchHeader">-->
+      <!--<div class="search-inputs">-->
+      <!--<select class="form-control form-white">-->
+      <!--<option>全部</option>-->
+      <!--<option>非社推荐选题</option>-->
+      <!--<option>社推荐选题</option>-->
+      <!--</select>-->
+      <!--</div>-->
+      <!--<div class="search-buttons">-->
+      <!--<button class="btn btn-default btn-icon" type="button" id="btnTaskTreeSearch"><i class="fa fa-search"></i>-->
+      <!--</button>-->
+      <!--</div>-->
+      <!--</div>-->
+      <!--</div>-->
+      <div class="panel-content panel-height-1">
+        <div id="monthTree">
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-9">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="panel">
+          <div class="panel-header custom-panel-header">
+            <h3>申请列表</h3>
+            <div class="control-btn">
+              <button class="btn btn-xs btn-success" data-auth="0361" id="btnCipAdd">新增</button>
+              <button class="btn btn-xs btn-blue" data-auth="0362" id="btnCipModify" disabled>修改</button>
+              <button class="btn btn-xs btn-danger" data-auth="0363" id="btnCipDelete" disabled>删除</button>
+              <button class="btn btn-xs btn-primary" data-auth="0365" id="btnCipSend" disabled>版署下发</button>
+            </div>
+          </div>
+          <!--<div class="panel-content border-bottom">-->
+          <!--<div class="form-horizontal" id="formSearchTask">-->
+          <!--<div class="row">-->
+          <!--<div class="col-xs-5">-->
+          <!--<div class="form-group">-->
+          <!--<label class="col-xs-4 control-label">筛选</label>-->
+          <!--<div class="col-sm-8">-->
+          <!--<select class="form-control">-->
+          <!--<option>待我处理</option>-->
+          <!--<option>与我相关</option>-->
+          <!--</select>-->
+          <!--</div>-->
+          <!--</div>-->
+          <!--</div>-->
+          <!--<div class="col-xs-5">-->
+          <!--<div class="form-group">-->
+          <!--<label class="col-xs-4 control-label">选题名称</label>-->
+          <!--<div class="col-sm-8">-->
+          <!--<input class="form-control" data-search="searchTopicName">-->
+          <!--</div>-->
+          <!--</div>-->
+          <!--</div>-->
+          <!--<div class="col-xs-2">-->
+
+          <!--</div>-->
+          <!--</div>-->
+          <!--<div class="row">-->
+          <!--<div class="col-xs-5">-->
+          <!--<div class="form-group">-->
+          <!--<label class="col-xs-4 control-label">选题类别</label>-->
+          <!--<div class="col-sm-8">-->
+          <!--<select class="form-control" data-search="searchTopicType">-->
+          <!--<option value="">全部</option>-->
+          <!--</select>-->
+          <!--</div>-->
+          <!--</div>-->
+          <!--</div>-->
+          <!--<div class="col-xs-5">-->
+          <!--</div>-->
+          <!--<div class="col-xs-2">-->
+          <!--<button class="btn btn-primary" id="btnSearchTask">搜索</button>-->
+          <!--</div>-->
+          <!--</div>-->
+          <!--</div>-->
+          <!--</div>-->
+          <div class="panel-content">
+            <div class="table-10">
+              <table class="table table-striped table-hover" data-multi="true" id="workListTable">
+                <thead>
+                <tr>
+                  <th>序号</th>
+                  <th><i class="fa fa-square-o" data-action="check"></i></th>
+                  <th>申请名称</th>
+                  <th>申请人</th>
+                  <th>申请数量</th>
+                  <th>申请时间</th>
+                  <th>申请状态</th>
+                </tr>
+                </thead>
+                <tbody id="workListTBody">
+
+                </tbody>
+              </table>
+            </div>
+            <div class="pagination-container" id="workListPaging">
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="panel">
+          <div class="panel-header custom-panel-header">
+            <h3>流程查看</h3>
+          </div>
+          <div class="panel-content">
+            <div class="table-5-static">
+              <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                  <th>序号</th>
+                  <th>状态</th>
+                  <th>负责人</th>
+                  <th>起始时间</th>
+                  <th>完成时间</th>
+                  <th>审核结果</th>
+                  <th>详细信息</th>
+                </tr>
+                </thead>
+                <tbody id="taskWorkflowTable">
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,41 @@
+<div class="modal-dialog dialog-container" style="width: 500px;">
+  <div class="modal-content">
+    <div class="panel">
+      <div class="panel-header border-bottom">
+        <h3><i class="fa fa-user"></i>密码修改</h3>
+        <div class="control-btn">
+          <a class="panel-close btn-close"><i class="fa fa-close"></i></a>
+        </div>
+      </div>
+      <div class="panel-content">
+        <div class="form-signin form-horizontal" role="form" id="formPersonEdit">
+          <div class="form-group">
+            <label class="col-xs-4 control-label">原密码<span class="must">*</span></label>
+            <div class="col-xs-6">
+              <input type="password" name="oldUserPwd" id="oldUserPwd" class="form-control form-white password"
+                     placeholder="原密码" data-fv-notempty = "true" data-fv-notempty-message="请填写原密码" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-xs-4 control-label">新密码<span class="must">*</span></label>
+            <div class="col-xs-6">
+              <input type="password" maxlength="16" pattern="^[\u4e00-\u9fa5_a-zA-Z0-9]{8,16}$"
+                      name="userPwd" class="form-control form-white password" id="inputPassword" placeholder="新密码"
+                     autocomplete="off" data-fv-notempty="true" data-fv-notempty-message="请输入密码" data-fv-regexp-message="请输入8-16位数字、字母组合的密码">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-xs-4 control-label">确认密码 <span class="must">*</span></label>
+            <div class="col-xs-6">
+              <input type="password" class="form-control form-white" id="inputPasswordConfirm" maxlength="32" placeholder="确认密码"
+                     name="confirmPassword" data-fv-notempty="true" data-fv-notempty-message="请填写新密码" data-fv-identical="true" data-fv-identical-field="userPwd" data-fv-identical-message="密码输入不一致请重新输入" />
+            </div>
+          </div>
+          <div class="dialog-options">
+            <button type="button" id="submitForm" class="btn btn-primary" data-style="expand-left">提交</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

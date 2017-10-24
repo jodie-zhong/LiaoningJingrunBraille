@@ -1,0 +1,220 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+
+    // 工作流类窗口继承自工作流Base
+    var Base = require('../../other/base/book-base');
+    var flowListTpl = require('./cover-design-bookList.tpl');
+
+    var FLOW_NOTICE = 'cn_coverDesignNotice';                       // 图书封面设计通知单
+    var FLOW_ISSUED = 'cn_issued';                                  // 出版部下发
+    var FLOW_DEVISE = 'cn_coverDesign';	                            // 封面设计
+    var FLOW_FIRST = 'cn_coverEditorFirst';	                        // 封面责编初审
+    var FLOW_MODIFI = 'cn_firstCoverModification';	                // 初审封面修改
+    var FLOW_SECOND = 'cn_coverEditorSecond';	                    // 封面责编复审
+    var FLOW_SECOND_M = 'cn_secondCoverModification';	            // 复审封面修改
+    var FLOW_CONFIRM = 'cn_editorConfirm';	                        // 责编确认
+
+    var Module = Base.extend(new function () {
+        var that;
+
+        this.deployKey = 'CNCoverDesignNotice';
+
+        // 与我相关
+        this.searchTaskAbout = '1';
+        // 其他搜索选项
+        this.searchParams = {};
+
+
+        this.flowInfoAction='common/searchBookFlowList.action';
+
+        // this.staticParams={
+        //     searchFlowId:'cover'
+        // };
+
+        // this.unreadSearchFlowId='cover';
+
+        // this.searchFlowId='cover';
+
+
+
+        /**
+         * 搜索任务列表的接口(覆盖父级)
+         */
+
+        // 查询任务树中未完成任务数的接口
+        // this.untreatedTaskAction = 'topic/unreadTopicCount.action';
+        // // 选题任务列表接口
+        // this.taskListActoin = 'topic/topicList.action';
+
+        this.bookDate=null;
+
+        /**
+         * 选择行变更事件回调
+         */
+        this.onSelectRowChanged = function () {
+            // 暂时啥也不做
+        };
+
+        this.onCheckRowChanged = function () {
+            this.$('#btnCoverSingle').attr('disabled', 'disabled');       // 处理
+            this.$('#btnCoverSearch').attr('disabled', 'disabled');       // 查看
+
+            var count = 0, flowId = null, users = null, bookIds = [],taskIds=[];
+            var notice=true,issued = true, devise=true,editorFirst=true,coverFirst=true,editorSecond=true,coverSecond=true,confirm=true,allMe = true,allUnfinished = true;
+            var userId = util.getUserInfo().userId;
+            that.$('#workListTBody').find('tr[checked]').each(function () {
+                flowId = $(this).attr('data-flowId');
+                users = $(this).attr('data-users') || '';
+                users = users? users.split(','): [];
+                // 包含非图书封面设计通知单
+                if(flowId !== FLOW_NOTICE){
+                    notice = false;
+                }
+                // 包含非出版部下发
+                if(flowId !== FLOW_ISSUED){
+                    issued = false;
+                }
+                // 包含非封面设计
+                if(flowId !== FLOW_DEVISE){
+                    devise = false;
+                }
+                // 包含非封面责编初审
+                if(flowId !== FLOW_FIRST){
+                    editorFirst = false;
+                }
+
+                // 包含非初审封面修改
+                if(flowId !== FLOW_MODIFI){
+                    coverFirst = false;
+                }
+                // 包含非封面责编复审
+                if( flowId !== FLOW_SECOND ){
+                    editorSecond = false;
+                }
+                // 包含非复审封面修改
+                if( flowId !== FLOW_SECOND_M ){
+                    coverSecond = false;
+                }
+                // 包含非责编确认
+                if( flowId !== FLOW_CONFIRM ){
+                    confirm = false;
+                }
+                // 待我处理
+                if(users.indexOf(userId) <0){
+                    allMe = false;
+                }
+
+                // 任务状态未完成
+                if($(this).attr('data-taskState') === '2'){
+                    allUnfinished = false;
+                }
+                bookIds.push($(this).attr('data-bookId'));
+                taskIds.push($(this).attr('data-taskId'));
+                count++;
+            });
+
+            this.currentBookId = bookIds.join(',');
+            this.currentTaskId = taskIds.join(',');
+
+            // 只选择了一条，处理和查看可用（）
+            if(count === 1) {
+                if( ( notice || issued || devise || editorFirst || coverFirst || editorSecond || coverSecond || confirm ) && allUnfinished && allMe ){
+                    this.$('#btnCoverSingle').removeAttr('disabled');
+                }
+                if( issued || devise || editorFirst || coverFirst || editorSecond || coverSecond || confirm ){
+                    this.$('#btnCoverSearch').removeAttr('disabled');
+                }
+            }
+        };
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+            // that.openPage('public/workflow/workflow-dialog', {
+            //     debug: true,
+            //     flowTemplate: 'cn-cover-design/cn-cover-design',
+            //     isEdit: true
+            // });
+
+            // 处理
+            that.$container.on('click', '#btnCoverSingle', function() {
+                var btnText=$(this).text();
+                that.openPage('public/workflow/workflow-dialog', {
+                    flowInfoAction: that.flowInfoAction,
+                    bookId: that.currentBookId,
+                    taskId: that.currentTaskId,
+                    deployId: that.deployKey,
+                    btnText:btnText
+                    // searchFlowId:that.searchFlowId
+                });
+            });
+
+            // 查看
+            that.$container.on('click', '#btnCoverSearch', function() {
+                that.openPage('public/workflow/workflow-dialog', {
+                    flowInfoAction: that.flowInfoAction,
+                    bookId: that.currentBookId,
+                    taskId: that.currentTaskId,
+                    deployId: that.deployKey,
+                    // searchFlowId:that.searchFlowId,
+                    isView: true
+                });
+            });
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            // that.initTemplate(tpl, {});
+
+            // 初始化数据前需要设置列表模板
+            this.baseTpl = flowListTpl;
+
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function () {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+
+    module.exports = Module;
+});

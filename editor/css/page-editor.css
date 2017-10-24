@@ -1,0 +1,60 @@
+.editor-container {
+  width: 1000px;
+  margin: 0 auto;
+  /*background-color: #ddd;*/
+}
+
+.braille-editor {
+  box-sizing: border-box;
+  width: 210mm;
+}
+
+.sharp-canvas-container {
+  position: relative;
+  border: 1px solid #EEE;
+  display: block;
+  margin: auto;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sharp-canvas {
+
+}
+
+.sharp-canvas-bak {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.insert-text-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 200px;
+  z-index: 2;
+}
+
+.insert-text-container i.fa-arrows {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  font-size: 20px;
+  cursor: move;
+  z-index: 2;
+}
+
+.insert-text-container input {
+  font-size: 20px;
+  padding: 0;
+  border: 1px dashed #AAA;
+  background-color: rgba(255, 255, 255, 0.4) !important;
+  font-family: 'EUDC', 'Lato', 'Open Sans', Helvetica, sans-serif !important;
+  color: #000;
+  z-index: 2;
+}
+
+/* CKEditor动态加了这么个玩意，页面顶出1px滚动条 */
+.cke_screen_reader_only.cke_copyformatting_notification {
+  display: none;
+}

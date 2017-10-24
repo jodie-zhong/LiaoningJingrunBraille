@@ -1,0 +1,38 @@
+<!--角色新增-->
+<div class="modal-dialog dialog-container">
+  <div class="modal-content">
+    <div class="panel">
+      <div class="panel-header border-bottom">
+        <h3><i class="fa fa-user-o"></i> 角色管理</h3>
+        <div class="control-btn">
+          <a class="panel-close btn-close"><i class="fa fa-close"></i></a>
+        </div>
+      </div>
+      <div class="panel-content">
+        <div class="form-horizontal" id="formRoleCreateEdit">
+          <div class="row">
+            <div class="form-group col-xs-12">
+              <label class="col-xs-2 control-label">角色名称<span class="c-red">*</span></label>
+              <div class="col-xs-6">
+                <input type="text" value="<%-info.roleName %>" name="roleName" class="form-control" data-fv-notempty="true" data-fv-notempty-message="请填写角色名称" maxlength="32"/>
+              </div>
+              <div class="col-xs-6"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-xs-12">
+              <label class="col-xs-2 control-label">角色描述<span class="c-red">*</span></label>
+              <div class="col-xs-10">
+                <input type="text" value="<%-info.roleDesc %>" name="roleDesc" class="form-control" data-fv-notempty="true" data-fv-notempty-message="请填写角色描述" maxlength="64"/>
+              </div>
+              <div class="col-xs-6"></div>
+            </div>
+          </div>
+          <div class="dialog-options">
+            <button class="btn btn-primary" id="btnRoleSave">保存</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

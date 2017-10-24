@@ -1,0 +1,163 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+    var that;
+
+    /**
+     * Workflow Item
+     */
+    module.exports = ItemBase.extend({
+        // 保存/提交接口
+        saveAction: 'tpr/saveOrSubmitTaskAllocation.action',
+        // 批量保存/提交接口
+        batchSaveAction: 'bookTopic/batchReview.action',
+        // 查询接口
+        detailAction: 'tpr/searchBookTrpDetail.action',
+
+        /**
+         * 是否确认切换
+         */
+        confirmChange: function () {
+            var selectionRow = that.$(this).parents('tr');
+            var inputEm = selectionRow.find("input[name='disConfirmReason']");
+            var fasciculeId = selectionRow.attr('data-fascicule-id');
+            var diffTb = that.$('#diffTb');
+            var diffRow = diffTb.find("tr[data-fascicule-id='" + fasciculeId + "']");
+            var diffCountTd;
+            var diffCount;
+            // 确认
+            if (that.$(this).attr('checked') === 'checked') {
+                inputEm.removeAttr('data-fv-notempty');
+                inputEm.remove('data-fv-notempty-message');
+                // 添加行
+                if (diffRow.length === 0) {
+                    diffTb.append(
+                        "<tr data-fascicule-id='" + fasciculeId + "'>" +
+                        "   <td>" + (diffTb.children().length + 1) + "</td>" +
+                        "   <td>" + selectionRow.attr('data-fascicule-name') + "</td>" +
+                        "   <td data-name='diffCount'>1</td>" +
+                        "   <td data-name='diffRate'>" + (1 / 10) + "</td>" +// TODO that.data.info.totalCount
+                        "</tr>"
+                    );
+                }
+                // 更新行数据
+                else {
+                    diffCountTd = diffRow.find('td[data-name="diffCount"]');
+                    diffCount = parseInt(diffCountTd.text()) + 1;
+                    diffCountTd.html(diffCount);
+                    diffRow.find('td[data-name="diffRate"]').html(diffCount / 10);// TODO that.data.info.totalCount
+                }
+                // 判断全选
+                var allChacked = true;
+                selectionRow.parent().find('input[name="confirmSelection"]').each(function () {
+                    if (that.$(this).attr('checked') !== 'checked') {
+                        allChacked = false;
+                        return false;
+                    }
+                });
+                if (allChacked) {
+                    that.$(this).parents('table').find('input[name="confirmSelectionBatch"]').attr('checked', 'checked');
+                }
+            }
+            // 不确认
+            else {
+                inputEm.attr('data-fv-notempty', 'true');
+                inputEm.attr('data-fv-notempty-message', '请填写不确认原因');
+                if (diffRow.length !== 0) {
+                    diffCountTd = diffRow.find('td[data-name="diffCount"]');
+                    diffCount = parseInt(diffCountTd.text());
+                    // 删除行
+                    if (diffCount <= 1) {
+                        diffRow.remove();
+                    }
+                    // 更新行数据
+                    else {
+                        diffCount--;
+                        diffCountTd.html(diffCount);
+                        diffRow.find('td[data-name="diffRate"]').html(diffCount / 10);// TODO that.data.info.totalCount
+                    }
+                }
+                // 去掉全选
+                that.$(this).parents('table').find('input[name="confirmSelectionBatch"]').removeAttr('checked');
+            }
+        },
+
+        /**
+         * 批量确认
+         */
+        confirmChangeBatch: function () {
+            // 确认
+            if (that.$(this).attr('checked') === 'checked') {
+                that.$(this).parents('table').find('input[name="confirmSelection"]').each(function () {
+                    that.$(this).attr('checked', 'checked');
+                    var selectionRow = that.$(this).parents('tr');
+                    var diffTb = that.$('#diffTb');
+                    var inputEm = selectionRow.find("input[name='disConfirmReason']");
+                    var fasciculeId = selectionRow.attr('data-fascicule-id');
+                    var diffRow = diffTb.find("tr[data-fascicule-id='" + fasciculeId + "']");
+                    inputEm.removeAttr('data-fv-notempty');
+                    inputEm.remove('data-fv-notempty-message');
+                    // 添加行
+                    if (diffRow.length === 0) {
+                        diffTb.append(
+                            "<tr data-fascicule-id='" + fasciculeId + "'>" +
+                            "   <td>" + (diffTb.children().length + 1) + "</td>" +
+                            "   <td>" + selectionRow.attr('data-fascicule-name') + "</td>" +
+                            "   <td data-name='diffCount'>1</td>" +
+                            "   <td data-name='diffRate'>" + (1 / 10) + "</td>" +// TODO that.data.info.totalCount
+                            "</tr>"
+                        );
+                    }
+                    // 更新行数据
+                    else {
+                        var diffCountTd = diffRow.find('td[data-name="diffCount"]');
+                        var diffCount = parseInt(diffCountTd.text()) + 1;
+                        diffCountTd.html(diffCount);
+                        diffRow.find('td[data-name="diffRate"]').html(diffCount / 10);// TODO that.data.info.totalCount
+                    }
+                });
+            }
+            // 不确认
+            else {
+                that.$(this).parents('table').find('input[name="confirmSelection"]').removeAttr('checked');
+                that.$('#diffTb').html('');
+            }
+        },
+
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+            // 是否确认监听
+            this.$container.on('change', 'input[name="confirmSelection"]', this.confirmChange);
+            // 是否批量确认
+            this.$container.on('change', 'input[name="confirmSelectionBatch"]', this.confirmChangeBatch);
+        },
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function (container, tpl) {
+            this._super(container, tpl);
+        },
+
+        /**
+         * 渲染页面
+         */
+        render: function () {
+            this._super();
+            that = this;
+            this.initPageEvent();
+            this.initPageData();
+        }
+    });
+});

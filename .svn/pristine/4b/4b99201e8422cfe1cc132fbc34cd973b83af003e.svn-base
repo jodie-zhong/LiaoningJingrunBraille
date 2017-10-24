@@ -1,0 +1,241 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    // 工作流类窗口继承自工作流Base
+    var Base = require('../../other/base/plan-base');
+
+    var topicManageListTpl = require('./publish-plan-list.tpl');
+    
+    var Module = Base.extend(new function () {
+        var that;
+
+        this.deployKey = 'Publication';
+
+		this.treeName='出版计划';
+		
+		this.flowInfoAction = 'publication/searchBookListFlowInfo.action';
+
+        /**
+		 * 搜索任务列表的接口(覆盖父级)
+		 */
+		this.taskListAction = 'publication/searchPublicationList.action';
+        /**
+         * 选择行变更事件回调
+         */
+        this.onSelectRowChanged = function(){
+        	// 暂时啥也不做
+        };
+        
+        this.onCheckRowChanged = function () {
+			var count = 0, publishIds = [];
+			that.$('#workListTBody').find('tr[checked]').each(function() {				
+				publishIds.push($(this).attr('data-publish'));
+				count++;
+			});
+			this.currentBookId = publishIds.join(',');
+			
+			// 只选择了一条，查看可用
+			if(count === 1) {
+				
+			}
+        };
+        
+        /**
+         * 修改
+         */
+        function publishChange(id) {
+        	var params = {zPublishPlanReportDetailId: id};
+        	util.showLoading();
+        	util.sendRequest({
+        		data: params,
+        		action: 'publication/modifyReportBefore.action',
+        		success: function(resp) {
+        			util.hideLoading();
+        			if (resp.code === 0) {
+        				that.openPage('manage/publish-plan/publish-plan-edit',resp.data);
+        			} else{
+        				util.showAlert(resp.message);
+        			}
+        		},
+        		error: function(xhr) {
+        			// XHR错误
+                    console.log(xhr);
+					util.hideLoading();
+					util.showAlert(resp.message);
+        		}
+        	})
+        }
+        
+        /**
+         * 提交
+         */
+        function publishSubmit() {
+        	var publiId = that.$('tr[data-area = "publish"]').eq(0).attr('data-type');
+        	util.showLoading();
+			util.sendRequest({
+				action: 'publication/commitProcessing.action',
+				data: {zPublishPlanReportId: publiId},
+				success: function(resp) {
+					util.hideLoading();
+					if(resp.code === 0) {
+						util.showAlert('提交成功!');
+						that.searchUntreatedTask();
+					} else {
+						util.showAlert(resp.message);
+					}
+				},
+				error: function(xhr) {
+					// XHR错误
+                       console.log(xhr);
+					util.hideLoading();
+					util.showAlert('查询信息出错，请稍后重试！');
+				}
+			}); 
+       }
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+//          that.openPage('public/workflow/workflow-dialog', {
+//              debug: true,
+//              flowTemplate: 'publish-plan/publish-plan-examine',
+//              isEdit: true
+//          });
+			// 新增上报
+			that.$container.on('click', '#btnPublishAdd', function() {
+				that.openPage('manage/publish-plan/publish-plan-increased', {});
+			});
+			// 修改
+			that.$container.on('click', '#btnPublishChange', function() {
+				publishChange(that.currentBookId);
+			});
+			// 批量修改
+			that.$container.on('click', '#btnPublishBatchChange', function() {
+				that.openPage('manage/publish-plan/publish-plan-batchedit', that.currentBookId);
+			})
+			// 删除
+			that.$container.on('click', '#btnPublishDel', function() {
+				util.showConfirm('确定要删除所选的内容吗？', function() {
+                    util.showLoading();
+                    util.sendRequest({
+                        action: 'publication/deleteReport.action',
+                        data: {
+                            zPublishPlanReportDetailId: that.currentBookId
+                        },
+                        success: function (resp) {
+                            util.hideLoading();
+                            if (resp && resp.code === 0) {
+                                util.showAlert('删除选题成功！', function () {
+                                    that.searchUntreatedTask();
+                                });
+                            } else {
+                                console.log(resp);
+                                util.showAlert(resp.message || '删除选题出错，请稍后重试！');
+                            }
+                        },
+                        error: function (xhr) {
+                            // XHR错误
+                            util.hideLoading();
+                            console.log(xhr);
+                            util.showAlert('删除选题出错，请稍后重试！');
+                        }
+                    });
+				});
+			})
+			// 提交
+			that.$container.on('click', '#btnPublishSubmit', publishSubmit);
+
+            // 处理
+			that.$container.on('click', '#btnPublishHandle', function() {
+				var btnText=$(this).text();
+				var reportId = that.$('tr[data-area = "publish"]').eq(0).attr('data-type');
+				that.openPage('public/workflow/workflow-dialog', {
+					flowInfoAction: that.flowInfoAction,
+					zPublishPlanReportId: reportId,
+					deployId: that.deployKey,
+					btnText:btnText
+				});
+			});
+
+			// 查看
+			that.$container.on('click', '#btnPublishCheck', function() {
+				that.openPage('public/workflow/workflow-dialog', {
+					flowInfoAction: that.flowInfoAction,
+					bookId: that.currentBookId,
+					bookTopicId: that.currentBookTopicId,
+					taskId: that.currentTaskId,
+					deployId: that.deployKey,
+					isView: true
+				});
+			});
+			
+			// 导出
+			that.$container.on('click', '#export', function(){
+				var exp = that.$('tr[data-area = "publish"]').eq(0).attr('data-type');
+				var url = util.getServerBase() + 'publication/downLoadReport.action?';
+                    url += 'zPublishPlanReportId=' + exp;
+                    window.open(url, '_blank');
+			});
+
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+			that.$('#btnPrintHandle').attr('disabled', 'disabled');
+			that.$('#btnPrintCheck').attr('disabled', 'disabled');
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            // that.initTemplate(tpl, {});
+
+            // 初始化数据前需要设置列表模板
+            this.baseTpl = topicManageListTpl;
+
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+
+            // TODO: 测试
+            // that.openPage('public/workflow/workflow-dialog', {});
+            // that.openPage('public/file/file-upload', {});
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function () {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+
+    module.exports = Module;
+});

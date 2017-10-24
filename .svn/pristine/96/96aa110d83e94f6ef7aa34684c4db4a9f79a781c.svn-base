@@ -1,0 +1,28 @@
+<!-- 图书库 -->
+<% if(list.length > 0) { %>
+<% for(var i = 0; i < list.length; i++) { %>
+<tr data-bookId="<%- list[i].bookId %>">
+  <td><%- (i + 1) %></td>
+  <td data-check="true"><i class="fa fa-circle-o" data-action="check"></i></td>
+  <td title="<%- list[i].bookName %>"><%- list[i].bookName %></td>
+  <% if(list[i].bookType === '1') { %>
+  <td>盲文读物</td>
+  <% } else if(list[i].bookType === '2') { %>
+  <td>大字本读物</td>
+  <% } else if(list[i].bookType === '3') { %>
+  <td>普通读物</td>
+  <% } else if(list[i].bookType === '4') { %>
+  <td>有声读物</td>
+  <% } %>
+  <td title="<%- list[i].bookIsbn %>"><%- list[i].bookIsbn %></td>
+  <td title="<%- list[i].bookDetailDutyEditor %>"><%- list[i].bookDetailDutyEditor %></td>
+  <td title="<%- list[i].taskStateName %>"><%- list[i].taskStateName %></td>
+</tr>
+<% } %>
+<% } else { %>
+<tr>
+  <td colspan="7">
+    <p class="empty-tips">没有符合指定条件的数据</p>
+  </td>
+</tr>
+<% } %>

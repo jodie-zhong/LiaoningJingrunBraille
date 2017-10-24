@@ -1,0 +1,21 @@
+<!--重印审核状态-->
+<div class="form-horizontal">
+    <div class="row">
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label class="col-xs-4 control-label">提交人</label>
+                <div class="col-xs-8">
+                    <p class="form-control-static"><%- info.submitUserName %></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label class="col-xs-4 control-label">提交时间</label>
+                <div class="col-xs-8">
+                    <p class="form-control-static"><%- info.submitDatetime %></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

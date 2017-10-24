@@ -1,0 +1,1447 @@
+<% if(isEdit) { %>
+<div class="form-horizontal">
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">选题类型<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="bookTopicType" value="<%-info.bookTopicType %>"
+                 maxlength="128" placeholder="选题类型" data-required-error="请填写选题类型"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">选题备案文号</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.bookTopicFileNo %>" name="bookTopicFileNo"
+                 placeholder="选题备案文号" maxlength="128"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">本社选题编号<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="bookTopicNo" value="<%-info.bookTopicNo%>"
+                 maxlength="128" placeholder="本社选题编号" data-required-error="请填写本社选题编号"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">本社选题种类</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.bookTopicClasses %>" name="bookTopicClasses"
+                 placeholder="本社选题种类" maxlength="128"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">重大选题备案号<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="importantTopicCode" value="<%-info.importantTopicCode%>"
+                 maxlength="128" placeholder="重大选题备案号" data-required-error="请填写重大选题备案号"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">初审人员</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.firstInstanceOfficer %>" name="firstInstanceOfficer"
+                 placeholder="初审人员" maxlength="32"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">复审人员<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="secondInstanceOfficer" value="<%-info.secondInstanceOfficer%>"
+                 maxlength="32" placeholder="复审人员" data-required-error="请填写复审人员"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">终审人员</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.lastInstanceOfficer %>" name="lastInstanceOfficer"
+                 placeholder="终审人员" maxlength="32"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">三审意见<span class="must">*</span></label>
+        <div class="col-xs-10">
+          <textarea class="form-control" name="threeOpinions"><%-info.threeOpinions%></textarea>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">ISBN号<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="bookIsbn" value="<%-info.bookIsbn%>"
+                 maxlength="32" placeholder="ISBN号" data-required-error="请填写ISBN号"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">书名（正书名）</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.bookName %>" name="bookName"
+                 placeholder="书名" maxlength="64"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">副书名及说明文字<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="bookSubtitle" value="<%-info.bookSubtitle%>"
+                 maxlength="128" placeholder="副书名及说明文字" data-required-error="请填写副书名及说明文字"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">并列书名</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.bookTieName %>" name="bookTieName"
+                 placeholder="并列书名" maxlength="64"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">第一作者<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="bookDetailAuthor" value="<%-info.bookDetailAuthor%>"
+                 maxlength="32" placeholder="第一作者" data-required-error="请填写第一作者"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">第一著作方式</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.bookDetailWorkWay %>" name="bookDetailWorkWay"
+                 placeholder="第一著作方式" maxlength="64"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">其他作者<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="bookDetailOtherAuthor" value="<%-info.bookDetailOtherAuthor%>"
+                 maxlength="32" placeholder="其他作者" data-required-error="请填写其他作者"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">其他著作方式</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.bookDetailOtherWorkWay %>"
+                 name="bookDetailOtherWorkWay"
+                 placeholder="其他著作方式" maxlength="64"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">正文文种<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="bookTextLanguage" value="<%-info.bookTextLanguage%>"
+                 maxlength="32" placeholder="正文文种" data-required-error="请填写正文文种"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">正文文字</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.bookTextWords %>" name="bookTextWords"
+                 placeholder="正文文字" maxlength="64"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">装订形式<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="bindingWay" value="<%-info.bindingWay%>"
+                 maxlength="32" placeholder="装订形式" data-required-error="请填写装订形式"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">全书页数</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.bookPageNum %>" name="bookPageNum"
+                 placeholder="全书页数" maxlength="11"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">字数（千字）<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="bookDetailWordsNum" value="<%-info.bookDetailWordsNum%>"
+                 maxlength="11" placeholder="字数（千字）" data-required-error="请填写字数（千字）"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">图幅数</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.bookDetailSheetNum %>" name="bookDetailSheetNum"
+                 placeholder="图幅数" maxlength="11"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">附件类型<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="bookFileType" value="<%-info.bookFileType%>"
+                 maxlength="11" placeholder="附件类型" data-required-error="请填写其他作者"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">附件数量</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.bookFileNum %>" name="bookFileNum"
+                 placeholder="附件数量" maxlength="5"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">责任编辑<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="dutyEditor" value="<%-info.dutyEditor%>"
+                 maxlength="32" placeholder="责任编辑" data-required-error="请填写责任编辑"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">电话</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.phone %>" name="phone"
+                 placeholder="电话" maxlength="11"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">内容提要<span class="must">*</span></label>
+        <div class="col-xs-10">
+                    <textarea type="text" class="form-control" name="bookDetailSketched"
+                              maxlength="1024" placeholder="内容提要" data-required-error="请填写内容提要"><%-info.bookDetailSketched%></textarea>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">作者简介<span class="must">*</span></label>
+        <div class="col-xs-10">
+                    <textarea type="text" class="form-control" name="bookDetailAuthorMsg"
+                              maxlength="1024" placeholder="作者简介" data-required-error="请填写作者简介"><%-info.bookDetailAuthorMsg%></textarea>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">建议主题词<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="bookSubjectHeadings" value="<%-info.bookSubjectHeadings%>"
+                 maxlength="1024" placeholder="建议主题词" data-required-error="请填写建议主题词"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">图书类型</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.bookType %>" name="bookType"
+                 placeholder="图书类型" maxlength="11"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">图书分类<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="bookDetailKind" value="<%-info.bookDetailKind%>"
+                 maxlength="11" placeholder="图书分类" data-required-error="请填写图书分类"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">指导分类</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.bookDetailGuideKind %>" name="bookDetailGuideKind"
+                 placeholder="指导分类" maxlength="64"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">发行范围<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <div class="input-group">
+            <input type="text" class="form-control" name="bookDetailPublishScope"
+                   value="<%-info.bookDetailPublishScope%>"
+                   maxlength="64" placeholder="发行范围" data-required-error="请填写发行范围"/>
+            <div class="help-block with-errors"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">读者对象</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.bookDetailReader %>" name="bookDetailReader"
+                 placeholder="读者对象" maxlength="64"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">版次<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="bookDetailEdition" value="<%-info.bookDetailEdition%>"
+                 maxlength="128" placeholder="版次" data-required-error="请填写版次"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">印次</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.bookDetailLayoutOrder %>" name="bookDetailLayoutOrder"
+                 placeholder="印次" maxlength="32"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">成品尺寸<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="finishedSize" value="<%-info.finishedSize%>"
+                 maxlength="32" placeholder="成品尺寸" data-required-error="请填写成品尺寸"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">印张数</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.printPaperNum %>" name="printPaperNum"
+                 placeholder="印张数" maxlength="5"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">本次印量<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="printRuns" value="<%-info.printRuns%>"
+                 maxlength="5" placeholder="本次印量" data-required-error="请填写本次印量"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">本次起印量</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.currentlyPrintsRuns %>" name="currentlyPrintsRuns"
+                 placeholder="本次起印量" maxlength="5"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">累计印量<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="bookTotalVolume" value="<%-info.bookTotalVolume%>"
+                 maxlength="8" placeholder="累计印量" data-required-error="请填写累计印量"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">定价（本册）</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.bookFasciclePrice %>" name="bookFasciclePrice"
+                 placeholder="定价（本册）" maxlength="32"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">价格变更次数<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="priceChangeNum" value="<%-info.priceChangeNum%>"
+                 maxlength="5" placeholder="价格变更次数" data-required-error="请填写价格变更次数"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">出版方式</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.bookPublishMode %>" name="bookPublishMode"
+                 placeholder="出版方式" maxlength="20"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">合作出版者<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="cooperativePublisher" value="<%-info.cooperativePublisher%>"
+                 maxlength="64" placeholder="合作出版者" data-required-error="请填写合作出版者"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">出版地（申领者所在地）</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.placePublication %>" name="placePublication"
+                 placeholder="其他著作方式" maxlength="128"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">印刷单位<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="printingUnit" value="<%-info.printingUnit%>"
+                 maxlength="32" placeholder="印刷单位" data-required-error="请填写印刷单位"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">计划出版时间</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control date-time" value="<%- info.planPublishDatetime %>"
+                 name="planPublishDatetime"
+                 placeholder="计划出版时间"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">实际出版时间<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control date-time" name="actualPublishDatetime"
+                 value="<%-info.actualPublishDatetime%>"
+                 maxlength="32" placeholder="实际出版时间" data-required-error="请填写实际出版时间"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">丛书名</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.seriesBookName %>" name="seriesBookName"
+                 placeholder="丛书名" maxlength="128"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">附属丛书名<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="accessorySeriesBookName"
+                 value="<%-info.accessorySeriesBookName%>"
+                 maxlength="128" placeholder="附属丛书名" data-required-error="请填写附属丛书名"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">并列丛书名</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.paratacticSeriesBookName %>"
+                 name="paratacticSeriesBookName"
+                 placeholder="并列丛书名" maxlength="128"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">丛书著作责任者<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="seriesBookAuthor" value="<%-info.seriesBookAuthor%>"
+                 maxlength="64" placeholder="丛书著作责任者" data-required-error="请填写丛书著作责任者"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">分（辑）册号</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.bookFascicleNum %>" name="bookFascicleNum"
+                 placeholder="分（辑）册号" maxlength="11"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">定价（本套）<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="bookPrice" value="<%-info.bookPrice %>"
+                 maxlength="32" placeholder="定价（本套）" data-required-error="请填写定价（本套）"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">数量</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.counts %>" name="counts"
+                 placeholder="数量" maxlength="5"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">套书名<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="packageBooksName" value="<%-info.packageBooksName%>"
+                 maxlength="128" placeholder="套书名" data-required-error="请填写套书名"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">套书著作责任者</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.packageBooksAuthor %>" name="packageBooksAuthor"
+                 placeholder="套书著作责任者" maxlength="64"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">引进版图书原书名<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="bookOriginalName" value="<%-info.bookOriginalName%>"
+                 maxlength="64" placeholder="引进版图书原书名" data-required-error="请填写引进版图书原书名"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">版权合同登记号</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.copyrightContractNum %>" name="copyrightContractNum"
+                 placeholder="版权合同登记号" maxlength="64"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">原出版地<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="pristinePlacePublication"
+                 value="<%-info.pristinePlacePublication%>"
+                 maxlength="128" placeholder="原出版地" data-required-error="请填写原出版地"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">引进版图书原出版者</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.author %>" name="author"
+                 placeholder="引进版图书原出版者" maxlength="32"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">教材目录文件号<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="directoryFileNumber" value="<%-info.directoryFileNumber%>"
+                 maxlength="64" placeholder="教材目录文件号" data-required-error="请填写教材目录文件号"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">目录（章节）信息</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.catalogInformation %>" name="catalogInformation"
+                 placeholder="目录（章节）信息" maxlength="128"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">备注<span class="must">*</span></label>
+        <div class="col-xs-10">
+                    <textarea type="text" class="form-control" name="remarks"
+                              maxlength="256" placeholder="其他作者"
+                              data-required-error="请填写其他作者"><%-info.remarks%></textarea>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">封面设计者<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" name="coverDesigner" value="<%-info.coverDesigner %>"
+                 maxlength="32" placeholder="封面设计者" data-required-error="请填写封面设计者"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">出版社名称</label>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" value="<%- info.bookPressName %>" name="bookPressName"
+                 placeholder="出版社名称" maxlength="20"/>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% if(info.userTaskEntities) { %>
+  <% for(var i = 0 ; i < info.userTaskEntities.length; i++) { %>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">下一流程</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.userTaskEntities[i].flowName %>（<%- info.userTaskEntities[i].deptNames %> - <%- info.userTaskEntities[i].roleNames %>）</p>
+          <input type="hidden" name="flowId" value="<%- info.userTaskEntities[i].flowId %>">
+          <input type="hidden" name="flowName" value="<%- info.userTaskEntities[i].flowName %>">
+          <input type="hidden" name="nextCategory" value="<%- info.userTaskEntities[i].category %>">
+          <input type="hidden" name="deptIds" value="<%- info.userTaskEntities[i].deptIds %>">
+          <input type="hidden" name="roleIds" value="<%- info.userTaskEntities[i].roleIds %>">
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <% if(info.userTaskEntities[i].roleIds) { %>
+      <div class="form-group">
+        <label class="col-xs-4 control-label">任务人<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <div class="input-group with-clear">
+            <input type="text" class="form-control" name="taskUsers"
+                   value="<%- info.userTaskEntities[i].nextFlowTaskUserNames %>"
+                   data-value="<%- info.userTaskEntities[i].nextFlowTaskUserIds %>" placeholder="任务人" readonly
+                   data-data="{roleIds: '<%- info.userTaskEntities[i].roleIds %>', searchDepartmentId: '<%- info.userTaskEntities[i].deptIds %>'}"
+                   data-fv-notempty="true" data-fv-notempty-message="请选择下一任务人">
+            <span class="input-group-btn">
+              <button class="btn btn-clear" type="button" data-action="clear" ><i class="fa fa-remove box"></i></button>
+              <button class="btn btn-default" type="button" data-open="public/user/select-users"
+                      data-data='{"roleIds": "<%- info.userTaskEntities[i].roleIds %>", "deptIds": "<%- info.userTaskEntities[i].deptIds %>"}'><i
+                      class="fa fa-user-o"></i>
+              </button>
+            </span>
+          </div>
+          <div class="help-block with-errors"></div>
+        </div>
+      </div>
+      <% } %>
+    </div>
+  </div>
+  <% } %>
+  <% } %>
+</div>
+<% } else { %>
+<div class="form-horizontal">
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">选题类型<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookTopicType %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">选题备案文号</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookTopicFileNo %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">本社选题编号<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookTopicNo %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">本社选题种类</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><% info.bookTopicClasses %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">重大选题备案号<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><% info.importantTopicCode %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">初审人员</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><% info.firstInstanceOfficer %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">复审人员<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><% info.secondInstanceOfficer %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">终审人员</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><% info.lastInstanceOfficer %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">三审意见<span class="must">*</span></label>
+        <div class="col-xs-10">
+          <pre class="form-control-static"><%-info.threeOpinions%></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">ISBN号<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><% info.bookIsbn %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">书名（正书名）</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><% info.bookName %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">副书名及说明文字<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><% info.bookSubtitle %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">并列书名</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><% info.bookTieName %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">第一作者<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><% info.bookDetailAuthor %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">第一著作方式</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><% info.bookDetailWorkWay %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">其他作者<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><% info.bookDetailWorkWay %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">其他著作方式</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><% info.bookDetailWorkWay %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">正文文种<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><% info.bookTextLanguage %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">正文文字</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><% info.bookTextWords %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">装订形式<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><% info.bindingWay %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">全书页数</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><% info.bookPageNum %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">字数（千字）<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><% info.bookDetailWordsNum %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">图幅数</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><% info.bookDetailSheetNum %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">附件类型<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><% info.bookFileType %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">附件数量</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><% info.bookFileNum %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">责任编辑<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><% info.dutyEditor %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">电话</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><% info.phone %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">内容提要<span class="must">*</span></label>
+        <div class="col-xs-10">
+          <pre class="form-control-static"><%- info.bookDetailSketched %></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">作者简介<span class="must">*</span></label>
+        <div class="col-xs-10">
+          <pre class="form-control-static"><%- info.bookDetailAuthorMsg %></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">建议主题词<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookSubjectHeadings %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">图书类型</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookType %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">图书分类<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookDetailKind %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">指导分类</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookDetailGuideKind %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">发行范围<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <div class="input-group">
+            <p class="form-control-static"><%- info.bookDetailPublishScope %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">读者对象</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookDetailReader %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">版次<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookDetailEdition %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">印次</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookDetailLayoutOrder %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">成品尺寸<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.finishedSize %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">印张数</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.printPaperNum %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">本次印量<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.printRuns %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">本次起印量</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.currentlyPrintsRuns %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">累计印量<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookTotalVolume %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">定价（本册）</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookPrice %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">价格变更次数<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.priceChangeNum %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">出版方式</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookPublishMode %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">合作出版者<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.cooperativePublisher %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">出版地（申领者所在地）</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.placePublication %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">印刷单位<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.printingUnit %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">计划出版时间</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.planPublishDatetime %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">实际出版时间<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.actualPublishDatetime %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">丛书名</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.seriesBookName %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">附属丛书名<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.accessorySeriesBookName %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">并列丛书名</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.paratacticSeriesBookName %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">丛书著作责任者<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.seriesBookAuthor %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">分（辑）册号</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookFascicleNum %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">定价（本套）<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookPrice %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">数量</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.counts %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">套书名<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.packageBooksName %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">套书著作责任者</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.packageBooksAuthor %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">引进版图书原书名<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookOriginalName %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">版权合同登记号</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.copyrightContractNum %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">原出版地<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.pristinePlacePublication %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">引进版图书原出版者</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.author %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">教材目录文件号<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.directoryFileNumber %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">目录（章节）信息</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.catalogInformation %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <label class="col-xs-2 control-label">备注<span class="must">*</span></label>
+        <div class="col-xs-10">
+          <pre class="form-control-static"><%- info.remarks %></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">封面设计者<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.coverLayoutUser %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">出版社名称</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.bookPressName %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">提交人</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitUserName %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">提交时间</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitDatetime %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>

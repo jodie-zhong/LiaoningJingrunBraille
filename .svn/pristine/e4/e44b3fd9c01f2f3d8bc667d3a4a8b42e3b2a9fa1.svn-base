@@ -1,0 +1,19 @@
+[
+  {
+    "name": "file",
+    "type": "image",
+    "label": "图片文件",
+    "extension": "jpg|png",
+    "maxSize": 204800
+  },
+  {
+    "name": "border",
+    "type": "border",
+    "label": "边框"
+  },
+  {
+    "name": "radius",
+    "type": "radius",
+    "label":"边框弧度"
+  }
+]

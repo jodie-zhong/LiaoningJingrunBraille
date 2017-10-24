@@ -1,0 +1,99 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+    var util = require('../../../../../common/util.js');
+
+    /**
+     * Workflow Item
+     */
+    var Item = ItemBase.extend({
+        // 保存/提交接口
+        saveAction: 'backup/saveOrSubmitBackup.action',
+        // 查询接口
+        detailAction: 'backup/searchBackupDetail.action',
+
+        onHandleChange: function () {
+            var handle = this.$('input[name="topicSelectProperty"]:checked').val();
+            this.$('div[data-area="import"]').hide();
+            this.$('div[data-area="cite"]').hide();
+            if (handle === '2') {
+                // 重大选题备案
+                this.$('div[data-area="import"]').show();
+            } else if (handle === '3') {
+            	// 引用选题备案
+                this.$('div[data-area="cite"]').show();
+            }
+        },
+
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+            var that = this;
+            // 选题备案类型
+            this.$container.on('change', 'input[name="topicSelectProperty"]', this.onHandleChange.bind(this));
+            
+            this.$container.on('change', 'input[name="topicId"]', function(){
+            	var name = $(this).val();
+            	$('input[name="topicImportantFileName"]').val(name);
+            	$('input[name="bookName"]').val(name);
+            });
+        },
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+			// 初始化日期组件
+            this.$('input[data-type="othera"]').datetimepicker({
+                format: 'YYYY-MM-DD',
+                locale: 'zh-cn',
+                sideBySide: true,
+                minDate: new Date()
+            });
+            this.$('input[data-type="otherb"]').datetimepicker({
+                format: 'YYYY-MM-DD',
+                locale: 'zh-cn',
+                sideBySide: true,
+                minDate: new Date()
+            });
+            
+			this.onHandleChange();
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function (container, tpl) {
+            this._super(container, tpl);
+        },
+        back: function (data) {
+//      	if (data) {
+//      		var name = data.name;
+//      		$('input[name="importantTopicFileName"]').val(name);
+//      		console.log(data.id);
+//      	}
+        },
+        
+        /**
+         * 渲染页面
+         */
+        render: function () {
+            this._super();
+
+            this.initPageEvent();
+
+            this.initPageData();
+        }
+        
+        
+
+    });
+
+
+    module.exports = Item;
+
+});

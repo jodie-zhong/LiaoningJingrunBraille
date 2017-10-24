@@ -1,0 +1,49 @@
+[
+  {
+    "name": "text",
+    "type": "string",
+    "label": "文字"
+  },
+  {
+    "name": "link",
+    "type": "string",
+    "label": "链接"
+  },
+  {
+    "name": "background",
+    "type": "color",
+    "label": "背景颜色"
+  },
+  {
+    "name": "color",
+    "type": "color",
+    "label": "文字颜色"
+  },
+  {
+    "name": "border",
+    "type": "border",
+    "label": "按钮边框"
+  },
+  {
+    "name": "radius",
+    "type": "radius",
+    "label": "边框弧度"
+  },
+  {
+    "name": "fontSize",
+    "type": "number",
+    "label": "字号",
+    "isRem": true
+  },
+  {
+    "name": "lineHeight",
+    "type": "number",
+    "label": "高度",
+    "isRem": true
+  },
+  {
+    "name": "margin",
+    "type": "margin",
+    "label": "外边距"
+  }
+]

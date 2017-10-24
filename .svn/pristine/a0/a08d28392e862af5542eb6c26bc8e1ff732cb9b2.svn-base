@@ -1,0 +1,79 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+    var util = require('../../../../../common/util.js');
+
+    /**
+     * Workflow Item
+     */
+    var Item = ItemBase.extend({
+        // 保存/提交接口
+        saveAction: 'cipApply/saveOrSubmitApply.action',
+
+        // 查询接口
+        detailAction: 'cipApply/searchApplyDetail.action',
+
+        onHandleChange: function () {
+            var price = this.$('input[name="bookPrice"]').val();
+            var bPrice=parseFloat(price).toFixed(2);
+            this.$('input[name="bookPrice"]').val(bPrice);
+        },
+
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+            var that = this;
+
+            this.$container.on('change', 'input[name="bookPrice"]', this.onHandleChange.bind(this));
+
+        },
+
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function (container, tpl) {
+            this._super(container, tpl);
+
+        },
+
+        /**
+         * 渲染页面
+         */
+        render: function () {
+            this._super();
+
+            this.initPageEvent();
+
+            this.initPageData();
+        },
+
+        /**
+         * 从弹窗返回
+         * @param data
+        //  */
+        // 这么写会覆盖back,刷新列表会被覆盖
+        // back: function(data){
+        //     // 将title值设置为返回的数据,input的change事件
+        //     this.$('input[name="dutyEditor"]').attr('title',data.name);
+        //
+        // }
+
+    });
+
+
+    module.exports = Item;
+
+});
+

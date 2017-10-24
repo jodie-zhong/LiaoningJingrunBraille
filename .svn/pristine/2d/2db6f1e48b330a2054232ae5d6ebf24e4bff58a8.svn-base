@@ -1,0 +1,366 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    var DialogBase = require('../../../common/base-dialog');
+    var listEnterTpl = require('./reprint-audit-enter-list.tpl');
+    var Module = DialogBase.extend(new function () {
+        var that;
+        var currentApply = '';
+        var bookDateAdd = {};
+        var $checkedTr = null;
+        // 重新生成序号
+        function onWorkLoadNum() {
+            var i = 1;
+            that.$('#selectBookTable tr').each(function () {
+                $(this).find('td[data-value="number"]').text(i++);
+            });
+        }
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+            //图书添加
+            that.$container.on('click', '#addBook', function () {
+                that.openPage('chinese/reprint/reprint-audit-select', bookDateAdd);
+            });
+            // 每本书的删除事件
+            that.$container.on('click', 'button.book-delete', function () {
+                // 先删除数据，并排序，再删dom,重置radio的name
+                var $el = $(this);
+                var id = $el.attr('data-id');
+                var ids = bookDateAdd.idReAd;
+                var bookNames = bookDateAdd.nameReAd;
+                var bookLeads = bookDateAdd.leadReAd;
+                var bookReads = bookDateAdd.readReAd;
+                var bookReps = bookDateAdd.Reprints;
+                var taskIds = bookDateAdd.aTaskId;
+                var inputStates = bookDateAdd.inputState;
+                var index = $.inArray(id, ids);
+                if (index >= 0) {
+                    ids.splice(index, 1);
+                    bookNames.splice(index, 1);
+                    bookLeads.splice(index, 1);
+                    bookReads.splice(index, 1);
+                    bookReps.splice(index, 1);
+                    taskIds.splice(index, 1);
+                    inputStates.splice(index, 1);
+                }
+                $el.parents('tr').remove();
+                onWorkLoadNum();
+                // 重新生成bookDateAdd
+                if (ids) {
+                    bookDateAdd = {
+                        idReAd: ids,
+                        nameReAd: bookNames,
+                        leadReAd: bookLeads,
+                        readReAd: bookReads,
+                        Reprints: bookReps,
+                        aTaskId: taskIds,
+                        inputState: inputStates,
+                    };
+                }
+                // 将formEnter清空
+                that.$('#formEnter').empty();
+            });
+            // 每本书的录入事件
+            that.$container.on('click', 'button.book-enter', function () {
+                $checkedTr = $(this).parents('tr');
+                var $prev = $(this).next();
+                util.showLoading();
+                util.sendRequest({
+                    data: {
+                        bookId: $prev.attr('data-id'),
+                        taskId: $prev.attr('data-taskId'),
+                        reprintFlag: '1',
+                        hReprintBookAnditId: $prev.attr('data-reprintid'),
+                        currentFlowId: 'rpt_departmentHeadAudit',
+                        inputState: $prev.attr('data-inputStateId')
+                    },
+                    action: 'cnReprint/searchCNReprintDetail.action',
+                    success: function (resp) {
+                        util.hideLoading();
+                        if (resp.code === 0) {
+                            var taskFlow = resp.data.nextTaskFlowInfoEntity;
+                            if (taskFlow && taskFlow.nextFlowTaskUserIds) {
+                                // 说明有数据，开始找对应的流程
+                                var flows = resp.data.userTaskEntities;
+                                if (flows) {
+                                    for (var i = 0; i < flows.length; i++) {
+                                        if (taskFlow.flowId === flows[i].flowId) {
+                                            flows[i].nextFlowTaskUserIds = taskFlow.nextFlowTaskUserIds;
+                                            flows[i].nextFlowTaskUserNames = taskFlow.nextFlowTaskUserNames;
+                                        }
+                                    }
+                                }
+                            }
+                            that.$('#formEnter').html(util.template(listEnterTpl, {info: resp.data}));
+                        } else {
+                            console.log(resp);
+                            util.showAlert(resp.message || '出错，请稍后重试！');
+                        }
+                    },
+                    error: function (xhr) {
+                        // XHR错误
+                        util.hideLoading();
+                        console.log(xhr);
+                        util.showAlert('出错，请稍后重试！');
+                    }
+                });
+            });
+            // 点录入完成按钮
+            that.$container.on('click', '#btnEnter', function () {
+                var $form = that.$('#formEnter');
+                // 没有错误开始处理
+                if (that.validate($form) === true) {
+                    // 通过公共方法生成表单参数
+                    var params = {};
+                    params.operationType = '1';
+                    params.currentFlowId = 'rpt_departmentHeadAudit';
+                    params.taskUsers = $form.find('input[name="taskUsers"]').attr('data-value');
+                    params.deptIds = $form.find('input[name="deptIds"]').val();
+                    params.roleIds = $form.find('input[name="roleIds"]').val();
+                    params.nextCategory = $form.find('input[name="nextCategory"]').val();
+                    params.bookList = [];
+                    params.bookList.push({
+                        flowId: $form.find('input[name="flowId"]').val(),
+                        flowName: $form.find('input[name="flowName"]').val(),
+                        bookId: $form.find('input[name="bookId"]').val(),
+                        taskId: $form.find('input[name="taskId"]').val(),
+                        handleState: $form.find('input[name="handleState"]:checked').val(),
+                        auditContent: $form.find('textarea[name="auditContent"]').val(),
+                        deptDiscussContent: $form.find('textarea[name="deptDiscussContent"]').val(),
+                        hReprintBookAnditId: $form.find('input[name="hReprintBookAnditId"]').val(),
+                        taskUsers : $form.find('input[name="taskUsers"]').attr('data-value'),
+                        inputState: '2',// 永远都传2
+                    });
+                    util.showLoading();
+                    util.sendRequest({
+                        data: params,
+                        action: 'cnReprint/saveOrSubmitCNReprint.action',
+                        success: function (resp) {
+                            util.hideLoading();
+                            console.log(resp);
+                            if (resp.code === 0) {
+                                // 业务执行成功
+                                util.showAlert('操作成功!', function () {
+                                    $checkedTr.find('.no-entry').text('已录入');
+                                    // 将删除按钮的data-handleState属性设置为选择的
+                                    $checkedTr.find('.book-delete').attr('data-handleState', $form.find('input[name="handleState"]:checked').val());
+                                    // 将任务人更新
+                                    $checkedTr.find('.book-delete').attr('data-taskUsers', $form.find('input[name="taskUsers"]').val());
+                                    // 将formEnter清空
+                                    $form.empty();
+                                });
+                            } else {
+                                // 业务执行失败
+                                util.showAlert(resp.message || '操作失败，请稍后重试！');
+                            }
+                        },
+                        error: function (xhr) {
+                            // XHR错误
+                            util.hideLoading();
+                            console.log(xhr);
+                            util.showAlert('操作失败，请稍后重试！');
+                        }
+                    });
+                }
+            });
+
+            // 点提交按钮
+            that.$container.on('click', '#btnCipSubmit', function () {
+                // 点击之前判断是否全为已录入
+                var onoff = true;
+                if (that.$('#selectBookTable .no-entry').length > 0) {
+                    that.$('#selectBookTable .no-entry').each(function () {
+                        if ($(this).text() !== '已录入') {
+                            onoff = false;
+                        }
+                    });
+                } else {
+                    onoff = false;
+                }
+                if (onoff) {
+                    var $form = that.$('#formEnter');
+                    // 没有错误开始处理
+                    if (that.validate($form) === true) {
+                        // 通过公共方法生成表单参数
+                        var params = {};
+                        params.operationType = '2';
+                        params.currentFlowId = 'rpt_departmentHeadAudit';
+                        // params.taskUsers = $form.find('input[name="taskUsers"]').attr('data-value');
+                        // params.deptIds = $form.find('input[name="deptIds"]').val();
+                        // params.roleIds = $form.find('input[name="roleIds"]').val();
+                        // params.nextCategory = $form.find('input[name="nextCategory"]').val();
+                        params.bookList = [];
+                        that.$('#selectBookTable tr').each(function () {
+                            var $el = $(this);
+                            var $type = $el.find('.book-type');
+                            var needFlowId = 'rpt_coverDesignAssignment';  //默认为封面设计任务分配
+                            var needFlowName = '封面设计任务分配';
+                            var needBookPrintState = '2';
+                            if ($type.text() === '再版') {
+                                needFlowId = 'rpt_topicDeclaration';
+                                needFlowName = '选题申报';
+                                needBookPrintState = '3';
+                            }
+                            params.bookList.push({
+                                bookId: $el.find('.book-delete').attr('data-id'),
+                                taskId: $el.find('.book-delete').attr('data-taskId'),
+                                hReprintBookAnditId: $el.find('.book-delete').attr('data-reprintId'),
+                                parentBookId: $el.find('.book-delete').attr('data-bookParentId'),
+                                handleState: $el.find('.book-delete').attr('data-handleState'),
+                                flowId: needFlowId,
+                                flowName: needFlowName,
+                                taskUsers: $el.find('.book-delete').attr('data-taskUsers'),
+                                hBookPrintState: needBookPrintState,
+                                inputState: '2',
+                            });
+                        })
+                        util.showLoading();
+                        util.sendRequest({
+                            data: params,
+                            action: 'cnReprint/saveOrSubmitCNReprint.action',
+                            success: function (resp) {
+                                util.hideLoading();
+                                console.log(resp);
+                                if (resp.code === 0) {
+                                    // 业务执行成功
+                                    util.showAlert('操作成功!', function () {
+                                        that.close({refresh: true});
+                                    });
+                                } else {
+                                    // 业务执行失败
+                                    util.showAlert(resp.message || '操作失败，请稍后重试！');
+                                }
+                            },
+                            error: function (xhr) {
+                                // XHR错误
+                                util.hideLoading();
+                                console.log(xhr);
+                                util.showAlert('操作失败，请稍后重试！');
+                            }
+                        });
+                    }
+                } else {
+                    util.showAlert('请选择图书，并将图书录入信息补全并保存');
+                }
+            });
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+            that.initValidate(that.$('#panelWorkflowContent'));
+            that.initValidate(that.$('#formEnter'));
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            bookDateAdd = {};
+            that = this;
+            currentApply = data;
+            that.initTemplate(tpl, {info: data.info});
+            // 初始化页面事件
+            initPageEvent();
+            // 初始化页面数据
+            initPageData();
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+            if (data.book && data.idReAd) {
+                console.log(data);
+                bookDateAdd = data;
+                var length = $('#selectBookTable tr').length;
+                var ids = [], names = [], leads = [], reads = [], reprints = [], bookType = [], taskIds = [], inputStates = [], inputTexts = [], parentIds = [], audit = [], taskUsers = [];
+                if (data.idReAd) {
+                    ids = data.idReAd;
+                    names = data.nameReAd;
+                    leads = data.leadReAd;
+                    reads = data.readReAd;
+                    reprints = data.Reprints;
+                    taskIds = data.aTaskId;
+                    inputStates = data.inputState;
+                    parentIds = data.parentBookIds;
+                    audit = data.audit;
+                    taskUsers = data.taskUsers;
+                }
+                $.each(reads, function (index, value) {
+                    if (value === '2') {
+                        bookType.push('重印');
+                    } else {
+                        bookType.push('再版');
+                    }
+                });
+                $.each(inputStates, function (index, value) {
+                    if (value === '1') {
+                        inputTexts.push('未录入');
+                    } else {
+                        inputTexts.push('已录入');
+                    }
+                });
+                //将数据添加到已有的table表格数据后
+                var $tbody = $("#selectBookTable");
+                for (var i = 0; i < ids.length; i++) {
+                    var bookTr = $('<tr><td data-value="number">' + (i + 1 + length) + '</td><td>' + names[i] + '</td><td class="book-type">' + bookType[i] + '</td><td>' + leads[i] + '</td><td class="no-entry">' + inputTexts[i] + '</td><td><button class="btn btn-xs book-enter btn-rounded">录入</button><button' +
+                        ' data-id="' + ids[i] + '" data-lead="' + leads[i] + '" data-taskUsers="' + taskUsers[i] + '" data-taskId="' + taskIds[i] + '" data-inputStateId="' + inputStates[i] + '" data-bookParentId="' + parentIds[i] + '" data-handleState="' + audit[i] + '" data-name="' + names[i] + '" data-reprintId="' + reprints[i] + '" data-read="' + reads[i] + '" class="btn btn-xs btn-danger btn-rounded book-delete">删除</button></td></tr>');
+                    $tbody.append(bookTr);
+                }
+                // 获取渲染后的所有tr上的id与name，将bookDateAdd替换
+                var newId = [], newName = [], newLead = [], newRead = [], newReprint = [], newTaskId = [], newInput = [], newParentId = [], newAudit = [], newTaskUsers = [];
+                $("#selectBookTable tr").each(function () {
+                    var $el1 = $(this);
+                    newId.push($el1.find('button.book-delete').attr('data-id'));
+                    newName.push($el1.find('button.book-delete').attr('data-name'));
+                    newLead.push($el1.find('button.book-delete').attr('data-lead'));
+                    newRead.push($el1.find('button.book-delete').attr('data-read'));
+                    newReprint.push($el1.find('button.book-delete').attr('data-reprintId'));
+                    newTaskId.push($el1.find('button.book-delete').attr('data-taskId'));
+                    newInput.push($el1.find('button.book-delete').attr('data-inputStateId'));
+                    newParentId.push($el1.find('button.book-delete').attr('data-bookParentId'));
+                    newAudit.push($el1.find('button.book-delete').attr('data-handleState'));
+                    newTaskUsers.push($el1.find('button.book-delete').attr('data-taskUsers'));
+                });
+                bookDateAdd = {
+                    idReAd: newId,
+                    nameReAd: newName,
+                    leadReAd: newLead,
+                    readReAd: newRead,
+                    Reprints: newReprint,
+                    aTaskId: newTaskId,
+                    inputState: newInput,
+                    parentBookIds: newParentId,
+                    audit: newAudit,
+                    taskUsers: newTaskUsers
+                };
+            }
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function () {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+    }());
+
+    module.exports = Module;
+});

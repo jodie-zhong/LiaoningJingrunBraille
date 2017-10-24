@@ -1,0 +1,134 @@
+<div class="modal-dialog dialog-container">
+  <div class="modal-content">
+    <div class="panel">
+      <div class="panel-header">
+        <h3><i class="fa fa-television"></i> 培训<%- info.trainName?'修改':'新增' %></h3>
+        <div class="control-btn">
+          <a class="panel-close btn-close"><i class="fa fa-close"></i></a>
+        </div>
+      </div>
+      <div class="panel-content">
+        <div class="form-horizontal" id="formTrainEdit">
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="form-group">
+                <label class="col-xs-4 control-label">培训名称<span class="must">*</span></label>
+                <div class="col-xs-8">
+                  <input type="text" maxlength="32" value="<%- info.trainName %>" name="trainName" class="form-control"
+                         data-fv-notempty="true" data-fv-notempty-message="请填写培训名称"/>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-6">
+              <div class="form-group">
+                <label class="col-xs-4 control-label">培训编号<span class="must">*</span></label>
+                <div class="col-xs-8">
+                  <input type="text" maxlength="32" value="<%- info.trainNum %>" name="trainNum" class="form-control"
+                         data-fv-notempty="true" data-fv-notempty-message="请填写培训编号"/>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="form-group">
+                <label class="col-xs-4 control-label">培训单位<span class="must">*</span></label>
+                <div class="col-xs-8">
+                  <div class="input-group with-clear">
+                    <input type="text" class="form-control" value="<%- info.trainUnitName %>" name="trainUnit"
+                           data-value="<%- info.trainUnit %>" placeholder="培训单位" readonly data-fv-notempty="true"
+                           data-fv-notempty-message="请填写培训单位"/>
+                    <span class="input-group-btn">
+											<button class="btn btn-clear" type="button" data-action="clear"><i
+                              class="fa fa-remove box"></i></button>
+										  <button class="btn btn-default" type="button" data-open="public/department/select-departments"
+                              data-data="{}"><i class="fa fa-graduation-cap"></i></button>
+									</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-6">
+              <div class="form-group">
+                <label class="col-xs-4 control-label">培训人员<span class="must">*</span></label>
+                <div class="col-xs-8">
+                  <div class="input-group with-clear">
+                    <input type="text" class="form-control" value="<%- info.trainUserNames %>" name="trainUserIds"
+                           data-value="<%- info.trainUserIds %>" placeholder="培训人员" readonly data-fv-notempty="true"
+                           data-fv-notempty-message="请填写培训人员"/>
+                    <span class="input-group-btn">
+											<button class="btn btn-clear" type="button" data-action="clear"><i
+                              class="fa fa-remove box"></i></button>
+										  <button class="btn btn-default" type="button" data-open="public/user/select-users" data-data="{}"><i
+                              class="fa fa-users"></i></button>
+									</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="form-group">
+                <label class="col-xs-4 control-label">培训时间<span class="must">*</span></label>
+                <div class="col-xs-8">
+                  <input type="text" value="<%- info.trainDatetime %>" name="trainDatetime"
+                         class="form-control date-time" data-fv-notempty="true" data-fv-notempty-message="请选择培训时间"/>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-6">
+              <div class="form-group">
+                <label class=" col-xs-4 control-label">培训形式<span class="must">*</span></label>
+                <div class=" col-xs-8">
+                  <select class="form-control" name="trainForm" id="selTrainOptionName" data-fv-notempty="true"
+                          data-fv-notempty-message="请选择培训形式">
+                    <option value="<%- info.trainForm %>" selected="">
+                      <%- info.trainFormName %>
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="form-group">
+                <label class="col-xs-4 control-label">培训课时<span class="must">*</span></label>
+                <div class=" col-xs-8">
+                  <input type="text" maxlength="32" pattern="^[0-9]+(.[0-9]{1,2})?$" value="<%- info.trainHour %>"
+                         name="trainHour" class="form-control" data-fv-regexp-message="请输入不小于零的整数"
+                         data-fv-notempty="true" data-fv-notempty-message="请输入培训课时">
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-6">
+              <div class="form-group">
+                <label class=" col-xs-4 control-label">培训积分<span class="must">*</span></label>
+                <div class=" col-xs-8">
+                  <input type="text" maxlength="32" pattern="^[0-9]+(.[0-9]{1,2})?$" value="<%- info.trainIntegral %>"
+                         name="trainIntegral" class="form-control" data-fv-regexp-message="请输入不小于零的整数"
+                         data-fv-notempty="true" data-fv-notempty-message="请输入培训积分">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="form-group">
+                <label class="col-xs-2 control-label">培训内容<span class="must">*</span></label>
+                <div class="col-xs-10">
+                  <textarea class="form-control" name="trainContent" data-fv-notempty="true" placeholder="培训内容"
+                            data-fv-notempty-message="请填写培训内容" maxlength="1024"><%- info.trainContent %></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="dialog-options">
+            <button class="btn btn-primary" id="btnTrainSave">保存</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

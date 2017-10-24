@@ -1,0 +1,22 @@
+[
+  {
+    "groupName": "静态组件",
+    "list":[
+      {
+        "name": "image",
+        "label": "图片",
+        "type": "static"
+      },
+      {
+        "name": "richText",
+        "label": "富文本",
+        "type": "static"
+      },
+      {
+        "name": "shape",
+        "label": "形状",
+        "type": "static"
+      }
+    ]
+  }
+]

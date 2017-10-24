@@ -1,0 +1,21 @@
+<% if(info.length > 0) { %>
+<% for(var i = 0; i < info.length; i++) { %>
+<tr data-id="<%- info[i].bookTopicId %>">
+  <td><%- (i + 1) %></td>
+  <td data-check="true"><i class="fa fa-square-o" data-action="check"></i></td>
+  <td><%- info[i].bookTopicName %></td>
+  <td><%- info[i].bookDetailAuthor %></td>
+  <!--<td><%- info[i].bookDetailWorkWay %></td>-->
+  <td><%- info[i].bookDetailWordsNum %></td>
+  <!--<td><%- info[i].bookDetailPublishingHouse %></td>-->
+  <!--<td><%- info[i].bookDetailPublicationDate %></td>-->
+  <td><%- info[i].bookTopicOneKind %></td>
+  <td><%- info[i].createUserName %></td>
+  <!--<td><%- info[i].bookDetailMarketMsg %></td>-->
+</tr>
+<% } %>
+<% } else { %>
+<tr data-noselect="true">
+  <td colspan="7"><p class="empty-tips">暂无数据</p></td>
+</tr>
+<% } %>

@@ -1,0 +1,13 @@
+{
+	"code": 0,
+	"message": "查询字典表详情成功",
+	"data": {
+		"codeId": "1",
+		"codeType": "1",
+		"code": "0001",
+		"value": "标题",
+		"parentId": "10",
+		"remark": "处理状态",
+		"isUse": "1"
+	}
+}

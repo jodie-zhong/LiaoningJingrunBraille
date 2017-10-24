@@ -1,0 +1,36 @@
+{
+  "code":0,
+  "message":null,
+  "data":[
+    {
+      "roleId":"1",
+      "authorityId":"0114",
+      "authorityGrpup":null
+    },
+    {
+      "roleId":"1",
+      "authorityId":"011",
+      "authorityGrpup":null
+    },
+    {
+      "roleId":"1",
+      "authorityId":"0111",
+      "authorityGrpup":null
+    },
+    {
+      "roleId":"1",
+      "authorityId":"01",
+      "authorityGrpup":"system"
+    },
+    {
+      "roleId":"1",
+      "authorityId":"0112",
+      "authorityGrpup":null
+    },
+    {
+      "roleId":"1",
+      "authorityId":"0113",
+      "authorityGrpup":null
+    }
+  ]
+}

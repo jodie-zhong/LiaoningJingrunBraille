@@ -1,0 +1,219 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    var PageBase = require('../../../common/base-dialog');
+    var listTpl = require('./select-user-list.tpl');
+
+    var Module = PageBase.extend(new function () {
+        var that;
+        var searchParams = {};
+        var currentPage = 1;
+        var searchDepartId = '';
+
+        /**
+         * 搜索部门列表
+         */
+        function searchDepartmentList(){
+            var params = {
+            	searchDepartmentName: ""
+            };
+            util.sendRequest({
+                type: 'POST',
+                action: 'department/listDepartmentNoPage.action',
+                data: params,
+                success: function (resp) {
+                    console.log(resp);
+                    if (resp.code === 0) {
+                        var $select = that.$('#selUserOptionDept');
+                        var $option;
+                        for(var i = 0; i < resp.data.length;i++){
+                            $option = $('<option></option>');
+                            $option.text(resp.data[i].departmentName);
+                            $option.attr('value', resp.data[i].departmentId);
+                            $select.append($option);
+                        }
+                    } else {
+                        console.log(resp);
+                    }
+                },
+                error: function (xhr) {
+                    // XHR错误
+                    console.log(xhr);
+                }
+            });
+        }
+
+        /**
+         * 搜索角色列表
+         */
+        function searchRoleList(){
+            var params = {};
+            params.searchDepartmentId = searchDepartId;
+            util.sendRequest({
+                type: 'POST',
+                action: 'role/listRoleNoPage.action',
+                data: params,
+                success: function (resp) {
+                    console.log(resp);
+                    if (resp.code === 0) {
+                        var $select = that.$('#selUserOptionRole');
+                        var $option;
+                        for(var i = 0; i < resp.data.length;i++){
+                            $option = $('<option></option>');
+                            $option.text(resp.data[i].roleName);
+                            $option.attr('value', resp.data[i].roleId);
+                            $select.append($option);
+                        }
+                    } else {
+                        console.log(resp);
+                    }
+                },
+                error: function (xhr) {
+                    // XHR错误
+                    console.log(xhr);
+                }
+            });
+        }
+        
+        /**
+         * 搜索人员列表
+         */
+        function searchUserList(){
+            // 生成搜索条件
+            var params = $.extend({},searchParams);
+            params.page = currentPage;
+			util.showLoading('正在查询人员列表……');
+            util.sendRequest({
+                type: 'POST',
+                data: params,
+                action: 'user/windowListUser.action',
+                success: function (resp) {
+                    util.hideLoading();
+                    console.log(resp);
+                    if (resp.code === 0) {
+                        that.$('#selectUserTable').html(util.template(listTpl, {list:resp.data.records}));
+                        // 分页数据
+						that.$('#personListPaging').html(that.buildPagination(resp.data.pageNow, resp.data.pageCount));
+                    } else {
+                        util.showAlert(resp.message || '查询人员列表出错，请稍后重试！');
+                    }
+                },
+                error: function (xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('查询人员列表出错，请稍后重试！');
+                }
+            });
+        }
+        
+        /**
+		 * 跳转页面
+		 */
+		function jumpPage() {
+			var $el = $(this);
+			var page = $el.attr('data-page');
+			if(page) {
+				// 修改页面后重新刷新页面数据
+				currentPage = page;
+				searchUserList()
+			}
+		}
+        
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+
+            // 点击选择按钮
+            that.$container.on('click', 'table button', function(){
+                var $el = $(this).parent().parent();
+                var data = {
+                    id: $el.attr('data-id'),
+                    name: $el.attr('data-name')
+                };
+                that.close(data);
+            });
+
+            // 搜索按钮
+			that.$container.on('click','#btnSearchUser',function(){
+				searchParams = that.buildSearchParams(that.$('#formSearchUser input[data-search],select[data-search]'));
+				currentPage = 1;
+				searchUserList();
+			});
+			
+			// 根据部门搜索角色
+			that.$container.on('change','#selUserOptionDept',function(){
+				that.$('#selUserOptionRole option').remove();
+				searchDepartId = that.$('#selUserOptionDept').val();
+            	searchRoleList();
+			});
+			
+			// 分页
+			that.$container.on('click', '#personListPaging a', jumpPage);
+		}
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+            // 搜索默认的人员列表
+            searchUserList();
+            // 搜索部门列表
+            searchDepartmentList();
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            that.initTemplate(tpl, {});
+
+            // 初始化变量
+            searchParams = {};
+            currentPage = 1;
+            searchDepartId = '';
+            // 如果传了部门和角色，控制搜索条件
+			if(!util.showAll && (data.deptIds || data.roleIds)) {
+				searchParams.searchDepartmentId = data.deptIds;
+				searchParams.searchRoleId = data.roleIds;
+			}
+
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function(){
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+
+    module.exports = Module;
+});

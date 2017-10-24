@@ -1,0 +1,117 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var ItemBase = require('../item-base');
+    var util = require('../../../../../common/util.js');
+
+    /**
+     * Workflow Item
+     */
+    var Item = ItemBase.extend({
+        // 保存/提交接口
+        saveAction: 'cipApply/saveOrSubmitApply.action',
+
+        // 查询接口
+        detailAction: 'cipApply/searchApplyDetail.action',
+
+        onHandleChange: function () {
+            var price = this.$('input[name="bookPrice"]').val();
+            var bPrice=parseFloat(price).toFixed(2);
+            if(isNaN(bPrice)){
+                bPrice='';
+            }
+            this.$('input[name="bookPrice"]').val(bPrice);
+        },
+        // 判断有几条电话
+        searchButtonNum: function() {
+            var phoneLength = this.$('.form-horizontal .phone-number').length;
+            if (phoneLength !== 1) {
+                this.$('.form-horizontal button[data-type="phone-minus"]').show();
+                this.$('.form-horizontal button[data-type="phone-plus"]').hide();
+                this.$('.form-horizontal button[data-type="phone-plus"]').last().show();
+            } else{
+                this.$('.form-horizontal button[data-type="phone-minus"]').hide();
+                this.$('.form-horizontal button[data-type="phone-plus"]').show();
+            }
+        },
+        getFormData:function () {
+            var $form = this.$('.form-horizontal');
+            // 先调用父类生成基本的数据结构
+//      	var params = {};
+            var params = this._super();
+            // 处理上传部份数据结构
+            var arrAddress=[];
+            $form.find('.phone-number').each(function(){
+                var $el=$(this)
+                arrAddress.push($el.val());
+            });
+            params.phoneList=arrAddress;
+            return params;
+        },
+
+        // 添加电话
+        onWorkContentPlus: function($dwp) {
+            var workRow = this.$('#phoneTemplate').html();
+            $dwp.parents('.phoneList').append(workRow);
+            this.searchButtonNum();
+        },
+        // 删除电话
+        onWorkContentMinus: function($dwp) {
+            $dwp.parents('.addphone').remove();
+            this.searchButtonNum();
+        },
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+            var that = this;
+
+            this.$container.on('change', 'input[name="bookPrice"]', this.onHandleChange.bind(this));
+            // 添加工作量
+            this.$container.on('click', 'button[data-type="phone-plus"]', function() {
+                that.onWorkContentPlus($(this));
+            });
+            // 删除工作量
+            this.$container.on('click', 'button[data-type="phone-minus"]', function() {
+                that.onWorkContentMinus($(this));
+            });
+
+        },
+
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+            //  页面加载完后对加减按钮进行操作
+            this.searchButtonNum();
+        },
+
+        /**
+         * 构造函数
+         * @param container
+         * @param tpl
+         */
+        init: function (container, tpl) {
+            this._super(container, tpl);
+
+        },
+
+        /**
+         * 渲染页面
+         */
+        render: function () {
+            this._super();
+
+            this.initPageEvent();
+
+            this.initPageData();
+        },
+
+    });
+
+
+    module.exports = Item;
+
+});
+

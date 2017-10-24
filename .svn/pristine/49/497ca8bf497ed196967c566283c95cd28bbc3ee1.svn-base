@@ -1,0 +1,287 @@
+/* Simple JavaScript Inheritance
+ * By John Resig http://ejohn.org/
+ * MIT Licensed.
+ */
+// Inspired by base2 and Prototype
+(function () {
+    var initializing = false, fnTest = /xyz/.test(function () {
+        xyz;
+    }) ? /\b_super\b/ : /.*/;
+    // The base Class implementation (does nothing)
+    this.Class = function () {
+    };
+
+    // Create a new Class that inherits from this class
+    this.Class.extend = function (prop) {
+        var _super = this.prototype;
+
+        // Instantiate a base class (but only create the instance,
+        // don't run the init constructor)
+        initializing = true;
+        var prototype = new this();
+        initializing = false;
+
+        // Copy the properties over onto the new prototype
+        for (var name in prop) {
+            // Check if we're overwriting an existing function
+            prototype[name] = typeof prop[name] === "function" &&
+            typeof _super[name] === "function" && fnTest.test(prop[name]) ?
+                (function (name, fn) {
+                    return function () {
+                        var tmp = this._super;
+
+                        // Add a new ._super() method that is the same method
+                        // but on the super-class
+                        this._super = _super[name];
+
+                        // The method only need to be bound temporarily, so we
+                        // remove it when we're done executing
+                        var ret = fn.apply(this, arguments);
+                        this._super = tmp;
+
+                        return ret;
+                    };
+                })(name, prop[name]) :
+                prop[name];
+        }
+
+        // The dummy class constructor
+        function Class() {
+            // All construction is actually done in the init method
+            if (!initializing && this.init) {
+                this.init.apply(this, arguments);
+            }
+        }
+
+        // Populate our constructed prototype object
+        Class.prototype = prototype;
+
+        // Enforce the constructor to be what we expect
+        Class.prototype.constructor = Class;
+        // And make this class extendable
+        Class.extend = arguments.callee;
+
+        return Class;
+    };
+})();
+
+define(function (require, exports, module) {
+    "use strict";
+
+    /**
+     * WidgetBase基类
+     */
+    var WidgetBase = Class.extend({
+
+        // 公共属性
+        // position: 'relative',
+        top: 0,
+        left: 0,
+        width: 'auto',
+        height: 'auto',
+        zIndex: 0,
+        // rotate: 0,
+        opacity: 100,
+        prop: {},
+
+        /**
+         * 初始化控件
+         * @param $container
+         * @param data
+         * @param page
+         */
+        onInit: function ($container, data, page) {
+            // 外部容器（Page）
+            this.$container = $container;
+            // 自身容器（Widget）
+            // 设计模式id是由Editor设置的，运行模式来源于data
+            this.id = this.id || data.id;
+            this.$element = $('<div class="widget-container"></div>').attr('id', this.id);
+            // 数据
+            this.prop = $.extend(this.prop || {}, data.prop);
+            // page对象
+            this.page = page;
+            // design模式由具体子类进行渲染
+            if (this.getRuntime() !== 'design') {
+                // 设置容器属性
+                // 关于尺寸保存的都是以750为单位的数字，所以需要转为rem
+                this.setPublicProperty(data);
+                var css = {
+                    position: this.position,
+                    height: this.size2Rem(this.height)
+                };
+                if (this.position !== 'relative') {
+                    css.width = this.size2Rem(this.width);
+                    css.top = this.size2Rem(this.top);
+                    css.left = this.size2Rem(this.left);
+                    css.zIndex = this.zIndex;
+                }
+                this.$element.css(css);
+            }
+            // 将容器添加到Page
+            this.$container.append(this.$element);
+        },
+
+        /**
+         * 子类中需要在onBack中通过this._super()调用该方法
+         */
+        onBack: function () {
+
+        },
+
+        /**
+         * 派发自定义事件事件
+         * @param eventName
+         * @param data
+         */
+        dispatchEvent: function (eventName, data) {
+            var event = document.createEvent('Events');
+            event.initEvent(eventName.toLowerCase(), false, false);
+            event.data = data;
+            document.dispatchEvent(event);
+        },
+
+        /**
+         * 导出HTML文本
+         */
+        exportHtml: function () {
+
+        },
+
+        /**
+         * 获取属性数据
+         */
+        getProperty: function () {
+            return this.prop;
+        },
+
+        /**
+         * 设置属性数据
+         */
+        setProperty: function (prop) {
+
+        },
+
+        /**
+         * 获取公共舒心
+         * @returns
+         */
+        getPublicProperty: function () {
+            return {
+                position: this.position,
+                top: this.top,
+                left: this.left,
+                width: this.width,
+                height: this.height,
+                zIndex: this.zIndex,
+                opacity: this.opacity,
+                rotate: this.rotate
+            };
+        },
+
+        /**
+         * 设置公共属性
+         * @param prop
+         */
+        setPublicProperty: function (prop) {
+            // 如果有值则更新对应的公共属性
+            // 公共属性对样式的影响是由外层控制，组件本身仅记录
+            if (prop) {
+                this.position = prop.position || this.position;
+                this.top = typeof prop.top === 'undefined' ? this.top : prop.top;
+                this.left = typeof prop.left === 'undefined' ? this.left : prop.left;
+                this.width = typeof prop.width === 'undefined' ? this.width : prop.width;
+                this.height = typeof prop.height === 'undefined' ? this.height : prop.height;
+                this.zIndex = typeof prop.zIndex === 'undefined' ? this.zIndex : prop.zIndex;
+                this.rotate = typeof prop.rotate === 'undefined' ? this.rotate : prop.rotate;
+                this.opacity = typeof prop.opacity === 'undefined' ? this.opacity : prop.opacity;
+            }
+            if (this.position === 'relative') {
+                this.top = 0;
+                this.left = 0;
+            }
+        },
+
+        /**
+         * 获取运行时状态
+         * @returns {*|string}
+         */
+        getRuntime: function () {
+            return this.page && this.page.getRuntime() || 'run';
+        },
+
+        /**
+         * 获取组件自身的路径
+         * @returns {string}
+         */
+        getCurrentPath: function () {
+            var path = location.origin + location.pathname;
+            return path.replace(/\/(\w)+(\.html)/g, './widget/' + this.widgetName + '/');
+        },
+
+        /**
+         * 获取组件自身的资源文件路径
+         * @returns {string}
+         */
+        getResourcePath: function () {
+            var path = location.origin + location.pathname;
+            return path.replace(/\/(\w)+(\.html)/g, '/data/file/');
+        },
+
+        /**
+         * 当前页面所有监听事件列表
+         */
+        listeners: {},
+
+        /**
+         * 添加自定义事件监听
+         * @param eventName
+         * @param listener
+         */
+        addEventListener: function (eventName, listener) {
+            eventName = eventName.toLowerCase();
+            // 记录已经监听的事件
+            this.listeners[eventName] = this.listeners[eventName] || [];
+            this.listeners[eventName].push(listener);
+            document.addEventListener(eventName.toLowerCase(), listener);
+        },
+
+        /**
+         * 清除自定义事件监听（仅能清除当前page的事件）
+         * @param eventName
+         * @param listener
+         */
+        removeEventListener: function (eventName, listener) {
+            eventName = eventName.toLowerCase();
+            var evtListeners = this.listeners[eventName] || [];
+            for (var len = evtListeners.length, i = len - 1; i >= 0; i--) {
+                // 如果指定了listener则移除指定监听，否则移除所有监听
+                if (!listener || evtListeners[i] === listener) {
+                    document.removeEventListener(eventName, evtListeners[i]);
+                    evtListeners.splice(i, 1);
+                }
+            }
+        },
+        /**
+         * 设计稿尺寸转rem
+         * @param size
+         * @returns {*}
+         */
+        size2Rem: function (size) {
+            if (typeof size === 'number') {
+                return (size / 100) + 'rem';
+            } else {
+                size = size.toString();
+                if (size.indexOf('auto') >= 0 || size.indexOf('100%') >= 0) {
+                    return size;
+                } else {
+                    return (parseInt(size) / 100) + 'rem';
+                }
+            }
+        }
+
+    });
+
+    module.exports = WidgetBase;
+
+});

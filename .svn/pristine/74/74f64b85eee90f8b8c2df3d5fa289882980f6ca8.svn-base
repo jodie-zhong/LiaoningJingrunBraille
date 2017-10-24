@@ -1,0 +1,154 @@
+{
+  "code": 0,
+  "message": "查询列表成功",
+  "data": [
+    {
+      "roleId": "1",
+      "roleName": "系统管理员"
+    },
+    {
+      "roleId": "2",
+      "roleName": "社长/总编辑"
+    },
+    {
+      "roleId": "3",
+      "roleName": "副总编辑"
+    },
+    {
+      "roleId": "4",
+      "roleName": "副社长"
+    },
+    {
+      "roleId": "5",
+      "roleName": "总编室部门负责人"
+    },
+    {
+      "roleId": "6",
+      "roleName": "总编室管理员"
+    },
+    {
+      "roleId": "7",
+      "roleName": "盲文编译部部门负责人"
+    },
+    {
+      "roleId": "8",
+      "roleName": "盲文编译部责任编辑"
+    },
+    {
+      "roleId": "9",
+      "roleName": "盲文编译部译录"
+    },
+    {
+      "roleId": "10",
+      "roleName": "盲文编译部校对"
+    },
+    {
+      "roleId": "11",
+      "roleName": "盲文编译部通读"
+    },
+    {
+      "roleId": "12",
+      "roleName": "盲文编译部质检"
+    },
+    {
+      "roleId": "13",
+      "roleName": "汉文编辑室部门负责人"
+    },
+    {
+      "roleId": "14",
+      "roleName": "汉文编辑室责任编辑"
+    },
+    {
+      "roleId": "15",
+      "roleName": "汉文编辑室校对"
+    },
+    {
+      "roleId": "16",
+      "roleName": "汉文编辑室责任校对"
+    },
+    {
+      "roleId": "17",
+      "roleName": "有声读物事业部部门负责人"
+    },
+    {
+      "roleId": "18",
+      "roleName": "有声读物事业部责任编辑"
+    },
+    {
+      "roleId": "19",
+      "roleName": "出版部部门负责人"
+    },
+    {
+      "roleId": "20",
+      "roleName": "出版部责任印制"
+    },
+    {
+      "roleId": "21",
+      "roleName": "出版部排版组长"
+    },
+    {
+      "roleId": "22",
+      "roleName": "出版部排版员"
+    },
+    {
+      "roleId": "23",
+      "roleName": "出版部设计组长"
+    },
+    {
+      "roleId": "24",
+      "roleName": "出版部设计员"
+    },
+    {
+      "roleId": "25",
+      "roleName": "出版部物资保管员"
+    },
+    {
+      "roleId": "26",
+      "roleName": "出版部责任印刷"
+    },
+    {
+      "roleId": "27",
+      "roleName": "发行部部门负责人"
+    },
+    {
+      "roleId": "28",
+      "roleName": "发行部业务员"
+    },
+    {
+      "roleId": "29",
+      "roleName": "发行部内勤人员"
+    },
+    {
+      "roleId": "30",
+      "roleName": "读者服务部部门负责人"
+    },
+    {
+      "roleId": "31",
+      "roleName": "读者服务部管理员"
+    },
+    {
+      "roleId": "32",
+      "roleName": "读者服务部制单员"
+    },
+    {
+      "roleId": "33",
+      "roleName": "材料供应部部门负责人"
+    },
+    {
+      "roleId": "34",
+      "roleName": "材料供应部管理员"
+    },
+    {
+      "roleId": "35",
+      "roleName": "盲文印制部部门负责人"
+    },
+    {
+      "roleId": "36",
+      "roleName": "盲文印制部印刷员"
+    },
+    {
+      "roleId": "42",
+      "roleName": "\"呵呵呵\""
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+<% if(list.length > 0) { %>
+<% for(var i = 0; i < list.length; i++) { %>
+<tr data-bookId="<%- list[i].bookId %>" data-bookTopicId="<%- list[i].bookTopicId %>" data-taskState="<%- list[i].taskState %>"
+    data-flowId="<%- list[i].flowId %>" data-taskId="<%- list[i].taskId %>" data-users="<%- list[i].taskUsers %>">
+  <td><%- (i + 1) %></td>
+  <td data-check="true"><i class="fa fa-square-o" data-action="check"></i></td>
+  <td><%- list[i].bookName %></td>
+  <td>
+    <% if(list[i].bookRegistrationState==='1') { %>
+    已登记
+    <% } else { %>
+    未登记
+    <% } %>
+  </td>
+</tr>
+<% } %>
+<% } else { %>
+<tr data-noselect="true">
+  <td colspan="4"><p class="empty-tips">暂无数据</p></td>
+</tr>
+<% } %>

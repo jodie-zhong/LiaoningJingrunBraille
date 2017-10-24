@@ -1,0 +1,339 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    var PageBase = require('../../../common/base-page');
+    //编辑界面模板
+    var listTpl = require('./dictionary-manage-list.tpl');
+    var listchildTpl = require('./dictionary-manage-listchild.tpl');
+
+    var Module = PageBase.extend(new function () {
+        var that;
+        // 当前选中的字典表ID
+        var currentCodeId = '';
+        var currentParentId = '';
+        var currentPage = '1';       
+        // 当前选中的字典详情
+        var currentDictionInfo = null;
+        var searchParams = {};
+        
+        /*
+         * 搜索一级字典列表 
+         */     
+        function searchDictionaryList() {
+        	// 清空二级字典列表
+     		searchDictionaryChildList('0');
+        	var params = $.extend({},searchParams);
+        	params.page = currentPage;
+        
+        	util.showLoading('');
+        	util.sendRequest({
+        		type: 'POST',
+        		data: params,
+        		action: 'code/listCode.action',
+        		success: function(resp) {
+        			util.hideLoading();
+        			console.log(resp);
+        			if (resp.code === 0) {
+        				that.$('#dictionListTable').html(util.template(listTpl,{
+        					list: resp.data.records,
+        					action: true
+        				}));
+        				if(resp.data.records.length === 0) {
+							util.showAlert('没有符合条件的查询结果。');
+						}
+        				
+        				// 分页数据
+        				that.$('#dictionListPaging').html(that.buildPagination(resp.data.pageNow, resp.data.pageCount));        				
+        			} else{
+        				util.showAlert(resp.message || '查询一级字典列表出错，请稍后重试！');
+        			}
+        		},
+        		error: function(xhr) {
+        			// XHR错误
+					util.hideLoading();
+					console.log(xhr);
+					util.showAlert('查询一级字典列表出错，请稍后重试！');
+        		}
+        	});
+        }
+        
+        /*
+         *  根据一级字典ID检索二级字典列表
+         */
+        function searchDictionaryChildList(id) {
+        	if (id) {
+        		currentCodeId = id;
+                currentParentId = id;
+        		var params = {
+        			parentId: currentCodeId
+        		};
+        		util.showLoading('');
+        		util.sendRequest({
+        			type: 'POST',
+        			data: params,
+        			action: 'code/listChildCode.action',
+        			success: function(resp) {
+        				util.hideLoading();
+        				console.log(resp);
+        				if (resp.code === 0) {
+        					that.$('#dictionListChildTable').html(util.template(listchildTpl, {
+        						listchild: resp.data.records,
+        						action: true,
+        					}));
+        				} else{
+        					util.showAlert(resp.message || '查询二级字典列表出错，请稍后重试！');
+        				}
+        			},
+        			error: function(xhr) {
+        				// XHR错误
+						util.hideLoading();
+						console.log(xhr);
+						util.showAlert('查询二级字典列表出错，请稍后重试！');
+        			}
+        		});
+        	}
+        }
+        
+        /*
+         * 查询字典表详情
+         */
+        function searchDictionaryInfo(id) {
+        	if (id) {
+        		currentCodeId = id;
+        		var params = {
+        			codeId: id
+        		};
+        		util.showLoading();
+        		util.sendRequest({
+        			type: 'POST',
+        			data: params,
+        			action: 'code/detailCode.action',
+        			success: function(resp) {
+        				util.hideLoading();
+        				console.log(resp);
+        				if (resp.code === 0) {
+        					currentDictionInfo = resp.data;
+        				} else{
+        					util.showAlert(resp.message || '查询字典信息出错，请稍后重试！');
+        				}
+        			},
+        			error: function(xhr) {
+        				// XHR错误
+        				util.hideLoading();
+        				console.log(xhr);
+        				util.showAlert('查询字典信息出错，请稍后重试！');
+        			}
+        		});
+        	}
+        }
+        
+        /*
+         * 启用字典
+         */
+        function setDictionUse() {
+        	util.showConfirm('确定要将“' + currentDictionInfo.value +'”启用吗？', function() {
+                var params = {
+        			codeId: currentDictionInfo.codeId,
+        			value: currentDictionInfo.value,
+        			isUse: '1'
+        		};        		
+        		util.showLoading();
+        		util.sendRequest({
+        			type: 'POST',
+        			data: params,
+        			action: 'code/modifyCodeIsUse.action',
+        			success: function(resp) {
+        				util.hideLoading();
+        				console.log(resp);
+        				if (resp.code === 0) {
+                            that.$('#btnDictionChildModify,#btnDictionChildChange').attr('disabled', 'disabled');
+                            searchDictionaryChildList(currentParentId);
+        				} else{
+        					util.showAlert(resp.message || '修改字典状态出错，请稍后重试！');
+        				}
+        			},
+        			error: function(xhr) {
+        				// XHR错误
+        				util.hideLoading();
+        				console.log(xhr);
+        				util.showAlert('修改字典状态出错，请稍后重试！');
+        			}
+        		});
+        	});
+        }
+        
+        /*
+         * 停用字典
+         */
+        function setDictionDel() {
+        	util.showConfirm('确定要将“' + currentDictionInfo.value +'”停用吗？', function() {
+                var params = {
+        			codeId: currentDictionInfo.codeId,
+        			value: currentDictionInfo.value,
+        			isUse: '2'
+        		};        		
+        		util.showLoading();
+        		util.sendRequest({
+        			type: 'POST',
+        			data: params,
+        			action: 'code/modifyCodeIsUse.action',
+        			success: function(resp) {
+        				util.hideLoading();
+        				console.log(resp);
+        				if (resp.code === 0) {
+                            that.$('#btnDictionChildModify,#btnDictionChildChange').attr('disabled', 'disabled');
+                            searchDictionaryChildList(currentParentId);
+        				} else{
+        					util.showAlert(resp.message || '修改字典状态出错，请稍后重试！');
+        				}
+        			},
+        			error: function(xhr) {
+        				// XHR错误
+        				util.hideLoading();
+        				console.log(xhr);
+        				util.showAlert('修改字典状态出错，请稍后重试！');
+        			}
+        		});
+        	});
+        }
+        
+        /**
+         * 跳转页面
+         */
+        function jumpPage() {
+        	var $el = $(this);
+        	var page = $el.attr('data-page');
+        	if(page) {
+        		// 修改页面后重新刷新页面数据
+        		currentPage = page;
+        		searchDictionaryList();
+        	}
+        }
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+        	// 一级字典表选中事件
+        	that.$container.on('click','#dictionListTable tr', function(){
+        		that.$('#dictionListTable').find('tr').removeClass('info');
+        		$(this).addClass('info');
+          		//查询二级字典列表
+        		var id = $(this).attr('data-id');
+        		if (id) {
+        			// 查询选中的一级字典表的二级信息
+        			searchDictionaryChildList(id);        			
+        		}
+                that.$('#btnDictionChildAdd').removeAttr('disabled');
+                that.$('#btnDictionChildModify').attr('disabled','disabled');
+            	that.$('#btnDictionChildUse').attr('disabled','disabled');
+            	that.$('#btnDictionChildChange').attr('disabled','disabled');
+        	});
+        	
+        	// 二级字典表选中事件
+        	that.$container.on('click','#dictionListChildTable tr', function(){
+        		that.$('#btnDictionChildModify').attr('disabled','disabled');
+            	that.$('#btnDictionChildUse').attr('disabled','disabled');
+            	that.$('#btnDictionChildChange').attr('disabled','disabled');
+        		that.$('#dictionListChildTable').find('tr').removeClass('info');
+        		$(this).addClass('info');
+        		var id = $(this).attr('data-id');
+        		if (id) {
+                    searchDictionaryInfo(id);
+				}
+        		//	查询字典详情
+				var isUse = $(this).attr('data-use');
+				console.log(isUse);
+				if (isUse === '1') {
+                    that.$('#btnDictionChildModify,#btnDictionChildChange').removeAttr('disabled');
+				} else {
+                    that.$('#btnDictionChildUse').removeAttr('disabled');
+                }
+        	});
+        	
+        	// 查询
+        	that.$container.on('click','#btnSearchDiction',function() {
+        		searchParams = that.buildSearchParams(that.$('#formSearchDiction input[data-search]'));
+        		currentPage = 1;
+        		searchDictionaryList();
+        	});
+
+        	// 二级字典列表新建
+        	that.$container.on('click','#btnDictionChildAdd', function() {
+        		that.openPage('system/dictionary/dictionary-manage-editchild', {parentId:currentParentId});
+        	});
+
+        	// 二级字典列表编辑
+        	that.$container.on('click','#btnDictionChildModify', function() {
+        		that.openPage('system/dictionary/dictionary-manage-editchild', currentDictionInfo);
+        	});
+        	
+        	// 字典列表启用
+        	that.$container.on('click','#btnDictionChildUse', setDictionUse);
+
+        	// 字典列表停用
+        	that.$container.on('click','#btnDictionChildChange', setDictionDel);
+
+        	// 分页
+        	that.$container.on('click', '#dictionListPaging a', jumpPage);
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+			// 一级字典列表
+			searchDictionaryList();
+        }
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            that.initTemplate(tpl, {});
+			// 重新初始化数据
+			currentCodeId = '';
+			currentParentId = '';
+        	currentPage = '1';    
+        	currentDictionInfo = null;
+			searchParams = {};
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+            if(data && data.refresh === true) {
+				searchDictionaryList();
+			}
+
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function(){
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+
+    module.exports = Module;
+});

@@ -1,0 +1,193 @@
+<!--修改盲文封底及电子书稿-->
+<% if(isEdit) { %>
+<div class="form-horizontal" id="formEdit">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="form-group">
+        <table class="table table-striped table-nowrap table-hover">
+          <thead>
+          <tr>
+            <th class="w-table">序号</th>
+            <th class="w-150">分册书</th>
+            <th class="w-100">类型</th>
+            <th class="w-150">附件名称</th>
+            <th class="w-150">操作</th>
+            <th class="w-150">上传</th>
+          </tr>
+          </thead>
+          <tbody>
+          <% for(var i=0;i< info.bookFascicleList.length;i++ ) {%>
+          <tr data-type="ebook">
+            <td><%- (i + 1) %></td>
+            <td class="bookName" title="<%- info.bookFascicleList[i].bookFascicleName %>"><%-
+              info.bookFascicleList[i].bookFascicleName %>
+            </td>
+            <td class="bookFileType" data-bookFileTypeCode="<%- info.bookFascicleList[i].bookFileTypeCode %>"
+                title="<%- info.bookFascicleList[i].bookFileType %>"><%-
+              info.bookFascicleList[i].bookFileType %>
+            </td>
+            <td class="bookFileName" title="<%- info.bookFascicleList[i].bookFileName %>"><%-
+              info.bookFascicleList[i].bookFileName %>
+            </td>
+            <td>
+              <% if(!info.bookFascicleList[i].bookFileAddress || info.bookFascicleList[i].bookFileAddress
+              === '') { %>
+              <button class="btn btn-default btn-rounded btn-sm btn-download"
+                      data-address="<%- info.bookFascicleList[i].bookFileAddress %>" disabled>下载
+              </button>
+              <button class="btn btn-default btn-rounded btn-sm btn-preview"
+                      data-preview="<%- info.bookFascicleList[i].bookFileAddress %>" disabled>预览
+              </button>
+              <% } else { %>
+              <button class="btn btn-default btn-rounded btn-sm btn-download"
+                      data-address="<%- info.bookFascicleList[i].bookFileAddress %>">下载
+              </button>
+              <button class="btn btn-default btn-rounded btn-sm btn-preview"
+                      data-preview="<%- info.bookFascicleList[i].bookFileAddress %>">预览
+              </button>
+              <% } %>
+            </td>
+            <td>
+              <div class="input-group input-group-xs fileUp with-clear">
+                <input type="text" class="form-control bookAddress" name="bookFileAddress"
+                       data-value="<%- info.bookFascicleList[i].bookFileAddress %>"
+                       value="<%- info.bookFascicleList[i].bookFileName %>"
+                       placeholder="上传" readonly/>
+                <span class="input-group-btn">
+                  <button class="btn btn-clear" type="button" data-action="clear"><i
+                          class="fa fa-remove box"></i></button>
+                  <button class="btn btn-default" type="button" data-open="public/file/file-upload"
+                          data-data='{"type": "*.doc;*.docx;*.jpg;*.jpeg;*.png;*.pdf;"}'><i class="fa fa-file-o"></i>
+                  </button>
+                </span>
+              </div>
+            </td>
+          </tr>
+          <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <% if(info.userTaskEntities) { %>
+  <% for(var i = 0; i < info.userTaskEntities.length; i++) { %>
+  <div class="row" data-flow="<%- info.userTaskEntities[i].flowId %>" data-area="nextFlow">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">下一流程</label>
+        <div class="col-xs-8">
+          <% if(!info.userTaskEntities[i].deptAndRoles) { %>
+          <p class="form-control-static"><%- info.userTaskEntities[i].flowName %></p>
+          <% } else { %>
+          <p class="form-control-static">
+            <%- info.userTaskEntities[i].flowName %>（<%- info.userTaskEntities[i].deptAndRoles %>）
+          </p>
+          <% } %>
+          <input type="hidden" name="flowId" value="<%- info.userTaskEntities[i].flowId %>">
+          <input type="hidden" name="flowName" value="<%- info.userTaskEntities[i].flowName %>">
+          <input type="hidden" name="nextCategory" value="<%- info.userTaskEntities[i].category %>">
+          <input type="hidden" name="deptIds" value="<%- info.userTaskEntities[i].deptIds %>">
+          <input type="hidden" name="roleIds" value="<%- info.userTaskEntities[i].roleIds %>">
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <% if(info.userTaskEntities[i].roleIds) { %>
+      <div class="form-group">
+        <label class="col-xs-4 control-label">任务人<span class="must">*</span></label>
+        <div class="col-xs-8">
+          <div class="input-group">
+            <div class="input-group with-clear">
+              <input type="text" class="form-control" name="taskUsers"
+                     title="<%- info.userTaskEntities[i].nextFlowTaskUserNames %>"
+                     value="<%- info.userTaskEntities[i].nextFlowTaskUserNames %>"
+                     data-value="<%- info.userTaskEntities[i].nextFlowTaskUserIds %>" placeholder="任务人"
+                     readonly
+                     data-data="{roleIds: '<%- info.userTaskEntities[i].roleIds %>', searchDepartmentId: '<%- info.userTaskEntities[i].deptIds %>'}"
+                     data-fv-notempty="true" data-fv-notempty-message="请选择下一任务人">
+              <span class="input-group-btn">
+              <button class="btn btn-clear" type="button" data-action="clear"><i class="fa fa-remove box"></i></button>
+              <button class="btn btn-default" type="button" data-open="public/user/select-users"
+                      data-data='{"roleIds": "<%- info.userTaskEntities[i].roleIds %>", "deptIds": "<%- info.userTaskEntities[i].deptIds %>"}'><i
+                      class="fa fa-user-o"></i>
+              </button>
+            </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% } %>
+    </div>
+  </div>
+  <% } %>
+  <% } %>
+</div>
+<% }else{ %>
+<div class="form-horizontal">
+  <div class="row">
+    <table class="table table-striped table-nowrap table-hover">
+      <thead>
+      <tr>
+        <th class="w-table">序号</th>
+        <th class="w-150">分册书</th>
+        <th class="w-100">类型</th>
+        <th class="w-150">附件名称</th>
+        <th class="w-150">操作</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% for(var i=0;i< info.bookFascicleList.length;i++ ) {%>
+      <tr>
+        <td><%- (i + 1) %></td>
+        <td title="<%- info.bookFascicleList[i].bookFascicleName %>"><%-
+          info.bookFascicleList[i].bookFascicleName %>
+        </td>
+        <td title="<%- info.bookFascicleList[i].bookFileType %>"><%-
+          info.bookFascicleList[i].bookFileType %>
+        </td>
+        <td class="bookFileName" title="<%- info.bookFascicleList[i].bookFileName %>"><%-
+          info.bookFascicleList[i].bookFileName %>
+        </td>
+        <td>
+          <% if(!info.bookFascicleList[i].bookFileAddress || info.bookFascicleList[i].bookFileAddress
+          === '') { %>
+          <button class="btn btn-default btn-rounded btn-sm btn-download"
+                  data-address="<%- info.fascicleList[i].hBookFileAddress %>" disabled>下载
+          </button>
+          <button class="btn btn-default btn-rounded btn-sm btn-preview"
+                  data-preview="<%- info.bookFascicleList[i].bookFileAddress %>" disabled>预览
+          </button>
+          <% } else { %>
+          <button class="btn btn-default btn-rounded btn-sm btn-download"
+                  data-address="<%- info.bookFascicleList[i].bookFileAddress %>">下载
+          </button>
+          <button class="btn btn-default btn-rounded btn-sm btn-preview"
+                  data-preview="<%- info.bookFascicleList[i].bookFileAddress %>">预览
+          </button>
+          <% } %>
+        </td>
+      </tr>
+      <% } %>
+      </tbody>
+    </table>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">提交人</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitUserName %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label class="col-xs-4 control-label">提交时间</label>
+        <div class="col-xs-8">
+          <p class="form-control-static"><%- info.submitDatetime %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>

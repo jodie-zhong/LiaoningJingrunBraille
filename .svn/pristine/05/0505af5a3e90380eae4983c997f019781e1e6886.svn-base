@@ -1,0 +1,736 @@
+<!--备案确认-->
+<% if(isEdit) { %>
+<div class="form-horizontal">
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">图书名称</label>
+				<div class="col-xs-8">
+					<p class="form-control-static">
+						<%- info.bookDetailAuthorTitles %>
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group ">
+				<label class="col-xs-4 control-label">是否加急</label>
+				<div class="col-xs-8">
+					<p class="form-control-static">
+						<%- info.bookDetailSubmitDatetime %>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">作者<span class="c-red">*</span></label>
+				<div class="col-xs-8">
+					<input type="text" class="form-control" name="bookTopicName" value="<%- info.bookTopicName %>" maxlength="128" placeholder="作者" required data-required-error="作者" />
+					<div class="help-block with-errors"></div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">著作方式</label>
+				<div class="col-xs-8">
+					<input type="text" class="form-control" value="<%- info.bookSeriesName %>" name="bookSeriesName" placeholder="著作方式" maxlength="128" />
+					<div class="help-block with-errors"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">原出版者<span class="c-red">*</span></label>
+				<div class="col-xs-8">
+					<input type="text" class="form-control" name="bookTopicName" value="<%- info.bookTopicName %>" maxlength="128" placeholder="原出版者" required data-required-error="作者" />
+					<div class="help-block with-errors"></div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">字数</label>
+				<div class="col-xs-8">
+					<input type="text" class="form-control" value="<%- info.bookSeriesName %>" name="bookSeriesName" placeholder="字数" maxlength="128" />
+					<div class="help-block with-errors"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">原版次<span class="c-red">*</span></label>
+				<div class="col-xs-8">
+					<input type="text" class="form-control" name="bookTopicName" value="<%- info.bookTopicName %>" maxlength="128" placeholder="原版次" required data-required-error="作者" />
+					<div class="help-block with-errors"></div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">出版时间</label>
+				<div class="col-xs-8">
+					<input type="text" class="form-control" value="<%- info.bookSeriesName %>" name="bookSeriesName" placeholder="出版时间" maxlength="128" />
+					<div class="help-block with-errors"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">印数<span class="c-red">*</span></label>
+				<div class="col-xs-8">
+					<input type="text" class="form-control" name="bookTopicName" value="<%- info.bookTopicName %>" maxlength="128" placeholder="印数" required data-required-error="作者" />
+					<div class="help-block with-errors"></div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">编排次序</label>
+				<div class="col-xs-8">
+					<input type="text" class="form-control" value="<%- info.bookSeriesName %>" name="bookSeriesName" placeholder="编排次序" maxlength="128" />
+					<div class="help-block with-errors"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">盲文形式<span class="c-red">*</span></label>
+				<div class="col-xs-8">
+					<select name="bookTopicOneKind" class="form-control" id="bookTopicOne">
+					</select>
+					<div class="help-block with-errors"></div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6"></div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group ">
+				<label class="col-xs-2 control-label">图书类别</label>
+				<div class="col-xs-3">
+					<select name="bookTopicOneKind" class="form-control" id="bookTopicOne">
+					</select>
+				</div>
+				<div class="col-xs-3">
+					<select name="bookTopicTwoKind" class="form-control" id="bookTopicTwo">
+					</select>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label">作者简介</label>
+				<div class="col-xs-10">
+					<textarea class="form-control" name="bookDetailAuthorResult" placeholder="作者简介" maxlength="256"><%- info.bookDetailAuthorResult %></textarea>
+					<div class="help-block with-errors"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group ">
+				<label class="col-xs-2 control-label">是否分册<span class="c-red">*</span></label>
+				<div class="col-xs-10">
+					<label class="radio-inline">
+            <% if(!info.bookTopicRecommendType || info.bookTopicRecommendType === '2') { %>
+            <input type="radio" name="bookTopicRecommendType" value="2" checked/>否
+            <% } else { %>
+            <input type="radio" name="bookTopicRecommendType" value="2" />否
+            <% } %>
+          </label>
+					<label class="radio-inline">
+            <% if(info.bookTopicRecommendType && info.bookTopicRecommendType === '1') { %>
+            <input type="radio" name="bookTopicRecommendType" value="1" checked/>是
+            <% } else { %>
+            <input type="radio" name="bookTopicRecommendType" value="1" />是
+            <% } %>
+          </label>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row" data-area = "nopage">
+		<div class="col-xs-12">
+			<label class="col-xs-2 control-label">图书封面</label>
+			<div class="col-xs-10">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>封面名称</th>
+							<th>封面地址</th>
+							<th colspan="2">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>盲文封面一</td>
+							<td>
+								<div class="input-group">
+									<input type="text" class="form-control" name="userHead" value="<%- info.userHead %>" data-id="<%- info.userHead %>" placeholder="盲文封面二" readonly>
+									<span class="input-group-btn">
+                    					<button class="btn btn-default" type="button" data-open="public/file/file-upload" data-data="{}"><i class="fa fa-file-o"></i></button>
+                  					</span>
+								</div>
+							</td>
+							<td><button class="btn btn-xs btn-rounded btn-default" type="button">自动生成</button></td>
+						</tr>
+						<tr>
+							<td>盲文封面二</td>
+							<td>
+								<div class="input-group">
+									<input type="text" class="form-control" name="userHead" value="<%- info.userHead %>" data-id="<%- info.userHead %>" placeholder="盲文封面二" readonly>
+									<span class="input-group-btn">
+                    					<button class="btn btn-default" type="button" data-open="public/file/file-upload" data-data="{}"><i class="fa fa-file-o"></i></button>
+                  					</span>
+								</div>
+							</td>
+							<td><button class="btn btn-xs btn-rounded btn-default" type="button">自动生成</button></td>
+						</tr>
+						<tr>
+							<td>汉文封面一</td>
+							<td>
+								<div class="input-group">
+									<input type="text" class="form-control" name="userHead" value="<%- info.userHead %>" data-id="<%- info.userHead %>" placeholder="盲文封面二" readonly>
+									<span class="input-group-btn">
+                    					<button class="btn btn-default" type="button" data-open="public/file/file-upload" data-data="{}"><i class="fa fa-file-o"></i></button>
+                  					</span>
+								</div>
+							</td>
+							<td><button class="btn btn-xs btn-rounded btn-default" type="button">自动生成</button></td>
+						</tr>
+						<tr>
+							<td>汉文封面二（版权页）</td>
+							<td>
+								<div class="input-group">
+									<input type="text" class="form-control" name="userHead" value="<%- info.userHead %>" data-id="<%- info.userHead %>" placeholder="盲文封面二" readonly>
+									<span class="input-group-btn">
+                    					<button class="btn btn-default" type="button" data-open="public/file/file-upload" data-data="{}"><i class="fa fa-file-o"></i></button>
+                  					</span>
+								</div>
+							</td>
+							<td><button class="btn btn-xs btn-rounded btn-default" type="button">自动生成</button></td>
+						</tr>
+						<tr>
+							<td>汉文封面四</td>
+							<td>
+								<div class="input-group">
+									<input type="text" class="form-control" name="userHead" value="<%- info.userHead %>" data-id="<%- info.userHead %>" placeholder="盲文封面二" readonly>
+									<span class="input-group-btn">
+                    					<button class="btn btn-default" type="button" data-open="public/file/file-upload" data-data="{}"><i class="fa fa-file-o"></i></button>
+                  					</span>
+								</div>
+							</td>
+							<td><button class="btn btn-xs btn-rounded btn-default" type="button">自动生成</button></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="row" data-area = "page" style="display: none;">
+		<div class="col-xs-12">
+			<label class="col-xs-2 control-label">图书封面</label>
+			<div class="col-xs-10">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>封面名称</th>
+							<th>封面地址</th>
+							<th colspan="2">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>盲文封面二</td>
+							<td>
+								<div class="input-group">
+									<input type="text" class="form-control" name="userHead" value="<%- info.userHead %>" data-id="<%- info.userHead %>" placeholder="盲文封面二" readonly>
+									<span class="input-group-btn">
+                    					<button class="btn btn-default" type="button" data-open="public/file/file-upload" data-data="{}"><i class="fa fa-file-o"></i></button>
+                  					</span>
+								</div>
+							</td>
+							<td><button class="btn btn-xs btn-rounded btn-default" type="button">自动生成</button></td>
+						</tr>
+						<tr>
+							<td>汉文封面一</td>
+							<td>
+								<div class="input-group">
+									<input type="text" class="form-control" name="userHead" value="<%- info.userHead %>" data-id="<%- info.userHead %>" placeholder="盲文封面二" readonly>
+									<span class="input-group-btn">
+                    					<button class="btn btn-default" type="button" data-open="public/file/file-upload" data-data="{}"><i class="fa fa-file-o"></i></button>
+                  					</span>
+								</div>
+							</td>
+							<td><button class="btn btn-xs btn-rounded btn-default" type="button">自动生成</button></td>
+						</tr>
+						<tr>
+							<td>汉文封面二（版权页）</td>
+							<td>
+								<div class="input-group">
+									<input type="text" class="form-control" name="userHead" value="<%- info.userHead %>" data-id="<%- info.userHead %>" placeholder="盲文封面二" readonly>
+									<span class="input-group-btn">
+                    					<button class="btn btn-default" type="button" data-open="public/file/file-upload" data-data="{}"><i class="fa fa-file-o"></i></button>
+                  					</span>
+								</div>
+							</td>
+							<td><button class="btn btn-xs btn-rounded btn-default" type="button">自动生成</button></td>
+						</tr>
+						<tr>
+							<td>汉文封面四</td>
+							<td>
+								<div class="input-group">
+									<input type="text" class="form-control" name="userHead" value="<%- info.userHead %>" data-id="<%- info.userHead %>" placeholder="盲文封面二" readonly>
+									<span class="input-group-btn">
+                    					<button class="btn btn-default" type="button" data-open="public/file/file-upload" data-data="{}"><i class="fa fa-file-o"></i></button>
+                  					</span>
+								</div>
+							</td>
+							<td><button class="btn btn-xs btn-rounded btn-default" type="button">自动生成</button></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="page col-xs-12" data-page = "open">
+		<div class="panel-header border-bottom" style="margin-bottom: 10px;">
+			<h3>分页信息</h3>
+			<div class="control-btn">
+				<button class="btn btn-xs btn-success"><i class="fa fa-plus" style="padding: 0;"></i></button>
+			</div>
+		</div>
+		<div class="border-bottom" style="margin-bottom: 10px;">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="form-group">
+					<label class="col-xs-2 control-label">分页序号<span class="c-red">*</span></label>
+					<div class="col-xs-4">
+						<input type="text" class="form-control" value="<%- info.bookSeriesName %>" name="bookSeriesName" placeholder="分页序号" maxlength="128" />
+						<div class="help-block with-errors"></div>
+					</div>
+					<div class="button-close" style="position: absolute;top: 0;right: 20px;">
+						<button class="btn btn-xs btn-danger"><i class="fa fa-close" style="padding: 0;"></i></button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-6">
+				<div class="form-group">
+					<label class="col-xs-4 control-label">盲文封面二<span class="c-red">*</span></label>
+					<div class="col-xs-8">
+						<div class="input-group">
+							<input type="text" class="form-control" name="userHead" value="<%- info.userHead %>" data-id="<%- info.userHead %>" placeholder="盲文封面二" readonly>
+							<span class="input-group-btn">
+                    			<button class="btn btn-default" type="button" data-open="public/file/file-upload" data-data="{}"><i class="fa fa-file-o"></i></button>
+                  			</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-6">
+				<button class="btn btn-default" type="button">自动生成</button>
+			</div>
+		</div>
+		<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label">分册位置</label>
+				<div class="col-xs-10">
+					<textarea class="form-control" name="bookDetailMarketMsg" placeholder="分册位置" maxlength="1024"><%- info.bookDetailMarketMsg %></textarea>
+					<div class="help-block with-errors"></div>
+				</div>
+			</div>
+		</div>
+		</div>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label">内容简介</label>
+				<div class="col-xs-10">
+					<textarea class="form-control" name="bookDetailSketched" placeholder="内容简介" maxlength="1024"><%- info.bookDetailSketched %></textarea>
+					<div class="help-block with-errors"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label">加工记录</label>
+				<div class="col-xs-10">
+					<textarea class="form-control" name="bookDetailMarketMsg" placeholder="加工记录" maxlength="1024"><%- info.bookDetailMarketMsg %></textarea>
+					<div class="help-block with-errors"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group ">
+				<label class="col-xs-2 control-label">初审结果<span class="c-red">*</span></label>
+				<div class="col-xs-10">
+					<label class="radio-inline">
+            <% if(!info.bookTopicRecommendType || info.bookTopicRecommendType === '2') { %>
+            <input type="radio" name="bookTopicRecommendType" value="2" required data-required-error="请选择初审结果" checked/>建议发稿
+            <% } else { %>
+            <input type="radio" name="bookTopicRecommendType" value="2" required data-required-error="请选择初审结果"/>建议发稿
+            <% } %>
+          </label>
+					<label class="radio-inline">
+            <% if(info.bookTopicRecommendType && info.bookTopicRecommendType === '1') { %>
+            <input type="radio" name="bookTopicRecommendType" value="1" required data-required-error="请选择初审结果" checked/>退稿
+            <% } else { %>
+            <input type="radio" name="bookTopicRecommendType" value="1" required data-required-error="请选择初审结果"/>退稿
+            <% } %>
+          </label>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label">初审意见</label>
+				<div class="col-xs-10">
+					<textarea class="form-control" name="bookDetailAuthorContactWay" placeholder="初审意见" maxlength="128"><%- info.bookDetailAuthorContactWay %></textarea>
+					<div class="help-block with-errors"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<% if(info.userTaskEntities) { %>
+	<% for(var i = 0; i < info.userTaskEntities.length; i++) { %>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">下一流程</label>
+				<div class="col-xs-8">
+					<p class="form-control-static">
+						<%- info.userTaskEntities[i].userTaskName %>
+					</p>
+					<input type="hidden" name="userTaskId" value="<%- info.userTaskEntities[i].userTaskId %>">
+					<input type="hidden" name="userTaskName" value="<%- info.userTaskEntities[i].userTaskName %>">
+					<input type="hidden" name="nextCategory" value="<%- info.userTaskEntities[i].category %>">
+					<input type="hidden" name="deptIds" value="<%- info.userTaskEntities[i].deptIds %>">
+					<input type="hidden" name="roleIds" value="<%- info.userTaskEntities[i].roleIds %>">
+					<input type="hidden" name="taskId" value="<%- info.taskId %>">
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<% if(info.userTaskEntities[i].roleIds) { %>
+			<div class="form-group">
+				<label class="col-xs-4 control-label">任务人<span class="c-red">*</span></label>
+				<div class="col-xs-8">
+					<div class="input-group">
+						<input type="text" class="form-control" name="taskUsers" value="<%- info.userTaskEntities[i].nextFlowTaskUserNames %>" data-value="<%- info.userTaskEntities[i].nextFlowTaskUserIds %>" placeholder="任务人" readonly data-data="{searchRoleId: '', searchDepartmentId: ''}" required data-required-error="请选择任务人">
+						<span class="input-group-btn">
+              <button class="btn btn-default" type="button" data-open="public/user/select-users" data-data="{}"><i
+                      class="fa fa-user-o"></i></button>
+            </span>
+					</div>
+					<div class="help-block with-errors"></div>
+				</div>
+			</div>
+			<% } %>
+		</div>
+	</div>
+	<% } %>
+	<% } %>
+</div>
+<% } else { %>
+<div class="form-horizontal">
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">图书名称</label>
+				<div class="col-xs-8">
+					<p class="form-control-static">
+						<%- info.bookTopicName %>
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">是否加急</label>
+				<div class="col-xs-8">
+					<p class="form-control-static">
+						<%- info.bookSeriesName %>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">作者</label>
+				<div class="col-xs-8">
+					<p class="form-control-static">
+						<%- info.bookDetailAuthor %>
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">著作方式</label>
+				<div class="col-xs-8">
+					<p class="form-control-static">
+						<%- info.bookDetailWorkWay %>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">原出版者</label>
+				<div class="col-xs-8">
+					<p class="form-control-static">
+						<%- info.bookDetailAuthorEducation %>
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group ">
+				<label class="col-xs-4 control-label">字数</label>
+				<div class="col-xs-8">
+					<p class="form-control-static">
+						<%- info.bookDetailWords %>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">原版次</label>
+				<div class="col-xs-8">
+					<p class="form-control-static">
+						<%- info.bookDetailAuthorTitles %>
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group ">
+				<label class="col-xs-4 control-label">出版时间</label>
+				<div class="col-xs-8">
+					<p class="form-control-static">
+						<%- info.bookDetailSubmitDatetime %>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">印数</label>
+				<div class="col-xs-8">
+					<p class="form-control-static">
+						<%- info.bookDetailName %>
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">编排版次</label>
+				<div class="col-xs-8">
+					<p class="form-control-static">
+						<%- info.bookDetailEdition %>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">盲文形式</label>
+				<div class="col-xs-8">
+					<p class="form-control-static">
+						<%- info.bookDetailEdition %>
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group ">
+				<label class="col-xs-4 control-label">图书类别</label>
+				<div class="col-xs-8">
+					<p>
+						<%- info.bookTopicOneKindName %>
+						<%- info.bookTopicTwoKindName %>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label">作者简介</label>
+				<div class="col-xs-10">
+					<pre class="form-control-static"><%- info.bookDetailAuthorResult %></pre>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label">图书封面</label>
+				<div class="col-xs-10">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>封面名称</th>
+								<th>封面地址</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>盲文封面二</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>汉文封面一</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>汉文封面二（版权页）</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>汉文封面四</td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label">是否分页</label>
+				<div class="col-xs-8">
+					<p class="form-control-static">
+						<% if(!info.bookTopicRecommendType || info.bookTopicRecommendType === '2') { %>
+            			否
+            			<% } %>
+            			<% if(info.bookTopicRecommendType && info.bookTopicRecommendType === '1') { %>
+            			是
+            			<% } %>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--当有分页信息时，显示分页信息-->
+	<% if(info.type === '2') { %>
+	<div></div>
+	<% } %>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label">内容简介</label>
+				<div class="col-xs-10">
+					<pre class="form-control-static"><%- info.bookDetailAuthorContactWay %></pre>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label">加工记录</label>
+				<div class="col-xs-10">
+					<pre class="form-control-static"><%- info.bookDetailAuthorContactWay %></pre>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label">初审结果</label>
+				<div class="col-xs-8">
+					<p class="form-control-static">
+						<% if(!info.bookTopicRecommendType || info.bookTopicRecommendType === '2') { %>
+            			建议发稿
+            			<% } %>
+            			<% if(info.bookTopicRecommendType && info.bookTopicRecommendType === '1') { %>
+            			退稿
+            			<% } %>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<% if(info.firsrtype === '2') { %>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="form-group">
+				<label class="col-xs-2 control-label">初审意见</label>
+				<div class="col-xs-10">
+					<pre class="form-control-static"><%- info.bookDetailSketched %></pre>
+				</div>
+			</div>
+		</div>
+	</div>
+	<% } %>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">提交人</label>
+				<div class="col-xs-8">
+					<p class="form-control-static">
+						<%- info.submitUserName %>
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label class="col-xs-4 control-label">提交时间</label>
+				<div class="col-xs-8">
+					<p class="form-control-static">
+						<%- info.submitDatetime %>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<% } %>

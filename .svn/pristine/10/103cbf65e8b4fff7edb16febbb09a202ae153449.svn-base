@@ -1,0 +1,16 @@
+<!--<% for(var i = 0; i < list.length; i++) { %>-->
+<!--<tr data-id="<%- list[i].reportTopicId %>" >-->
+    <!--<td><%- (i + 1) %></td>-->
+    <!--<td><%- list[i].reportTopicName %></td>-->
+    <!--<td><%- list[i].reportTopicDepartmentName %></td>-->
+    <!--<td><%- list[i].reportTopicNum %></td>-->
+    <!--<td><%- list[i].reportTopicDatetime %></td>-->
+    <!--<% if(list[i]){%>-->
+    <!--<td>已录入</td>-->
+    <!--<%}else{%>-->
+    <!--<td>未录入</td>-->
+    <!--<%}%>-->
+    <!--<td><button class="btn btn-primary enteringMeeting">录入</button></td>-->
+<!--</tr>-->
+<!--<% } %>-->
+<!--</tbody>-->

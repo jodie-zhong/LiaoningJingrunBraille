@@ -1,0 +1,209 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var Class = require('../../../../common/class');
+    var util = require('../../../../common/util.js');
+
+    /**
+     * Workflow Item基类
+     */
+    var ItemBase = Class.extend({
+        $container: null,
+
+        tpl: null,
+
+        data: null,
+
+        workflowDialog: null,
+
+        init: function (container, tpl, parentWindow) {
+            this.$container = container;
+            this.tpl = tpl;
+        },
+
+        /**
+         * 选择容器内对象
+         * @param selector
+         */
+        $: function (selector) {
+            return this.$container.find(selector);
+        },
+
+        /**
+         * 设置表单数据
+         * @param data
+         */
+        setData: function (data) {
+            this.data = data;
+            this.$container.html(util.template(this.tpl, data));
+
+            this.render();
+        },
+
+        /**
+         * 动态添加表单校验项
+         * @param field
+         */
+        addValidateField: function (field) {
+            this.workflowDialog.addValidateField(this.workflowDialog.$('#panelWorkflow'), field);
+        },
+
+        /**
+         * 动态删除表单校验项
+         * @param field
+         */
+        removeValidateField: function (field) {
+            this.workflowDialog.removeValidateField(this.workflowDialog.$('#panelWorkflow'), field);
+        },
+
+        /**
+         * 销毁表单校验
+         */
+        destroyValidate: function () {
+            this.workflowDialog.destroyValidate(this.workflowDialog.$('#panelWorkflow'));
+        },
+
+        /**
+         * 初始化表单校验
+         */
+        initValidate: function () {
+            this.workflowDialog.initValidate(this.workflowDialog.$('#panelWorkflow'));
+        },
+
+        /**
+         * 根据Form内输入框生成请求参数
+         * @param $els
+         */
+        getFormData: function () {
+            var $els = this.$('input, textarea, select');
+
+            var params = {}, $el;
+            $els.each(function () {
+                $el = $(this);
+                if ($el.parents('.row').is(':hidden')) {
+                    return;
+                }
+                switch (this.nodeName) {
+                    case 'INPUT':
+                        if ($el.attr('name')) {
+                            if (this.type === 'text' || this.type === 'email' || this.type === 'number' || this.type === 'password' || this.type === 'hidden') {
+                                params[$el.attr('name')] = $el.attr('data-value') ? $el.attr('data-value') : $el.val();
+                                // 如果是文件，需要提交文件名字段时会带有该属性
+                                if ($el.attr('data-file')) {
+                                    params[$el.attr('data-file')] = $el.val();
+                                }
+                            } else if (this.type === 'radio') {
+                                if ($el.prop('checked')) {
+                                    params[$el.attr('name')] = $el.val();
+                                    // 审核结果特殊处理
+                                    if ($el.attr('name') === 'handleState') {
+                                        params.handleStateName = $el.parent().text().trim();
+                                    }
+                                }
+                            } else if (this.type === 'checkbox') {
+                                if ($el.prop('checked')) {
+                                    params[$el.attr('name')] = params[$el.attr('name')] || [];
+                                    params[$el.attr('name')].push($el.val());
+                                }
+                            }
+                        }
+                        break;
+                    case 'SELECT':
+                        if ($el.attr('name')) {
+                            params[$el.attr('name')] = $el.val();
+                        }
+                        break;
+                    case 'TEXTAREA':
+                        if ($el.attr('name')) {
+                            params[$el.attr('name')] = $el.attr('data-value') ? $el.attr('data-value') : $el.val();
+                        }
+                        break;
+                    default:
+                }
+            });
+
+            // 重新整理
+            for (var i in params) {
+                if (params.hasOwnProperty(i) && typeof params[i] === 'object') {
+                    params[i] = params[i].join(',');
+                }
+            }
+
+            return params;
+        },
+
+        /**
+         * 渲染界面
+         */
+        render: function () {
+            // 下载文件
+            this.$container.on('click', '.downloadFile', function () {
+                window.open(util.getServerBase() + 'common/downloadFile.action?path=' + encodeURIComponent($(this).attr('data-download-address')), '_blank');
+            });
+            // 文件上传监听
+            this.$container.on('change', ".uploadFile", function () {
+                var address = $(this).attr("data-value");
+                var downBtn = $(this).parents("tr").find(".downloadFile");// 表格中一列输入框一列下载按钮的情况
+                if (downBtn.length === 0) {
+                    downBtn = $(this).parent().find(".downloadFile");// 输入框和下载按钮同一层级的情况
+                }
+                if (downBtn.length === 0) {
+                    downBtn = $(this).parents(".form-group").find(".downloadFile");// 输入框和下载按钮同一form-group的情况
+                }
+                if (downBtn.length === 0) {// 3种情况都找不到按钮，不继续执行
+                    return;
+                }
+                if (address && address !== '') {
+                    downBtn.attr("data-download-address", address);
+                    downBtn.removeAttr("disabled");
+                } else {
+                    downBtn.removeAttr("data-download-address");
+                    downBtn.attr("disabled", "disabled");
+                }
+            });
+            // 初始化下载按钮显示
+            this.$container.find(".downloadFile").each(function () {
+                var fileInput = $(this).parents("tr").find(".uploadFile");// 表格中一列输入框一列下载按钮的情况
+                if (fileInput.length === 0) {
+                    fileInput = $(this).parent().find(".uploadFile");// 输入框和下载按钮同一层级的情况
+                }
+                if (fileInput.length === 0) {
+                    fileInput = $(this).parents(".form-group").find(".uploadFile");// 输入框和下载按钮同一form-group的情况
+                }
+                // 编辑状态
+                if (fileInput.length > 0) {
+                    var address = fileInput.attr("data-value");
+                    if (address && address !== '') {
+                        $(this).attr("data-download-address", address);
+                        $(this).removeAttr("disabled");
+                    } else {
+                        $(this).removeAttr("data-download-address");
+                        $(this).attr("disabled", "disabled");
+                    }
+                }
+                // 查看状态
+                else {
+                    var selfAddress = $(this).attr("data-download-address");
+                    if (selfAddress && selfAddress !== '') {
+                        $(this).removeAttr("disabled");
+                    } else {
+                        $(this).attr("disabled", "disabled");
+                    }
+                }
+            });
+        },
+
+        /**
+         * 从弹窗返回
+         * @param data
+         */
+        back: function (data) {
+
+        }
+
+    });
+
+
+    module.exports = ItemBase;
+
+});

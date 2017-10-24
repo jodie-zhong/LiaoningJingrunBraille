@@ -1,0 +1,506 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    var Base = require('../../../common/base-dialog');
+
+    // 表单校验组件
+    require('../../../assets/plugins/form-validation/formValidation.min');
+    require('../../../assets/plugins/form-validation/formValidation.min.css');
+    // 日期组件
+    require('../../../assets/plugins/bootstrap-datetimepicker/js/bootstrap-datatimepicker');
+    require('../../../assets/plugins/bootstrap-datetimepicker/js/moment-with-locales');
+    require('../../../assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css');
+    // 右侧流程提示窗模板
+    var tipTpl = require('./workflow-tip.tpl');
+    // 流程映射关系
+    var flowMapping = require('./workflow-mapping');
+
+    var Module = Base.extend({
+        /**
+         * 流程信息接口
+         */
+        flowInfoAction: 'topic/listFlowInfo.action',
+        /**
+         * 流程列表接口（右侧小窗口）
+         */
+        flowListAction: 'topic/listFlowStage.action',
+        // 图书或选题ID
+        // 如果未批量审批模式，bookId可能为一个逗号分隔的数组
+        bookId: null,
+        topicId: null,
+        // 年月，和bookId、topicId相同作用，图书印制单审核类业务使用
+        yearMonth: null,
+        // 流程类型ID
+        flowId: null,
+        // 流程类型名称
+        flowName: null,
+        // 任务ID
+        taskId: null,
+        // 流程数据
+        flowData: null,
+        // 任务大类
+        deployId: null,
+        // 正在展开的Workflow Item
+        loadingFlowItem: null,
+        // 可编辑的Workflow Item（每个流程最多只有一个可编辑）
+        editFlowItem: null,
+
+        // 印刷需要区分
+        searchFlowId: null,
+
+        // 查看模式
+        isView: false,
+
+        /**
+         * 第一步查询流程信息
+         */
+        searchFlowInfo: function () {
+            // bookId可能是一个数组，只取第一个
+            var id = this.bookId ? this.bookId.split(',')[0] : '';
+            var topicId = this.topicId ? this.topicId.split(',')[0] : '';
+            util.showLoading();
+            util.sendRequest({
+                action: this.flowInfoAction,
+                data: {
+                    bookId: id,
+                    topicId: topicId,
+                    yearMonth: this.yearMonth,
+                    searchFlowId: this.searchFlowId,
+                    bookDeploymentKey: this.deployId,
+                    isView: this.isView || ''
+                },
+                success: function (resp) {
+                    util.hideLoading();
+                    if (resp.code === 0) {
+                        // 批量操作
+                        if ((this.bookId && this.bookId.indexOf(',') >= 0) || (this.topicId && this.topicId.indexOf(',') >= 0)) {
+                            // 如果是批量操作只保留最后一个工作流
+                            this.flowData = resp.data.listFlow.slice(-1);
+                        } else {
+                            this.flowData = resp.data.listFlow;
+                        }
+                        this.flowId = resp.data.currentFlow;
+                        this.flowName = resp.data.currentFlowName;
+                        // TODO: 暂时注掉
+                        // 加载右侧工作流提示
+                        // this.renderWorkflowTip();
+                        // 同步生成界面
+                        this.renderWorkflowPanel();
+                    } else {
+                        console.log(resp);
+                        util.showAlert(resp.message || '查询任务流程信息失败！');
+                    }
+                }.bind(this),
+                error: function (xhr) {
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('查询任务流程信息失败！');
+                }
+            });
+        },
+
+        /**
+         * 第二步：生成任务提示窗
+         */
+        renderWorkflowTip: function () {
+            util.sendRequest({
+                action: this.flowListAction,
+                data: {
+                    flowId: this.flowId
+                },
+                success: function (resp) {
+                    if (resp.code === 0) {
+                        resp.data.highlightFlowId = this.flowId;
+                        this.$('#panelWorkflow').append(util.template(tipTpl, resp.data));
+                    } else {
+                        console.log(resp);
+                    }
+
+                }.bind(this),
+                error: function (xhr) {
+                    // 什么也不做
+                    console.log(xhr);
+                }.bind(this)
+
+            });
+        },
+
+        /**
+         * 生成工作流面板
+         */
+        renderWorkflowPanel: function () {
+            var flowPanelTpl = '' +
+                '<% for(var i = 0; i < list.length;i++) { %>' +
+                '<% if(list[i].flowId !== "abandoned") { %>' +
+                '<div class="flow-panel">' +
+                '  <div class="flow-panel-header"' +
+                '    <span class="c-primary"><i class="fa fa-caret-right"></i> <%- list[i].flowName %></span>' +
+                '    <% if(list[i].submitUserName && list[i].submitDatetime) { %>' +
+                '    <span style="color: #999; font-size: 12px;">（处理人：<%- list[i].submitUserName %> | 处理时间：<%- list[i].submitDatetime %>）</span>' +
+                '    <% } %>' +
+                '  </div>' +
+                '  <div class="flow-panel-body" data-taskId="<%- list[i].taskId %>" data-flowId="<%- list[i].flowId %>" data-instance="<%- list[i].processInstanceId %>">' +
+                '  </div>' +
+                '</div>' +
+                '<% } %>' +
+                '<% } %>';
+
+            var $flowPanel = this.$('#panelWorkflow');
+            $flowPanel.html(util.template(flowPanelTpl, {list: this.flowData, isView: this.isView}));
+
+            // 查看模式
+            if (this.isView) {
+                // 第一个为当前工作流
+                this.$('.flow-panel').first().find('.fa-caret-right').removeClass('fa-caret-right').addClass('fa-caret-down');
+                this.loadingFlowItem = this.$('.flow-panel').first().find('.flow-panel-body');
+                // 默认渲染第一个
+                this.renderWorkflowItem(this.loadingFlowItem.attr('data-flowId'), this.loadingFlowItem.attr('data-taskId'), this.loadingFlowItem.attr('data-instance'), false);
+            } else {
+                // 最后一个为当前编辑
+                this.$('.flow-panel').last().find('.fa-caret-right').removeClass('fa-caret-right').addClass('fa-caret-down');
+                this.loadingFlowItem = this.$('.flow-panel').last().find('.flow-panel-body');
+                // 默认渲染最后一个编辑状态
+                this.renderWorkflowItem(this.loadingFlowItem.attr('data-flowId'), this.loadingFlowItem.attr('data-taskId'), this.loadingFlowItem.attr('data-instance'), true);
+            }
+        },
+
+        /**
+         * 生成每个WorkFlow项目
+         * @param flowId
+         * @param taskId
+         * @param current
+         */
+        renderWorkflowItem: function (flowId, taskId, instance, current) {
+            if (flowMapping[flowId]) {
+                // 匹配到开始渲染
+                util.showLoading();
+                var that = this;
+                // 加载模板
+                var item = './modules/public/workflow/items/' + flowMapping[flowId];
+                seajs.use([item + '.js', item + '.tpl'], function (Item, tpl) {
+                    // 避免加载异常
+                    if (!Item || !tpl) {
+                        util.hideLoading();
+                        util.showAlert('加载工作流组件出错：' + flowMapping[flowId]);
+                        return;
+                    }
+
+                    // 初始化Flow Item
+                    var flowItem = new Item(that.loadingFlowItem, tpl);
+                    flowItem.workflowDialog = that;
+                    // 如果是当前流程Item则设置到全局
+                    if (current) {
+                        that.editFlowItem = flowItem;
+                    }
+                    // 查询流程详情
+                    util.sendRequest({
+                        action: flowItem.detailAction,
+                        data: {
+                            taskId: taskId,
+                            currentFlowId: flowId,
+                            processInstanceId: instance,
+                            bookId: that.bookId,
+                            topicId: that.topicId
+                        },
+                        success: function (resp) {
+                            util.hideLoading();
+                            if (resp.code === 0) {
+                                // 更新当前任务人
+                                var taskFlow = resp.data.nextTaskFlowInfoEntity, i, j;
+                                var flows = resp.data.userTaskEntities;
+                                if (taskFlow && taskFlow.nextFlowTaskUserIds) {
+                                    // 说明有数据，开始找对应的流程
+                                    if (flows) {
+                                        for (i = 0; i < flows.length; i++) {
+                                            if (taskFlow.flowId === flows[i].flowId) {
+                                                flows[i].nextFlowTaskUserIds = taskFlow.nextFlowTaskUserIds;
+                                                flows[i].nextFlowTaskUserNames = taskFlow.nextFlowTaskUserNames;
+                                            }
+                                        }
+                                    }
+                                } else if (resp.data.nextTaskFlowList && resp.data.nextTaskFlowList.length > 0) {
+                                    // 下一流程任务为复数的，会使用nextTaskFlowList、而不使用nextTaskFlowInfoEntity
+                                    for (j = 0; j < resp.data.nextTaskFlowList.length; j++) {
+                                        taskFlow = resp.data.nextTaskFlowList[j];
+                                        for (i = 0; i < flows.length; i++) {
+                                            if (taskFlow.flowId === flows[i].flowId) {
+                                                flows[i].nextFlowTaskUserIds = taskFlow.nextFlowTaskUserIds;
+                                                flows[i].nextFlowTaskUserNames = taskFlow.nextFlowTaskUserNames;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+
+                                // 设置Flow Item的数据
+                                flowItem.setData({
+                                    isEdit: current,
+                                    info: $.extend({flowId: flowId, taskId: taskId}, resp.data)
+                                });
+
+                                if (current) {
+                                    // 表单校验
+                                    that.initValidate(that.$('#panelWorkflow'));
+                                    // 自动滚动
+                                    setTimeout(function () {
+                                        // 如果比较快的走到此处，可能对话框还没完全展示，直接scroll会滚不动，所以增加一些延迟
+                                        that.$('#panelWorkflow').animate({scrollTop: that.loadingFlowItem.position().top - 20}, 200);
+                                    }, 300);
+                                }
+                            } else {
+                                console.log(resp);
+                                util.showAlert(resp.message || '查询流程详情出错，请稍后重试！');
+                            }
+                        },
+                        error: function (xhr) {
+                            util.hideLoading();
+                            console.log(xhr);
+                            util.showAlert('查询流程详情出错，请稍后重试！');
+                        }
+                    });
+                });
+
+            } else {
+                // 配置错误，找不到对应FlowItem
+                util.showAlert('工作流类型匹配失败，请联系管理员！<br>flowId：' + flowId);
+            }
+        },
+
+        /**
+         * 执行保存或提交操作
+         * @param params
+         */
+        doSave: function (params) {
+            var that = this;
+            // 下发请求
+            util.showLoading('正在提交数据...');
+            util.sendRequest({
+                action: (this.bookId || this.topicId || '').indexOf(',') >= 0 ? this.editFlowItem.batchSaveAction : this.editFlowItem.saveAction,
+                data: params,
+                success: function (resp) {
+                    util.hideLoading();
+                    if (resp.code === 0) {
+                        util.showAlert('操作成功！', function () {
+                            that.close({refresh: true});
+                        });
+                    } else {
+                        console.log(resp);
+                        util.showAlert(resp.message || '操作失败，请稍后重试！');
+                    }
+                },
+                error: function (xhr) {
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('操作失败，请稍后重试！');
+                }
+            });
+        },
+
+        /**
+         * 保存或提交工作流
+         * @param isSubmit
+         */
+        saveWorkFlow: function (isSubmit) {
+            // 没有找到编辑项肯定是流程出现异常
+            var $form = this.$('#panelWorkflow');
+            if (this.editFlowItem) {
+                var message = this.editFlowItem.confirmMessage;
+                if (this.validate($form) === true) {
+                    var params = this.editFlowItem.getFormData();
+                    // 提交或保存
+                    params.operationType = isSubmit ? '2' : '1';
+                    params.topicId = params.topicId || this.topicId;
+                    params.topicIds = params.topicIds || this.topicId;
+                    params.bookId = params.bookId || this.bookId;
+                    params.bookIds = params.bookIds || this.bookId;
+                    params.yearMonth = params.yearMonth || this.yearMonth;
+                    params.taskId = params.taskId || this.taskId;
+                    params.taskIds = params.taskIds || this.taskId;
+                    params.currentFlowId = params.currentFlowId || this.flowId;
+                    params.currentFlowName = params.currentFlowName || this.flowName;
+                    var that = this;
+
+                    if (isSubmit) {
+                        // 确认是否下发
+                        util.showConfirm(message || '确定要提交么？', function () {
+                            that.doSave(params);
+                        });
+                    } else {
+                        that.doSave(params);
+                    }
+
+                } else {
+                    // 尝试滚动到可视区域，需要进一步验证
+                    var $el = this.$('.has-error').parent();
+                    var el = $el[0];
+                    this.$('#panelWorkflow').animate({scrollTop: el.offsetTop - 20}, 200);
+                }
+            }
+        },
+
+        /**
+         * 初始化页面事件
+         */
+        initPageEvent: function () {
+            var that = this;
+            // 展开面板
+            this.$container.on('click', '.flow-panel-header', function () {
+                var $el = $(this);
+                var $pBody = $el.parent().find('.flow-panel-body');
+                if ($pBody.find('.form-group').length === 0) {
+                    // 修改图标样式
+                    $el.find('.fa-caret-right').removeClass('fa-caret-right').addClass('fa-caret-down');
+                    // 加载当前面板
+                    that.loadingFlowItem = $pBody;
+                    // 默认渲染最后一个编辑状态
+                    that.renderWorkflowItem(that.loadingFlowItem.attr('data-flowId'), that.loadingFlowItem.attr('data-taskId'), that.loadingFlowItem.attr('data-instance'), false);
+                } else {
+                    // 有内容，判断需要展开还是收起
+                    if ($pBody.find('.form-horizontal:visible').length > 0) {
+                        $el.find('.fa-caret-down').removeClass('fa-caret-down').addClass('fa-caret-right');
+                        $pBody.find('.form-horizontal').hide();
+                    } else {
+                        $el.find('.fa-caret-right').removeClass('fa-caret-right').addClass('fa-caret-down');
+                        $pBody.find('.form-horizontal').show();
+                    }
+                }
+            });
+
+            // 保存
+            this.$container.on('click', '#btnSaveWorkflow', function () {
+                this.saveWorkFlow(false);
+            }.bind(this));
+
+            // 提交
+            this.$container.on('click', '#btnSubmitWorkflow', function () {
+                this.saveWorkFlow(true);
+            }.bind(this));
+        },
+
+        /**
+         * 初始化页面数据
+         */
+        initPageData: function () {
+            // 第一步查询流程信息
+            this.searchFlowInfo();
+        },
+
+        /**
+         * 初始化时被调用
+         */
+        onInit: function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+
+            // 允许自定义流程信息集合接口
+            this.flowInfoAction = data.flowInfoAction || this.flowInfoAction;
+            this.bookId = data.bookId;
+            this.topicId = data.topicId;
+            this.yearMonth = data.yearMonth;
+            this.taskId = data.taskId;
+            this.deployId = data.deployId;
+            // 查看模式
+            this.isView = data.isView;
+            // 自定义参数
+            this.searchFlowId = data.searchFlowId;
+
+            this.initTemplate(tpl, {isView: this.isView});
+
+            // TODO: 调试流程样式用
+            if (data.debug) {
+                this.flowData = [{
+                    "taskId": "",
+                    "category": null,
+                    "flowName": "样式调试",
+                    "currentFlowId": null,
+                    "flowId": "",
+                    "submitUserName": null,
+                    "submitDatetime": null,
+                    "processInstanceId": null
+                }];
+
+                var flowPanelTpl = '' +
+                    '<% for(var i = 0; i < list.length;i++) { %>' +
+                    '<div class="flow-panel">' +
+                    '  <div class="flow-panel-header"' +
+                    '    <span class="c-primary"><i class="fa fa-caret-right"></i> <%- list[i].flowName %></span>' +
+                    '    <% if(list[i].submitUserName && list[i].submitDatetime) { %>' +
+                    '    <span style="color: #999; font-size: 12px;">（处理人：<%- list[i].submitUserName %> | 处理时间：<%- list[i].submitDatetime %>）</span>' +
+                    '    <% } %>' +
+                    '  </div>' +
+                    '  <div class="flow-panel-body" data-taskId="<%- list[i].taskId %>" data-flowId="<%- list[i].flowId %>" data-instance="<%- list[i].processInstanceId %>">' +
+                    '  </div>' +
+                    '</div>' +
+                    '<% } %>';
+
+                var $flowPanel = this.$('#panelWorkflow');
+                $flowPanel.html(util.template(flowPanelTpl, {list: this.flowData}));
+
+                // 最后一个为当前编辑
+                this.loadingFlowItem = this.$('.flow-panel').last().find('.flow-panel-body');
+
+                var that = this;
+                // 加载模板
+                var item = './modules/public/workflow/items/' + data.flowTemplate;
+                seajs.use([item + '.js', item + '.tpl'], function (Item, tpl) {
+                    // 避免加载异常
+                    if (!Item || !tpl) {
+                        util.hideLoading();
+                        util.showAlert('加载工作流组件出错：' + data.flowTemplate);
+                        return;
+                    }
+
+                    // 初始化Flow Item
+                    var flowItem = new Item(that.loadingFlowItem, tpl);
+                    flowItem.workflowDialog = that;
+                    that.editFlowItem = flowItem;
+
+                    flowItem.setData({
+                        isEdit: data.isEdit,
+                        info: {
+                            nextTaskFlowInfoEntity: {},
+                            userTaskEntities: []
+                        }
+                    });
+
+                });
+            } else {
+                // 初始化页面事件
+                this.initPageEvent();
+
+                // 初始化页面数据
+                this.initPageData();
+            }
+        },
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        onBack: function (data) {
+            this._super(data);
+
+            if (this.editFlowItem && this.editFlowItem.back) {
+                this.editFlowItem.back(data);
+            }
+        },
+
+        /**
+         * 窗口缩放事件
+         */
+        onResize: function () {
+            this._super();
+        },
+
+        /**
+         * 页面销毁
+         */
+        onDestroy: function () {
+            this._super();
+        }
+
+
+    });
+
+    module.exports = Module;
+});

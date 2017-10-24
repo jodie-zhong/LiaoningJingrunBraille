@@ -1,0 +1,211 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+
+    // 工作流类窗口继承自工作流Base
+    var Base = require('../../other/base/book-base');
+    var flowListTpl = require('./cover-design-bookList.tpl');
+
+    var FLOW_PAGE_DESIGN = 'cn_copyrightPageDesign';	            // 版权页设计单
+    var FLOW_COPY_DESIGN = 'cn_copyrightDesign';	                // 版权页设计
+    var FLOW_EXAM = 'cn_toExamine';	                                // 审核
+
+    var Module = Base.extend(new function () {
+        var that;
+
+        this.deployKey = 'CNCopyrightPageDesign';
+
+
+        // 与我相关
+        this.searchTaskAbout = '1';
+        // 其他搜索选项
+        this.searchParams = {};
+
+
+        this.flowInfoAction='common/searchBookFlowList.action';
+
+
+        // this.staticParams={
+        //     searchFlowId:'cover'
+        // };
+
+        // this.unreadSearchFlowId='cover';
+
+        // this.searchFlowId='cover';
+
+
+
+        /**
+         * 搜索任务列表的接口(覆盖父级)
+         */
+
+
+        this.bookDate=null;
+
+        /**
+         * 选择行变更事件回调
+         */
+        this.onSelectRowChanged = function () {
+            // 暂时啥也不做
+        };
+
+        this.onCheckRowChanged = function () {
+            this.$('#btnCoverSingle').attr('disabled', 'disabled');       // 处理
+            // this.$('#btnCoverBach').attr('disabled', 'disabled');         //批量处理
+            this.$('#btnCoverSearch').attr('disabled', 'disabled');       // 查看
+
+            var count = 0, flowId = null, users = null, bookIds = [],taskIds=[],depKeys=null;
+            var notice=true,issued = true, devise=true,ecFirst=true,editorFirst=true,coverFirst=true,editorS=true,editorSecond=true,confirm=true,pageDesign=true,copyrightDesign=true,toExamine=true,allMe = true,allUnfinished = true;
+            var userId = util.getUserInfo().userId;
+            that.$('#workListTBody').find('tr[checked]').each(function () {
+                flowId = $(this).attr('data-flowId');
+                users = $(this).attr('data-users') || '';
+                users = users? users.split(','): [];
+                // 包含非版权页设计单
+                if( flowId !== FLOW_PAGE_DESIGN ){
+                    pageDesign = false;
+                }
+                // 包含非版权页设计
+                if( flowId !== FLOW_COPY_DESIGN ){
+                    copyrightDesign = false;
+                }
+                // 包含非审核
+                if( flowId !== FLOW_EXAM ){
+                    toExamine = false;
+                }
+                // 待我处理
+                if(users.indexOf(userId) <0){
+                    allMe = false;
+                }
+
+                // 任务状态未完成
+                if($(this).attr('data-taskState') === '2'){
+                    allUnfinished = false;
+                }
+                bookIds.push($(this).attr('data-bookId'));
+                taskIds.push($(this).attr('data-taskId'));
+                count++;
+            });
+
+            this.currentBookId = bookIds.join(',');
+            this.currentTaskId = taskIds.join(',');
+            this.currentFlowId = flowId;
+
+            // 只选择了一条，处理和查看可用（）
+            if(count === 1) {
+                if( ( pageDesign || copyrightDesign || toExamine ) && allUnfinished && allMe ){
+                    this.$('#btnCoverSingle').removeAttr('disabled');
+                }
+                if( copyrightDesign || toExamine){
+                    this.$('#btnCoverSearch').removeAttr('disabled');
+                }
+            }
+            // 批量处理
+            // if(count > 1){
+            //     if( ( confirm || toExamine) && allUnfinished && allMe){
+            //         this.$('#btnCoverBach').removeAttr('disabled');
+            //     }
+            // }
+        };
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+            // that.openPage('public/workflow/workflow-dialog', {
+            //     debug: true,
+            //     flowTemplate: 'cn-cover-design/cn-cover-design',
+            //     isEdit: true
+            // });
+
+            // 处理
+            that.$container.on('click', '#btnCoverSingle', function() {
+                var btnText=$(this).text();
+                that.openPage('public/workflow/workflow-dialog', {
+                    flowInfoAction: that.flowInfoAction,
+                    bookId: that.currentBookId,
+                    taskId: that.currentTaskId,
+                    deployId: that.deployKey,
+                    btnText:btnText
+                    // searchFlowId:that.searchFlowId
+                });
+            });
+            // 批量处理
+            // that.$container.on('click', '#btnCoverBach', function() {
+            //     var btnText=$(this).text();
+            //     that.openPage('public/workflow/workflow-dialog', {
+            //         flowInfoAction: that.flowInfoAction,
+            //         bookId: that.currentBookId,
+            //         taskId: that.currentTaskId,
+            //         deployId: that.currentDepKey,
+            //         btnText:btnText
+            //     });
+            // });
+
+            // 查看
+            that.$container.on('click', '#btnCoverSearch', function() {
+                that.openPage('public/workflow/workflow-dialog', {
+                    flowInfoAction: that.flowInfoAction,
+                    bookId: that.currentBookId,
+                    taskId: that.currentTaskId,
+                    deployId: that.deployKey,
+                    // searchFlowId:that.searchFlowId,
+                    isView: true
+                });
+            });
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            // that.initTemplate(tpl, {});
+
+            // 初始化数据前需要设置列表模板
+            this.baseTpl = flowListTpl;
+
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function () {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+
+    module.exports = Module;
+});

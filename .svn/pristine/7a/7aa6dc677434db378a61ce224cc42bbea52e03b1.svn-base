@@ -1,0 +1,211 @@
+define(function(require, exports, module) {
+	"use strict";
+
+	var ItemBase = require('../item-base');
+	var util = require('../../../../../common/util');
+	var changeRecordConfig = require('./change-record-apply-config');
+	var itemTpl = require('./change-record-apply-item.tpl');
+
+	/**
+	 * Workflow Item
+	 */
+	var Item = ItemBase.extend({
+		// 保存/提交接口
+//		saveAction: '',
+		saveAction: 'changeRecord/saveOrUpdateChangeRecord.action',
+		// 查询接口
+		detailAction: 'changeRecord/searchChangeRecordDetail.action',
+		
+		onChange: function (el) {
+            var price = el.val();
+            var bPrice=parseFloat(price).toFixed(2);
+            if(isNaN(bPrice)){
+                bPrice='0.00';
+            }
+            el.val(bPrice);
+        },
+
+		/**
+		 * 生成变更内容
+		 */
+		changeContent: function() {
+			var wrapLa = this.data.info.changeFileList.length;
+			var content = this.data.info.changeFileList;
+			if(wrapLa !== 0) {
+				var info;
+				for(var i = 0; i < wrapLa; i++) {
+					if(changeRecordConfig[content[i].changeFileField]) {
+						var cellCfg = $.extend({},changeRecordConfig[content[i].changeFileField]);
+						cellCfg.value = content[i].changeFileAfter;
+						info = {
+							title: content[i].changeFileFieldName,
+							html: this.buildChangeCell(cellCfg),
+							name: content[i].changeFileField,
+							oldValue: content[i].changeFileBefore,
+							changeFileCause: content[i].changeFileCause
+						};
+						this.$('#changeRecordContainer').append(util.template(itemTpl, {info: info}));
+					}
+				}
+			}
+		},
+
+		/**
+		 * 下一流程选择
+		 */
+		onHandleChange: function() {
+			var handle = this.$('input[name="mChangeFileItem"]:checked').val();
+			this.$('input[name="handleState"]').val(handle);
+			this.$('div[data-area="nextFlow"]').hide();
+			if(handle === '1') {
+				// 部门负责人审核
+				this.$('div[data-flow="toExamine"]').show();
+				this.$('div[data-area="content"]').show();
+			} else {
+				// 终止出版
+				this.$('div[data-flow="termination"]').show();
+				this.$('div[data-area="content"]').hide();
+			}
+		},
+
+		/** 
+		 * 变更项添加
+		 */
+		onChangePlus: function() {
+			var name = this.$('#changeContentSelect').val();
+			console.log(name);
+			if(changeRecordConfig[name]) {
+				var info = {
+					title: changeRecordConfig[name].title,
+					html: this.buildChangeCell(changeRecordConfig[name]),
+					name: name,
+					oldValue: this.data.info.changeRecordBookEntity[name]
+				}
+				this.$('#changeRecordContainer').append(util.template(itemTpl, {
+					info: info
+				}));
+				this.$('#changeContentSelect').find('option[value=' + name + ']').remove();
+			}
+		},
+
+		/**
+		 * 变更项删除
+		 */
+		onChangeMinus: function($div) {
+			var sel = $div.parents('div[data-area="changeRecordItem"]').find('p[data-value="change"]').text();
+			var name = $div.parents('div[data-area="changeRecordItem"]').find('input[data-name="name"]').val();
+			//      	console.log(sel);
+			$div.parents('div[data-area="changeRecordItem"]').remove();
+			this.$('#changeContentSelect').append('<option value=' + name + '>' + sel + '</option>');
+		},
+
+		/**
+		 * 初始化页面事件
+		 */
+		initPageEvent: function() {
+			var that = this;
+			this.$container.on('change', 'input[name="bookFasciclePrice"],input[name="bookPrice"]',function () {
+                that.onChange($(this));
+            });
+			this.$container.on('change', 'input[name="mChangeFileItem"]', this.onHandleChange.bind(this));
+			// 变更项添加
+			this.$container.on('click', 'button[data-type="change-plus"]', this.onChangePlus.bind(this));
+			// 变更项删除
+			this.$container.on('click', 'button[data-type="change-minus"]', function() {
+				that.onChangeMinus($(this));
+			});
+		},
+
+		/**
+		 * 生成下拉
+		 */
+		buildChangeSelect: function() {
+			var $sel = this.$('#changeContentSelect'),
+				$option;
+				
+			var fileList = this.data.info.changeFileList, list = [];
+			for(var j = 0; j < fileList.length; j++){
+				list.push(fileList[j].changeFileField);
+			}
+			
+			for(var i in changeRecordConfig) {
+				if(changeRecordConfig.hasOwnProperty(i) && list.indexOf(i) < 0) {
+					$option = $('<option></option>');
+					$option.val(i);
+					$option.text(changeRecordConfig[i].title);
+					$sel.append($option);
+				}
+			}
+		},
+
+		buildChangeCell: function(cfg) {
+			if(cfg.type === 'input') {
+				return util.template('<div class="col-xs-5"><input class="form-control" type="text" value="<%- cfg.value %>" data-name="after" maxlength="<%- cfg.maxlength %>" pattern="<%- cfg.pattern %>"></div>', {
+					cfg: cfg
+				});
+			} else if(cfg.type === 'textarea') {
+				return util.template('<div class="col-xs-10"><textarea class="form-control" data-name="after" maxlength="<%- cfg.maxlength %>"><%- cfg.value %></textarea></div>', {
+					cfg: cfg
+				});
+			}
+		},
+
+		/**
+		 * 保存或提交工作流
+		 * @param isSubmit
+		 */
+		getFormData: function() {
+			var $form = this.$('#formEdit');
+			// 先调用父类生成基本的数据结构
+			var params = this._super();
+
+			// 处理变更项数据结构
+			params.changeFileList = [];
+			var $list;
+			$form.find('div[data-area="changeRecordItem"]').each(function() {
+				$list = $(this);
+				params.changeFileList.push({
+					changeFileField: $list.find('input[data-name="name"]').val(),
+					changeFileFieldName: $list.find('p[data-value="change"]').text(),
+					changeFileBefore: $list.find('p[data-value="before"]').text(),
+					changeFileAfter: $list.find('input[data-name="after"]').val() || $list.find('textarea[data-name="after"]').text(),
+					changeFileCause: $list.find('textarea[name="changeFileCause"]').val(),
+				});
+			});
+			return params;
+		},
+
+		/**
+		 * 初始化页面数据
+		 */
+		initPageData: function() {
+			this.buildChangeSelect();
+			// 生成变更内容
+			this.changeContent();
+			this.onHandleChange();
+		},
+
+		/**
+		 * 构造函数
+		 * @param container
+		 * @param tpl
+		 */
+		init: function(container, tpl) {
+			this._super(container, tpl);
+		},
+
+		/**
+		 * 渲染页面
+		 */
+		render: function() {
+			this._super();
+
+			this.initPageEvent();
+
+			this.initPageData();
+		}
+	});
+
+	module.exports = Item;
+
+});

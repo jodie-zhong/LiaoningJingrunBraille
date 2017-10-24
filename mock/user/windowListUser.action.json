@@ -1,0 +1,37 @@
+{
+  "code": 0,
+  "message": "查询选择人员弹出框列表成功",
+  "data": {
+    "records": [
+      {
+        "userId": "1",
+        "departmentId": "1",
+        "departmentName": "社长/总编辑",
+        "roleIds": "1",
+        "roleNames": null,
+        "userName": "admin",
+        "isUse": "1"
+      },
+      {
+        "userId": "2",
+        "departmentId": "1",
+        "departmentName": "社长/总编辑",
+        "roleIds": "2",
+        "roleNames": null,
+        "userName": "zz",
+        "isUse": "1"
+      }
+    ],
+    "pageindex": {
+      "startindex": 1,
+      "endindex": 1
+    },
+    "pageCount": 1,
+    "pageSize": 10,
+    "pageNow": 1,
+    "rowCount": 2,
+    "startPage": 0,
+    "pagecode": 5,
+    "firstResult": 0
+  }
+}

@@ -1,0 +1,13 @@
+<!--译校通读众包管理列表-->
+<% for(var i = 0; i < list.length; i++) { %>
+<tr data-id = "<%- list[i].tprTaskId %>" data-name="<%- list[i].bookName %>">
+    <td><%- (i + 1) %></td>
+    <td data-check="true"><i class="fa fa-square-o" data-action="check"></i></td>
+    <td><%- list[i].bookName %></td>
+    <td><%- list[i].tprTaskFlow %></td>
+    <td><%- list[i].dutyEditor %></td>
+    <td data-id="<%- list[i].tprTaskUserId%>"><%- list[i].tprTaskUserName %></td>
+    <td><%- list[i].tprTaskDatetime %></td>
+    <td><%- list[i].tprTaskContent %></td>
+</tr>
+<% } %>

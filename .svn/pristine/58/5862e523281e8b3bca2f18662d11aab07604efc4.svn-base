@@ -1,0 +1,315 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    // 工作流类窗口继承自工作流Base
+    var Base = require('../../other/base/task-base');
+
+    var topicCipListTpl = require('./cip-version-list.tpl');
+
+
+    var FLOW_FINISH = '申请完成';
+    var FLOW_WAIT = '待版署申请提交';
+    var FLOW_WAIT_SEND = '待版署下发';
+
+    var Module = Base.extend(new function () {
+        var that;
+        var currentInfo=null;
+        var currentIssued={};
+        var currentNames=null;
+        this.deployKey = 'BrailleApplyISBNCIP';
+
+        // 与我相关
+        this.searchTaskAbout = '1';
+        // 其他搜索选项
+        this.searchParams = {};
+
+        this.searchFlowListKey='bookId';
+
+        this.flowInfoAction='common/searchBookFlowList.action';
+
+
+        /**
+         * 搜索任务列表的接口(覆盖父级)
+         */
+        this.taskListAction= 'cipEditionApply/searchApplyList.action';
+
+        // 查询任务树中未完成任务数的接口
+        // this.untreatedTaskAction = 'topic/unreadTopicCount.action';
+        // // 选题任务列表接口
+        // this.taskListActoin = 'topic/topicList.action';
+        this.bookDate=null;
+
+        /**
+         * 树节点变更事件
+         */
+        this.onTreeNodeChanged = function(){
+            var date = new Date();
+            this.$('#btnCipAdd').attr('disabled', 'disabled');
+            if(this.currentYear === date.getFullYear()){
+                if(!this.currentMonth || this.currentMonth === (date.getMonth() + 1)){
+                    this.$('#btnCipAdd').removeAttr('disabled');
+                }
+            }
+        };
+
+        /**
+         * 选择行变更事件回调
+         */
+        this.onSelectRowChanged = function(){
+
+        };
+        // 版署申请修改
+        function ModifyCip(){
+            var params={};
+            params.isbncipApplyId= that.currentBookId;
+            util.sendRequest({
+                data: params,
+                action: 'cipEditionApply/createOrModifyApplicationBefore.action',
+                success: function(resp) {
+                    // util.hideLoading();
+                    console.log(resp);
+                    if (resp.code === 0) {
+                        currentInfo=resp.data;
+                        currentInfo.currentBookId=that.currentBookId;
+                    } else{
+                        util.showAlert(resp.message || '查询申请出错，请稍后重试！');
+                    }
+                },
+                error: function(xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('查询申请出错，请稍后重试！');
+                }
+            });
+        }
+        // 版署下发
+        function IssuedCip() {
+            util.showLoading();
+            var params={};
+            params.isbncipApplyId= that.currentBookId;
+            util.sendRequest({
+                data: params,
+                action: 'cipEditionApply/doVersionIssued.action',
+                success: function(resp) {
+                    util.hideLoading();
+                    console.log(resp);
+                    if (resp.code === 0) {
+                        var taskFlow = resp.data.nextTaskFlowInfoEntity;
+                        if (taskFlow && taskFlow.nextFlowTaskUserIds) {
+                            // 说明有数据，开始找对应的流程
+                            var flows = resp.data.userTaskEntities;
+                            if (flows) {
+                                for (var i = 0; i < flows.length; i++) {
+                                    if (taskFlow.flowId === flows[i].flowId) {
+                                        flows[i].nextFlowTaskUserIds = taskFlow.nextFlowTaskUserIds;
+                                        flows[i].nextFlowTaskUserNames = taskFlow.nextFlowTaskUserNames;
+                                    }
+                                }
+                            }
+                        }
+                        currentIssued.records=resp.data;
+                        currentIssued.isbncipApplyId=that.currentBookId;
+                        // util.showAlert(resp.message || '查询版署下发成功！');
+                        // that.$('#selectIssuedTable').html(util.template(listTpl, {list: resp.data.records}));
+                    } else{
+                        util.showAlert(resp.message || '查询版署下发出错，请稍后重试！');
+                    }
+                },
+                error: function(xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('查询版署下发出错，请稍后重试！');
+                }
+            });
+        }
+
+        this.onCheckRowChanged = function () {
+            // 默认全部禁用
+
+            this.$('#btnCipModify').attr('disabled', 'disabled');       // 修改
+            this.$('#btnCipDelete').attr('disabled', 'disabled');       // 删除
+            this.$('#btnCipSend').attr('disabled', 'disabled');         // 版署下发
+
+            var count = 0, flowId = null, users = null, bookIds = [],taskIds=[],names=[];
+            var finish = true, wait = true, unSend = true, allMe = true, allUnfinished = true;
+            var userId = util.getUserInfo().userId;
+            that.$('#workListTBody').find('tr[checked]').each(function () {
+                flowId = $(this).attr('data-flowId');
+                users = $(this).attr('data-users') || '';
+                users = users? users.split(','): [];
+                // 包含非申请完成
+                if(flowId !== FLOW_FINISH){
+                    finish = false;
+                }
+                // 包含非待申请
+                if(flowId !== FLOW_WAIT){
+                    wait = false;
+                }
+                // 包含非待版署下发
+                if(flowId !== FLOW_WAIT_SEND){
+                    unSend = false;
+                }
+
+                // 待我处理
+                if(users.indexOf(userId) <0){
+                    allMe = false;
+                }
+                // 任务状态未完成
+                if($(this).attr('data-taskState') === '2'){
+                    allUnfinished = false;
+                }
+
+                bookIds.push($(this).attr('data-bookId'));
+                taskIds.push($(this).attr('data-taskId'));
+                names.push($(this).attr('data-bookName'));
+                count++;
+            });
+
+            this.currentBookId = bookIds.join(',');
+            this.currentTaskId = taskIds.join(',');
+            currentNames=names.join(',');
+            // 只选择了一条，修改、删除和版署下发可用
+            if(count === 1) {
+                if (wait) {
+                    this.$('#btnCipModify').removeAttr('disabled');       // 修改
+                    this.$('#btnCipDelete').removeAttr('disabled');       // 删除
+                    ModifyCip();
+                }
+                if (unSend) {
+                    this.$('#btnCipSend').removeAttr('disabled');
+                    IssuedCip();
+                    // 版署下发
+                }
+                /*if(flowId === FLOW_PEND && allMe && allUnfinished){
+                    this.$('#btnTopicHold').removeAttr('disabled');
+                }*/
+            }
+            // 选择一条或多条
+            if(count >1){
+                // 全部都是待申请状态
+                // if(allMe && allUnfinished){
+                //     // 删除可用
+                //     this.$('#btnCipDelete').removeAttr('disabled');
+                // }
+                // 全部都是待申请状态
+                if(wait){
+                    // 删除可用
+                    this.$('#btnCipDelete').removeAttr('disabled');
+                }
+            }
+        };
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+
+            // 新增
+            that.$container.on('click','#btnCipAdd',function () {
+                that.openPage('manage/cip-version/cip-version-create', {});
+            })
+            // 修改
+            that.$container.on('click','#btnCipModify',function () {
+                that.openPage('manage/cip-version/cip-version-create', currentInfo);
+            })
+            // 删除
+            that.$container.on('click','#btnCipDelete',function () {
+                util.showConfirm('确定要将“' + currentNames + '”删除吗？', function(){
+                    var params = {
+                        isbncipApplyId: that.currentBookId
+                    };
+                    util.showLoading();
+                    util.sendRequest({
+                        data: params,
+                        action: 'cipEditionApply/removeApplication.action',
+                        success: function(resp) {
+                            util.hideLoading();
+                            console.log(resp);
+                            if (resp.code === 0) {
+                                util.showAlert(resp.message || '上报删除成功！');
+                                // that.searchTaskList();
+                            } else{
+                                util.showAlert(resp.message || '上报删除出错，请稍后重试！');
+                            }
+                        },
+                        error: function(xhr) {
+                            // XHR错误
+                            util.hideLoading();
+                            console.log(xhr);
+                            util.showAlert('上报删除出错，请稍后重试！');
+                        }
+                    });
+                });
+            })
+            // 版署下发
+            that.$container.on('click','#btnCipSend',function () {
+                that.openPage('manage/cip-version/cip-version-apply', currentIssued);
+            });
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+
+
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            // that.initTemplate(tpl, {});
+
+            // 初始化数据前需要设置列表模板
+            this.listTpl = topicCipListTpl;
+
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+
+            // TODO: 测试
+            // that.openPage('public/workflow/workflow-dialog', {});
+            // that.openPage('public/file/file-upload', {});
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+            if(data && data.refresh === true){
+                this.$('#btnCipModify').attr('disabled', 'disabled');       // 修改
+                this.$('#btnCipDelete').attr('disabled', 'disabled');       // 删除
+                this.$('#btnCipSend').attr('disabled', 'disabled');         // 版署下发
+            }
+
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function () {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+
+    module.exports = Module;
+});

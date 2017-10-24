@@ -1,0 +1,456 @@
+define(function(require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    var Base = require('../../../common/base-page');
+    var flowListTpl = require('./print-audit-manage-list.tpl');
+    require('../../../assets/plugins/jstree/jstree.min');
+    require('../../../assets/plugins/jstree/src/themes/default/style.min.css');
+    require('../../../assets/plugins/icheck/icheck.min');
+    require('../../../assets/plugins/icheck/skins/minimal/blue.css');
+
+    var Module = Base.extend(new function() {
+        // 与任务流相关的参数
+        var deployKey = 'FLOW_BRAILLE_BOOKSPRINTEDAUDIT_KEY';
+
+        // 与我相关
+        var searchTaskAbout = '1';
+        // 其他搜索选项
+        var searchParams = {};
+
+       var searchFlowListKey='bookId';
+
+        var flowInfoAction='common/searchBookFlowList.action';
+
+        /**
+         * 搜索任务列表的接口(覆盖父级)
+         */
+        var taskListAction= 'cipApply/searchBookList.action';
+
+        var that;
+        var currentPage=1;
+        var currentMonth= '';
+        var currentYear= '';
+        var searchYearMonth='';
+        var treeObj=null;
+        var yearMonth=null;
+
+        // 当前选中的id
+        var currentBookId='';
+        var currentTaskId='';
+        var currentPrintId='';
+        var currentName='';
+        /**
+         * 初始化年月树
+         */
+        function initMonthTree(treeId, postfix, buildCallback, selectCallback) {
+            util.showLoading();
+            util.sendRequest({
+                data: {},
+                action: 'common/searchYearMonthList.action',
+                success: function (resp) {
+                    util.hideLoading();
+                    if (resp.code === 0) {
+                        // tree 基础数据
+                        var treeData = {
+                            'core': {
+                                'data': []
+                            }
+                        };
+
+                        // 排序
+                        // 服务器返回JSON格式，无法确保顺序，所以需要转成数组重新倒序排序
+                        var data = resp.data, count = 0, node;
+                        var newData = [];
+                        for (var i in data) {
+                            if (data.hasOwnProperty(i)) {
+                                newData.push({year: i, data: data[i]});
+                            }
+                        }
+                        newData.sort(function (a, b) {
+                            return (b.year - a.year);
+                        });
+
+
+                        // 遍历 年
+                        for (i = 0; i < newData.length; i++) {
+                            treeData.core.data.push({
+                                text: newData[i].year + '年',
+                                // 默认先显示动图
+                                icon: 'fa fa-calendar box',
+                                state: {
+                                    'opened': true,
+                                    'selected': false
+                                },
+                                children: [],
+                                data: {
+                                    year: parseInt(newData[i].year),
+                                    type: 'year'
+                                }
+                            });
+                            // 当前年节点子成员
+                            node = treeData.core.data[count++].children;
+                            for (var j = 0; j < newData[i].data.length; j++) {
+                                node.push({
+                                    'text': newData[i].data[j] + '月'+postfix,
+                                    'icon': 'fa fa-bookmark-o',
+                                    'data': {
+                                        year: parseInt(newData[i].year),
+                                        month: parseInt(newData[i].data[j]),
+                                        type: 'month'
+                                    }
+                                });
+                            }
+                        }
+
+                        // 生成树
+                        $('#monthTree').jstree(treeData).bind('changed.jstree', function (src, evt) {
+                            currentPage = 1;
+                            // 点击树节点后重新检索选题列表
+                            // 点击年的时候添加按钮隐藏，点击月的时候添加按钮出来
+                            var data = evt.node.data;
+                            if (data && data.month) {
+                                currentMonth = data.month;
+                                currentYear = data.year;
+                                searchYearMonth = util.fillUp(currentYear, '0', 4) + '-' + util.fillUp(currentMonth, '0', 2);
+                            } else {
+                                currentMonth = '';
+                                currentYear = data.year;
+                                searchYearMonth = util.fillUp(this.currentYear, '0', 4);
+                            }
+
+                            // 回调函数
+                            if(selectCallback){
+                                selectCallback(currentYear, currentMonth);
+                            }
+                        });
+                        // 全局treeObj对象
+                        treeObj =$(treeId).jstree();
+
+                        // 将年月数据记录到全局，后面刷新树时需要使用
+                        yearMonth = data;
+
+                        // 回调函数
+                        if(buildCallback){
+                            buildCallback(treeObj);
+                        }
+                    } else {
+                        console.log(resp);
+                        util.showAlert(resp.message || '查询基础数据出错，请稍后重试！');
+                    }
+                },
+                error: function (xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('查询基础数据出错，请稍后重试！');
+                }.bind(this)
+            });
+        }
+
+        /**
+         * 查询图书印制信息
+         */
+        function searchBookPrintedList() {
+            util.showLoading();
+            var params = {
+                page: currentPage,
+                bookPrintYear:currentYear,
+                bookPrintMonth:currentMonth
+            };
+            util.sendRequest({
+                data: params,
+                action: 'bookPrinted/searchBookPrintedList.action',
+                success: function(resp) {
+                    util.hideLoading();
+                    console.log(resp);
+                    if (resp.code === 0) {
+                        that.$('#workListTBody').html(util.template(flowListTpl, {
+                            list: resp.data.records
+                        }));
+                        // 分页数据
+                        that.$('#workListPaging').html(that.buildPagination(resp.data.pageNow, resp.data.pageCount));
+                    } else{
+                        util.showAlert(resp.message || '查询出错，请稍后重试！');
+                    }
+                },
+                error: function(xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('查询出错，请稍后重试！');
+                }
+            });
+        }
+
+        /**
+         * 上边选中事件
+         */
+
+         function onCheckRowChanged() {
+            // 默认全部禁用
+            // 注意添加的处理？
+
+            that.$('#btnPrintedDel, #btnPrintedSubmit, #btnPrintedSingle,#btnPrintedSearch').attr('disabled','disabled');
+
+            var count = 0, flowId = null, users = null, bookIds = [],taskIds=[],printIds=[],names=[];
+            var applyCip = true,applyAudit=true,versionApply=true, issued=true,failureApply=true,completionBook=true,completionCoverBook=true,registrationConfirmation=true,allMe = true, allUnfinished = true;
+            var userId = util.getUserInfo().userId;
+            that.$('#workListTBody').find('tr[checked]').each(function () {
+                flowId = $(this).attr('data-flowId');
+                users = $(this).attr('data-users') || '';
+                users = users? users.split(','): [];
+                // // 包含非提交申请
+                // if(flowId !== FLOW_ISDN_CIP ){
+                //     applyCip=false
+                // }
+                // // 包含非审核
+                // if(flowId !==FLOW_AUDITt ){
+                //     applyAudit=false
+                // }
+                // // 包含非版署申请
+                // if(flowId !== FLOW_VERSION_APPLY){
+                //     versionApply=false
+                // }
+                // // 包含非下发
+                // if(flowId !== FLOW_ISSUED ){
+                //     issued=false
+                // }
+                // // 包含非未通过处理
+                // if(flowId !== FLOW_FAILURE ){
+                //     failureApply=false
+                // }
+                // // 包含非补全图书信息
+                // if(flowId !== FLOW_COMP ){
+                //     completionBook=false
+                // }
+                // // 包含非盲文封面信息补全
+                // if(flowId !== FLOW_COVER){
+                //     completionCoverBook=false
+                // }
+                // // 包含非备案登记确认
+                // if(flowId !== FLOW_REGISTER){
+                //     registrationConfirmation=false
+                // }
+                //
+                // // 待我处理
+                // if(users.indexOf(userId) <0){
+                //     allMe = false;
+                // }
+                // // 任务状态未完成
+                // if($(this).attr('data-taskState') === '2'){
+                //     allUnfinished = false;
+                // }
+                bookIds.push($(this).attr('data-bookId'));
+                taskIds.push($(this).attr('data-taskId'));
+                printIds.push($(this).attr('data-PrintId'));
+                names.push($(this).attr('data-name'));
+                count++;
+            });
+
+            currentPrintId = printIds.join(',');
+            currentBookId  = bookIds.join(',');
+            currentTaskId  = taskIds.join(',');
+            currentName  = names.join(',');
+            // 只选择了一条，处理（对应该模块所有的flowid状态）可用
+            if(count === 1 ) {
+                if((applyCip || applyAudit|| issued || failureApply|| completionBook|| completionCoverBook || registrationConfirmation) && allUnfinished ){
+                    $('#btnPrintedDel').removeAttr('disabled');
+                }
+                // 暂时先这样
+                $('#btnPrintedSubmit').removeAttr('disabled');
+                // 查看可用
+                // if( applyAudit|| versionApply|| issued || failureApply|| completionBook|| completionCoverBook|| registrationConfirmation){
+                //     $('#btnCipSearch').removeAttr('disabled');
+                // }
+            }
+            // 选择一条或多条
+            if (count > 1 && allUnfinished ) {
+                // 批量处理可用
+                // if (allMe && allUnfinished && (applyAudit || failureApply || registrationConfirmation )) {
+                //     this.$('#btnCipBatch').removeAttr('disabled');
+                // }
+                if (applyAudit || failureApply || registrationConfirmation ) {
+                   $('#btnPrintedDel').removeAttr('disabled');
+                }
+            }
+        };
+        /**
+         * 导出函数
+         */
+        function exportBookPrint(){
+            if(currentYear && currentMonth){
+                var url = util.getServerBase() + 'bookPrinted/doExport.action?';
+                url += 'bookPrintYear=' + currentYear;
+                url += '&bookPrintMonth='+currentMonth;
+                window.open(url, '_blank');
+            }
+        }
+        /**
+         * 删除行
+         */
+        function deleteBookPrint() {
+            util.showConfirm('确定要将 “' + currentName + '” 删除吗？', function () {
+                var params = {
+                    bookPrintIds: currentPrintId
+                };
+                util.showLoading();
+                util.sendRequest({
+                    data: params,
+                    action: 'bookPrinted/removeBook.action',
+                    success: function (resp) {
+                        util.hideLoading();
+                        if (resp.code === 0) {
+                            // 成功删除后直接刷新列表
+                            util.showAlert(resp.message || '删除成功！');
+                            searchBookPrintedList();
+                        } else {
+                            console.log(resp);
+                            util.showAlert(resp.message || '删除出错，请稍后重试！');
+                        }
+                    },
+                    error: function (xhr) {
+                        // XHR错误
+                        util.hideLoading();
+                        console.log(xhr);
+                        util.showAlert('删除出错，请稍后重试！');
+                    }
+                });
+            });
+        }
+        /**
+        * 每个月提交一次
+         */
+        function submitBookPrint() {
+            var params = {
+                bookPrintYear:currentYear,
+                bookPrintMonth:currentMonth,
+                flowId:"submitAudit"
+                // bookPrintIds: currentPrintId
+            };
+            util.showLoading();
+            util.sendRequest({
+                data: params,
+                action: 'bookPrinted/doSubmitBookPrint.action',
+                success: function (resp) {
+                    util.hideLoading();
+                    if (resp.code === 0) {
+                        // 成功后直接刷新列表
+                        util.showAlert(resp.message || '提交成功！',function () {
+                            searchBookPrintedList();
+                        });
+
+                    } else {
+                        console.log(resp);
+                        util.showAlert(resp.message || '提交出错，请稍后重试！');
+                    }
+                },
+                error: function (xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('提交出错，请稍后重试！');
+                }
+            });
+
+        }
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+            // that.openPage('public/workflow/workflow-dialog', {
+            //     debug: true,
+            //     flowTemplate: 'print-audit/print-audit-add-book',
+            //     isEdit: true
+            // });
+
+            //上报列表选中事件
+            that.makeSelectableTable("#workListTable",null,onCheckRowChanged);
+            // 添加
+            that.$container.on('click', '#btnPrintedAdd', function () {
+                that.openPage('braille/print-audit/print-audit-add', {});
+            });
+            //删除（只有它有多选）
+            that.$container.on('click', '#btnPrintedDel',deleteBookPrint);
+
+            //导出
+            that.$container.on('click', '#btnPrintedExport',exportBookPrint);
+            // 提交
+            that.$container.on('click', '#btnPrintedSubmit',submitBookPrint);
+            // 处理
+            that.$container.on('click', '#btnCipSingle,#btnCipBatch', function () {
+                that.openPage('public/workflow/workflow-dialog', {
+                    flowInfoAction: flowInfoAction,
+                    bookId: currentBookId,
+                    taskId: currentTaskId,
+                    deployId: deployKey
+                });
+            });
+        }
+        /**
+        *树选择后回调函数
+         */
+        function selectTree(a,b) {
+            currentYear=a;
+            currentMonth=b;
+            searchBookPrintedList();
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+            initMonthTree("#monthTree","图书",null,selectTree);
+            searchBookPrintedList();
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            that.initTemplate(tpl, {});
+
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+
+            // TODO: 测试
+            // that.openPage('public/workflow/workflow-dialog', {});
+            // that.openPage('public/file/file-upload', {});
+        };
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function(data) {
+            this._super(data);
+            console.log(data);
+            if(data && data.refresh === true) {
+
+            }
+
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function() {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function() {
+            this._super();
+        };
+
+    }());
+
+    module.exports = Module;
+});

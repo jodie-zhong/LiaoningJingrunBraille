@@ -1,0 +1,28 @@
+{
+  "code": 0,
+  "message": "查询人员详情成功",
+  "data": {
+    "userId": "1",
+    "departmentId": "1",
+    "departmentName": "社长/总编辑",
+    "roleIds": "1,2",
+    "roleNames": "系统管理员,社长/总编辑",
+    "userLoginName": "admin",
+    "userPhone": "13232234565",
+    "userName": "管理员",
+    "userEmail": "332211225@qq.com",
+    "userSex": "1",
+    "age": "17",
+    "userBir": "2000-12-24",
+    "userBirYear": "2000",
+    "userBirMonth": "12",
+    "userBirDay": "24",
+    "userTitle": "用户职称",
+    "userSpecialty": "用户专业",
+    "userIdCard": "210181199312272114",
+    "userHead": "/user/user.png",
+    "userAddress": "墨尔本",
+    "officeTelephone": "22532399",
+    "isUse": "1"
+  }
+}

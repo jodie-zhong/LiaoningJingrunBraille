@@ -1,0 +1,658 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    var tree = require('../../other/base/tree-base');
+    require('../../../assets/plugins/jstree/jstree.min');
+    require('../../../assets/plugins/jstree/src/themes/default/style.min.css');
+    var topicConferenceListTpl = require('./topic-conference-list.tpl');
+    var conferenceReportListTpl=require('./topic-conference-report-list.tpl');
+
+    var Module = tree.extend(new function () {
+        this.yearMonthListAction = 'common/searchYearNextMonthList.action';
+        var that;
+        var currentMonth='';
+        var currentYear='';
+        var allReportInfo=null;
+        // 当前选中的会议ID
+        var currentConferenceInfoTop=null;
+        var currentReportState='';
+        // 上边按钮使用
+        var currentConferenceId = '';
+        // 下边按钮使用
+        var currentConferenceIdBottom = '';
+        var currentConferenceName='';
+        //当前选中的页码
+        var currentPage = 1;
+        // 当前选中的会议信息
+        var currentConferenceInfo = null;
+        //设置check选中的数据
+        var checkData=null;
+        /**
+         * 查询会议列表
+         */
+        function searchReportList(){
+            //需要将已有状态重置
+            that.$('#conferenceListTableHeader i').removeClass('fa-check-square-o').addClass('fa-square-o');
+            that.$('#btnConferenceModify, #btnConferenceDel, #btnConferenceReg,#btnConferenceSubmit,#btnConferenceSearch').attr('disabled','disabled');
+            // 重置下边选题列表
+            // 将底部修改与新增按钮置灰
+            that.$('#btnConferenceReportAdd,#btnConferenceReportDel,#btnConReportChecking').attr('disabled', 'disabled');
+            searchConferenceInfo(currentConferenceIdBottom);
+            var params = {
+                searchMeetingName:that.$('#searchConferenceName').val(),
+                searchMeetingState:that.$('#selectState').val(),
+                topicMeetingYear:currentYear,
+                topicMeetingMonth:currentMonth,
+                page: currentPage
+            };
+            util.showLoading();
+            util.sendRequest({
+                data: params,
+                action: 'meeting/listMeeting.action',
+                success: function(resp) {
+                    util.hideLoading();
+                    if (resp.code === 0) {
+                        that.$('#conferenceListTable').html(util.template(topicConferenceListTpl, {list: resp.data.records}));
+                        // 有被选中的tr，渲染下边
+                        if(currentConferenceIdBottom){
+                            that.$('#conferenceListTable tr').each(function () {
+                                var $el=$(this);
+                                if($el.attr('data-id')===currentConferenceIdBottom){
+                                    $el.addClass('info');
+                                }
+                            });
+                        }
+                        // 分页数据
+                        that.$('#conferenceListPaging').html(that.buildPagination(resp.data.pageNow, resp.data.pageCount));
+                    } else{
+                        util.showAlert(resp.message || '查询上报列表出错，请稍后重试！');
+                    }
+                },
+                error: function(xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    util.showAlert('查询上报列表出错，请稍后重试！');
+                }
+            });
+        }
+        /**
+         * 查询会议列表（初始化全归原始状态）
+         */
+        function conferenceList(){
+            //按钮恢复初始状态
+            that.$('#btnConferenceModify, #btnConferenceDel, #btnConferenceReg,#btnConferenceSubmit,#btnConferenceSearch').attr('disabled','disabled');
+            checkData={};
+            currentConferenceId ='';
+            currentConferenceIdBottom='';
+            // 将底部修改与新增按钮置灰
+            that.$('#btnConferenceReportAdd,#btnConReportChecking,#btnConferenceReportDel').attr('disabled', 'disabled');
+            searchConferenceInfo('');
+            var params = {
+                searchMeetingName:that.$('#searchConferenceName').val(),
+                searchMeetingState:that.$('#selectState').val(),
+                topicMeetingYear:currentYear,
+                topicMeetingMonth:currentMonth,
+                page: currentPage
+            };
+            util.showLoading();
+            util.sendRequest({
+                data:params,
+                action:'meeting/listMeeting.action',
+                success:function (resp) {
+                    util.hideLoading();
+                    if(resp.code===0){
+                        that.$('#conferenceListTable').html(util.template(topicConferenceListTpl, {list: resp.data.records}));
+                        // 分页数据
+                        that.$('#conferenceListPaging').html(that.buildPagination(resp.data.pageNow, resp.data.pageCount));
+                    }else{
+                        util.showAlert(resp.message || '初始化会议列表出错，请稍后重试！');
+                    }
+                },
+                error:function (xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    util.showAlert('初始化会议列表出错，请稍后重试！');
+                }
+            });
+        }
+
+        /**
+         * 跳转页面
+         */
+        function jumpPage() {
+            var $el = $(this);
+            var page = $el.attr('data-page');
+            if (page) {
+                // 修改页面后重新刷新页面数据
+                currentPage = page;
+                conferenceList();
+            }
+        }
+
+        /**
+         * 当前选中会议信息
+         */
+        function searchConferenceInfo(id) {
+            //清空上报列表的thead选中事件
+            that.$('#conferenceBottomList thead').find('i[data-action="check"]').removeClass('fa-check-square-o').addClass('fa-square-o');
+            if (id) {
+                currentConferenceIdBottom = id;
+                var params = {
+                    topicMeetingId: currentConferenceIdBottom
+                };
+                // util.showLoading();
+                util.sendRequest({
+                    data: params,
+                    action: 'meeting/listReportMeeting.action',
+                    success: function (resp) {
+                        util.hideLoading();
+                        if (resp.code === 0) {
+                             currentConferenceInfo = resp.data;
+                             currentConferenceInfo.topicMeetingId=currentConferenceIdBottom;
+                            // 查询上报选题列表
+                            that.$('#conferenceReportTable').html(util.template(conferenceReportListTpl, {list: resp.data.records}));
+                            if(currentReportState==='1'){
+                                that.$('#btnConferenceReportAdd,#btnConReportChecking').removeAttr('disabled');
+                            }else {
+                                that.$('#btnConferenceReportAdd,#btnConReportChecking').attr('disabled','disabled');
+                                that.$('#btnConferenceReportDel').attr('disabled','disabled');
+                            }
+                        } else {
+                            util.showAlert(resp.message || '查询上报选题列表出错，请稍后重试！');
+                        }
+                    },
+                    error: function (xhr) {
+                        // XHR错误
+                        util.hideLoading();
+                        util.showAlert('查询上报选题列表出错，请稍后重试！');
+                    }
+                });
+            }
+            else {
+                that.$('#conferenceReportTable').html("");
+            }
+        }
+        /**
+         * 获取选中会议的（上边按钮修改使用）数据
+         */
+        function currentConferenceModify() {
+            var params = {
+                topicMeetingId:currentConferenceId
+            };
+            // util.showLoading();
+            util.sendRequest({
+                data: params,
+                action: 'meeting/detailMeeting.action',
+                success: function (resp) {
+                    util.hideLoading();
+                    if (resp.code === 0) {
+                        currentConferenceInfoTop=resp.data;
+                        currentConferenceInfoTop.topicMeetingId=currentConferenceId;
+                        that.openPage('topic/topic-conference/topic-conference-edit',currentConferenceInfoTop);
+                    } else {
+                        util.showAlert(resp.message || '查询上报选题列表出错，请稍后重试！');
+                    }
+                },
+                error: function (xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('查询上报选题列表出错，请稍后重试！');
+                }
+            });
+        }
+
+        /**
+         * 获取选中会议的（上边按钮查看使用）数据
+         */
+        function currentConferenceSearch() {
+            var params = {
+                topicMeetingId:currentConferenceId
+            };
+            // util.showLoading();
+            util.sendRequest({
+                data: params,
+                action: 'meeting/detailMeeting.action',
+                success: function (resp) {
+                    util.hideLoading();
+                    if (resp.code === 0) {
+                        currentConferenceInfoTop=resp.data;
+                        currentConferenceInfoTop.topicMeetingId=currentConferenceId;
+                        that.openPage('topic/topic-conference/topic-conference-search', currentConferenceInfoTop);
+                    } else {
+                        util.showAlert(resp.message || '查询上报选题列表出错，请稍后重试！');
+                    }
+                },
+                error: function (xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('查询上报选题列表出错，请稍后重试！');
+                }
+            });
+        }
+        /**
+         * 删除会议行
+         */
+        function deleteconference() {
+            util.showConfirm('确定要将 “' + checkData.names + '” 删除吗？', function () {
+                var params = {
+                    topicMeetingIds: checkData.ids
+                };
+                util.showLoading();
+                util.sendRequest({
+                    data: params,
+                    action: 'meeting/removeMeeting.action',
+                    success: function (resp) {
+                        util.hideLoading();
+                        if (resp.code === 0) {
+                            // 成功删除后直接刷新列表
+                            util.showAlert(resp.message || '删除会议成功！',function () {
+                                conferenceList();
+                            });
+
+                        } else {
+                            util.showAlert(resp.message || '删除会议出错，请稍后重试！');
+                        }
+                    },
+                    error: function (xhr) {
+                        // XHR错误
+                        util.hideLoading();
+                        console.log(xhr);
+                        util.showAlert('删除会议出错，请稍后重试！');
+                    }
+                });
+            });
+        }
+        /**
+         * 登记事件
+         */
+        function conferenceRegister() {
+            var params={
+                topicMeetingId:currentConferenceId
+            };
+            util.showLoading();
+            util.sendRequest({
+                data: params,
+                action: 'meeting/detailRegisterMeeting.action',
+                success: function(resp) {
+                    util.hideLoading();
+                    if (resp.code === 0) {
+                        var info1=null;
+                        info1=resp.data;
+                        that.openPage('topic/topic-conference/topic-conference-register', info1);
+                    } else{
+                        util.showAlert(resp.message || '查询选题上报出错，请稍后重试！');
+                    }
+                },
+                error: function(xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('查询选题上报出错，请稍后重试！');
+                }
+            });
+        }
+
+        /**
+         * 提交事件
+         */
+        function conferenceSubmit() {
+            var params={
+                topicMeetingId:currentConferenceId
+            }
+            // util.showLoading();
+            util.sendRequest({
+                data: params,
+                action: 'meeting/detailSubmitMeeting.action',
+                success: function(resp) {
+                    util.hideLoading();
+                    if (resp.code === 0) {
+                        var info={};
+                        info.records=resp.data;
+                        info.topicMeetingId=currentConferenceId;
+                        that.openPage('topic/topic-conference/topic-conference-submit', info);
+                    } else{
+                        util.showAlert(resp.message || '查询会议出错，请稍后重试！');
+                    }
+                },
+                error: function(xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('查询会议出错，请稍后重试！');
+                }
+            });
+        }
+        function selectFn(){
+            currentReportState=that.$('#conferenceListTable').find('tr.info').attr('data-state');
+            currentConferenceIdBottom=that.$('#conferenceListTable').find('tr.info').attr('data-id');
+            currentConferenceName=that.$('#conferenceListTable').find('tr.info').attr('data-name');
+            searchConferenceInfo(currentConferenceIdBottom);
+        }
+        // 上边选中事件
+        function checkFn() {
+            currentConferenceId=that.$('#conferenceListTable').find('tr[checked="checked"]').attr('data-id');
+            that.$('#btnConferenceModify, #btnConferenceDel, #btnConferenceReg,#btnConferenceSubmit,#btnConferenceSearch').attr('disabled','disabled');
+            var  names = [], ids = [], state = [], number = [];
+            that.$("#conferenceListTable").find('tr[checked="checked"]').each(function () {
+                var $el = $(this);
+                // var $parent = $el.parent().parent();
+                names.push($el.attr("data-name"));
+                ids.push($el.attr("data-id"));
+                state.push($el.attr("data-state"));
+                number.push($el.attr("data-number"));
+            });
+            //按钮状态设置(总结：只有删除是多选，状态为3，已提交状态，只能查看)
+            if(state.indexOf("1")!==-1 && state.indexOf("2")===-1 && state.indexOf("3")===-1){ // 待开会状态
+                // that.$('#btnConferenceModify, #btnConferenceDel, #btnConferenceReg,#btnConferenceSubmit').removeAttr('disabled');
+                that.$('#btnConferenceModify, #btnConferenceDel,#btnConferenceReg,#btnConferenceSearch').removeAttr('disabled');
+                if(ids.length!==1){// 待开会状态且长度超过1，只有删除能改，其他未不能点
+                    that.$('#btnConferenceModify,#btnConferenceReg,#btnConferenceSearch').attr('disabled','disabled');
+                }else{
+                    that.$('#btnConferenceModify,#btnConferenceReg,#btnConferenceSearch').remove('disabled');
+                }
+                //没有上报选题列表不能登记
+                if(number.indexOf("0")!==-1){
+                    that.$('#btnConferenceReg').attr('disabled', 'disabled');
+                }else{
+                    that.$('#btnConferenceReg').removeAttr('disabled');
+                }
+            }
+            if(state.indexOf("1")===-1 && state.indexOf("2")!==-1 && state.indexOf("3")===-1){// 已开会状态
+                if(names.length===1 && number.indexOf("0")===-1){//  已开会状态且长度为1
+                    that.$('#btnConferenceSubmit,#btnConferenceSearch').removeAttr('disabled');
+                }else{
+                    that.$('#btnConferenceSubmit,#btnConferenceSearch').attr('disabled','disabled');
+                }
+            }
+            if(state.indexOf("1")===-1 && state.indexOf("2")===-1 && state.indexOf("3")!==-1 && names.length===1){// 已提交状态且长度为1
+                that.$('#btnConferenceSearch').removeAttr('disabled');
+            }
+            checkData={
+                names:names.join(","),
+                ids:ids.join(",")
+            };
+        }
+        /**
+         * 上个流程选题上报列表(注意传参)
+         */
+        function searchReportAdd() {
+            util.showLoading();
+            util.sendRequest({
+                data: {},
+                action: 'report/windowListReport.action',
+                success: function(resp) {
+                    util.hideLoading();
+                    if (resp.code === 0) {
+                        allReportInfo=resp.data;
+                        allReportInfo.topicReportId=currentConferenceIdBottom;
+                        that.openPage('topic/topic-conference/select-conference', allReportInfo);
+                    } else{
+                        util.showAlert(resp.message || '查询选题上报出错，请稍后重试！');
+                    }
+                },
+                error: function(xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('查询选题上报出错，请稍后重试！');
+                }
+            });
+        }
+        //下边选中事件
+        function checkBottomFn() {
+            var names=[],ids=[];
+            that.$("#conferenceReportTable").find(".fa-check-square-o").each(function () {
+                var $el=$(this);
+                var $parent=$el.parent().parent();
+                ids.push($parent.attr("data-id"));
+            });
+            //会议列表没有数据，则不能提交
+            if( ids.length > 0 && currentReportState==='1' ){
+                that.$('#btnConferenceReportDel').removeAttr('disabled');
+            }else {
+                that.$('#btnConferenceReportDel').attr('disabled', 'disabled');
+            }
+        }
+
+        /**
+         * 删除选题上报事件（底下删除事件）
+         */
+            function searchReportDel() {
+                util.showConfirm("确定要移除么？",function () {
+                    util.showLoading();
+                    var ids=[];
+                    var params={};
+                    var number=0;
+                    $('#conferenceReportTable').find('.fa-check-square-o').each(function () {
+                        var $el=$(this);
+                        var $parent=$el.parent().parent();
+                        ids.push($parent.attr("data-id"));
+                    });
+                    number=ids.length;
+                    params={
+                        topicMeetingId:currentConferenceIdBottom,
+                        topicReportIds:ids.join(","),
+                        operationType:'2',
+                        operationNum:number
+                    };
+                    util.sendRequest({
+                        type: 'POST',
+                        data: params,
+                        action: 'meeting/addOrRemoveReport.action',
+                        success: function(resp) {
+                            util.hideLoading();
+                            if (resp.code === 0) {
+                                util.showAlert(resp.message || '删除成功！',function () {
+                                    searchReportList();
+                                });
+
+                            } else{
+                                util.showAlert(resp.message || '删除出错，请稍后重试！');
+                            }
+                        },
+                        error: function(xhr) {
+                            // XHR错误
+                            util.hideLoading();
+                            console.log(xhr);
+                            util.showAlert('删除出错，请稍后重试！');
+                        }
+                    });
+                    }
+                );
+            }
+        /**
+         * 底下页面查看事件
+         */
+        function bottomSearch() {
+            var $el=$(this);
+            var $parent=$el.parent().parent();
+            var params={
+                topicReportId:$parent.attr('data-id')
+            };
+            util.sendRequest({
+                type: 'POST',
+                data: params,
+                action: 'report/listTopicReport.action',
+                success: function(resp) {
+                    util.hideLoading();
+                    if (resp.code === 0) {
+                        // util.showAlert(resp.message || '查看上报列表成功！');
+                        that.openPage('topic/topic-conference/topic-conference-bottom-search', resp.data.records);
+                    } else{
+                        util.showAlert(resp.message || '查看上报列表出错，请稍后重试！');
+                    }
+                },
+                error: function(xhr) {
+                    // XHR错误
+                    util.hideLoading();
+                    console.log(xhr);
+                    util.showAlert('查看上报列表出错，请稍后重试！');
+                }
+            });
+        }
+
+        /**
+         * 初始化下边选中事件
+         */
+        function checkedBottom() {
+            that.$container.on('click', '#conferenceBottomList thead i[data-action="check"]', function() {
+                var $el = $(this);
+                var $tbody=that.$('#conferenceReportTable')
+                if($el.hasClass('fa-check-square-o')) {
+                    // 取消全选
+                    $el.removeClass('fa-check-square-o').addClass('fa-square-o');
+                    $tbody.find('tr i[data-action="check"]').removeClass('fa-check-square-o').addClass('fa-square-o');
+                } else {
+                    // 全选
+                    $el.removeClass('fa-square-o').addClass('fa-check-square-o');
+                    $tbody.find('tr i[data-action="check"]').removeClass('fa-square-o').addClass('fa-check-square-o');
+                }
+            });
+
+            // 勾选行
+            that.$container.on('click', '#conferenceReportTable td:not(".reportSearch") ',function() {
+                var $el = $(this);
+                var $table=that.$('#conferenceBottomList');
+                // 设置选择状态
+                if($el.find('i[data-action="check"]').hasClass('fa-check-square-o')) {
+                    $el.find('i[data-action="check"]').removeClass('fa-check-square-o').addClass('fa-square-o');
+                } else {
+                    $el.find('i[data-action="check"]').removeClass('fa-square-o').addClass('fa-check-square-o');
+                }
+
+                // 判断全选状态
+                if($el.parents('tbody').find('i[data-action="check"]:not(.fa-check-square-o)').length === 0) {
+                    $table.find('thead i[data-action="check"]').removeClass('fa-square-o').addClass('fa-check-square-o');
+                } else {
+                    $table.find('thead i[data-action="check"]').removeClass('fa-check-square-o').addClass('fa-square-o');
+                }
+            });
+        }
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+            checkedBottom();
+            //上报列表选中事件
+            that.makeSelectableTable("#conferenceContentTable",selectFn,checkFn);
+            //上报列表选中事件
+            that.$container.on('click','#conferenceBottomList,#conferenceReportTable',checkBottomFn);
+            //上边查询搜索
+            that.$container.on('click','#btnSearchWork',searchReportList);
+            //新增
+            that.$container.on('click', '#btnConferenceAdd', function () {
+                that.openPage('topic/topic-conference/topic-conference-edit', {});
+            });
+            //修改
+            that.$container.on('click', '#btnConferenceModify', function () {
+                currentConferenceModify();
+            });
+            //删除
+            that.$container.on('click', '#btnConferenceDel',deleteconference);
+            //上边查看
+            that.$container.on('click', '#btnConferenceSearch',function () {
+                currentConferenceSearch();
+            });
+            //登记
+            that.$container.on('click', '#btnConferenceReg',conferenceRegister);
+            //提交
+            that.$container.on('click', '#btnConferenceSubmit',conferenceSubmit);
+            // 添加选题（底下添加按钮）
+            that.$container.on('click','#btnConferenceReportAdd', searchReportAdd);
+            //  删除（底下删除按钮）
+            that.$container.on('click','#btnConferenceReportDel', searchReportDel);
+            //  查重（底下查重按钮）
+            that.$container.on('click','#btnConReportChecking', function () {
+                that.openPage('topic/topic-conference/topic-rechecking',{currentConferenceId:currentConferenceIdBottom});
+            });
+
+            // 分页
+            that.$container.on('click', '#conferenceListPaging a', jumpPage);
+            //查看（底下按钮）
+            that.$container.on('click', '#conferenceReportTable .reportSearch',bottomSearch);
+        }
+
+        //树选择后回调函数
+        function selectTree(a,b) {
+            currentYear=a;
+            currentMonth=b;
+            currentPage=1;
+            that.$('#searchConferenceName').val('');
+            that.$('#selectState').val('');
+            conferenceList();
+            var currentDate=new Date();
+            var year=currentDate.getFullYear();
+            var month=currentDate.getMonth()+1;
+            if(currentYear===year && currentMonth===month){
+                that.$('#btnConferenceAdd').removeAttr('disabled');
+            }else {
+                that.$('#btnConferenceAdd').attr('disabled','disabled');
+            }
+        }
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+         // 初始化年月树
+        that.initMonthTree("#monthTree","选题大会",null,selectTree);
+        //初始化会议列表
+            conferenceList();
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            that.initTemplate(tpl, {});
+
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+
+            // TODO: 测试
+            // that.openPage('public/workflow/workflow-dialog', {});
+            // that.openPage('public/file/file-upload', {});
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+            if (data && data.refresh === true) {
+                currentPage = 1;
+                conferenceList();
+            }
+            if(data && data.renovate === true) {
+                searchReportList();
+            }
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function () {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+
+    module.exports = Module;
+});

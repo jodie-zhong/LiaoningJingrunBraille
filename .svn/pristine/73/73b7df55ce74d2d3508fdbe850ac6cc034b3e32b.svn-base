@@ -1,0 +1,324 @@
+define(function (require, exports, module) {
+    "use strict";
+
+    var util = require('../../../common/util');
+    // 工作流类窗口继承自工作流Base
+    var Base = require('../../other/base/task-base');
+
+    var topicManageListTpl = require('./topic-record-list.tpl');
+    // 选题备案新增
+    var FLOW_TOPIC_CREATE = 'topicRecordCreate';
+	// 重大选题备案管理
+	var FLOW_BIG_RECORD = 'bigTopicRecordRegister';           //选题备案登记
+	var FLOW_BIG_TRIAL = 'bigBrailleEditorialTrial';          //部门负责人审核
+	var FLOW_BIG_CHIEF = 'bigBrailleChiefEditorTrial';        //总编辑室审核
+	var FLOW_BIG_PUBLI = 'bigReportBureauPublication';        //上报版署
+	var FLOW_BIG_REGISTER = 'bigRecordRegister';              //备案登记
+	// 引进选题备案管理
+	var FLOW_CITE_RECORD = 'importTopicRecordRegister';       //选题备案登记
+	var FLOW_CITE_TRIAL = 'importBrailleEditorialTrial';      //部门负责人审核
+	var FLOW_CITE_CHIEF = 'importBrailleChiefEditorTrial';    //总编辑室审核
+	var FLOW_CITE_REGISTER = 'importRecordRegister';          //备案登记
+
+    var Module = Base.extend(new function () {
+        var that;
+        
+        this.taskListAction= 'backup/searchTopicList.action',
+
+        // 查询任务树中未完成任务数的接口
+        // this.untreatedTaskAction = 'topic/unreadTopicCount.action';
+        // 选题任务列表接口
+        // this.taskListActoin = 'topic/topicList.action';
+
+        this.deployKey = 'BrailleTopicRecord';
+        
+        // 与我相关
+        this.searchTaskAbout = '1';
+        // 其他搜索选项
+        this.searchParams = {};
+        
+        /**
+         * 树节点变更事件
+         */
+        this.onTreeNodeChanged = function(){
+            var date = new Date();
+            this.$('#btnTopicCreate').attr('disabled', 'disabled');
+            if(this.currentYear === date.getFullYear()){
+                if(!this.currentMonth || this.currentMonth === (date.getMonth() + 1)){
+                    this.$('#btnTopicCreate').removeAttr('disabled');
+                }
+            }
+        };
+
+		/**
+		 * 树节点变更事件
+		 */
+		this.onTreeNodeChanged = function(){
+			var date = new Date();
+			this.$('#btnTopicCreate').attr('disabled', 'disabled');
+			if(this.currentYear === date.getFullYear()){
+				if(!this.currentMonth || this.currentMonth === (date.getMonth() + 1)){
+					this.$('#btnTopicCreate').removeAttr('disabled');
+				}
+			}
+		};
+
+        /**
+         * 选择行变更事件回调
+         */
+        this.onSelectRowChanged = function(){
+		// 暂时啥也不做
+        };
+        
+        this.onCheckRowChanged = function() {
+        	this.$('#btnTopicModify').attr('disabled', 'disabled');
+        	this.$('#btnTopicDelate').attr('disabled', 'disabled');
+        	this.$('#btnTopicHandle').attr('disabled', 'disabled');
+        	this.$('#btnTopicBatch').attr('disabled', 'disabled');
+        	this.$('#btnTopicCheck').attr('disabled', 'disabled');
+        	
+        	var count = 0, flowId = null, users = null, bookIds = [], topicIds = [],taskIds=[], deployKeys=[];
+        	var bigRecord = true, citeRecord = true, bigTrial = true, citeTrial = true, bigChief = true, citeChief = true;
+        	var bigpubli = true, bigRegister = true, citeRegister = true, allMe = true, allUnfinished = true, allNum = true;
+        	var userId = util.getUserInfo().userId;
+        	that.$('#workListTBody').find('tr[checked]').each(function(){
+        		flowId = $(this).attr('data-flowId');
+        		users = $(this).attr('data-users') || '';
+        		users = users? users.split(','): [];
+        		// 包含非选题备案登记
+        		if (flowId !== FLOW_BIG_RECORD) {
+        			bigRecord = false;
+        		}
+        		// 包含非选题备案登记
+        		if (flowId !== FLOW_CITE_RECORD) {
+        			citeRecord = false;
+        		}
+        		// 包含非重大部门负责人审核
+        		if (flowId !== FLOW_BIG_TRIAL) {
+        			bigTrial = false;
+        		}
+        		// 包含非引用部门负责人审核
+        		if (flowId !== FLOW_CITE_TRIAL) {
+        			citeTrial = false;
+        		}
+        		// 包含非重大总编辑室审核
+        		if (flowId !== FLOW_BIG_CHIEF) {
+        			bigChief = false;
+        		}
+        		// 包含非引用总编辑室审核
+        		if (flowId !== FLOW_CITE_CHIEF) {
+        			citeChief = false;
+        		}
+        		// 包含非重大上报版署
+        		if (flowId !== FLOW_BIG_PUBLI) {
+        			bigpubli = false;
+        		}
+        		// 包含非重大备案登记
+        		if (flowId !== FLOW_BIG_REGISTER) {
+        			bigRegister = false;
+        		}
+        		// 包含非引用备案登记
+        		if (flowId !== FLOW_CITE_REGISTER) {
+        			citeRegister = false;
+        		}
+        		// 待我处理
+        		if(users.indexOf(userId) <0){
+                    allMe = false;
+                }
+        		// 任务状态未完成
+                if($(this).attr('data-taskState') === '2'){
+                    allUnfinished = false;
+                }
+                // 
+                if ($(this).attr('data-num') > 1) {
+                	allNum = false;
+                }
+                bookIds.push($(this).attr('data-bookId'));
+                topicIds.push($(this).attr('data-topicId'));
+                taskIds.push($(this).attr('data-taskId'));
+                deployKeys.push($(this).attr('data-deploy'));
+                count++;
+        	});
+        	this.currentBookId = bookIds.join(',');
+        	this.currentTopicId = topicIds.join(',');
+        	this.currentTaskId = taskIds.join(',');
+        	this.currentDeployId = deployKeys.join(',');
+        	// 只选择了一条处理可用
+        	if (count === 1) {
+        		// 只有新增选题备案成功后才能查看
+        		if (bigTrial || citeTrial || bigChief || citeChief || bigpubli || bigRegister || citeRegister) {
+        			this.$('#btnTopicCheck').removeAttr('disabled');
+        		}
+          		// 只有新增未提交的备案可用修改、删除
+        		if ((bigRecord || citeRecord) && allMe && allUnfinished) {
+        			this.$('#btnTopicModify').removeAttr('disabled');
+        		}
+        		// 只有新增未提交的备案可用修改、删除
+        		if ((bigRecord || citeRecord) && allMe && allUnfinished  && allNum) {
+        			this.$('#btnTopicDelate').removeAttr('disabled');
+        		}
+        		if ((bigTrial || citeTrial || bigChief || citeChief || bigpubli || bigRegister || citeRegister) && allMe && allUnfinished ) {
+        			this.$('#btnTopicHandle').removeAttr('disabled');
+        		}
+        	}
+        	// 选择一条或多条
+        	if (count > 1) {
+          		// 备案登记阶段可以删除
+          		if (allMe && allUnfinished && (bigTrial || citeTrial || bigChief || citeChief || bigRegister || citeRegister)) {
+          			this.$('#btnTopicBatch').removeAttr('disabled');
+          		}
+        	}
+        };
+
+        /**
+         * 初始化页面事件
+         */
+        function initPageEvent() {
+//          that.openPage('public/workflow/workflow-dialog', {
+//              debug: true,
+//              flowTemplate: 'topic-record/topic-record-create',
+//              isEdit: true
+//          });
+            
+            // 新增备案
+            that.$container.on('click','#btnTopicCreate',function() {
+            	that.openPage('public/workflow/workflow-dialog',{
+                    flowInfoAction: 'backup/listFlowInfoBackup.action',
+            		bookId: '',
+            		topicId: '',
+            		taskId: '',
+            		deployId: 'topicRecordCreate'
+            	});
+            });
+            // 修改备案
+            that.$container.on('click','#btnTopicModify, #btnTopicDepart, #btnTopicChief, #btnTopicReport, #btnTopicRecord', function(){
+            	that.openPage('public/workflow/workflow-dialog', {
+            		flowInfoAction: 'backup/listFlowInfoBackup.action',
+            		bookId: that.currentBookId,
+            		topicId: that.currentTopicId,
+            		taskId: that.currentTaskId,
+            		deployId: that.currentDeployId
+            	});
+            });
+            // 删除备案
+            that.$container.on('click','#btnTopicDelate', function() {
+            	util.showConfirm('确定要删除所选的选题吗？', function(){
+            		// 删除选题备案
+            		util.showLoading();
+            		util.sendRequest({
+            			action:'backup/delBookTopicBackup.action',
+            			data: {
+            				topicIds: that.currentTopicId
+            			},
+            			success: function(resp){
+            				util.hideLoading();
+            				if (resp && resp.code === 0) {
+            					util.showAlert('删除选题成功！', function(){
+            						that.searchUntreatedTask();
+            					});
+            				} else{
+            					console.log(resp);
+            					util.showAlert(resp.message || '删除选题出错，请稍后重试！');
+            				}
+            			},
+            			error: function(xhr){
+            				// XHR错误
+            				util.hideLoading();
+            				console.log(xhr);
+            				util.showAlert('删除选题出错，请稍后重试！');
+            			}          			
+            		});
+            	});
+            });
+            // 部门负责人审核、主编、副主编审核、备案登记 处理
+            that.$container.on('click','#btnTopicHandle', function(){
+            	that.openPage('public/workflow/workflow-dialog', {
+            		flowInfoAction: 'backup/listFlowInfoBackup.action',
+            		bookId: that.currentBookId,
+            		topicId: that.currentTopicId,
+            		taskId: that.currentTaskId,
+            		deployId: that.currentDeployId
+            	});
+            });
+            // 部门负责人审核、主编、副主编审核、备案登记 批量处理
+            that.$container.on('click','#btnTopicBatch', function(){
+            	that.openPage('public/workflow/workflow-dialog', {
+            		flowInfoAction: 'backup/listFlowInfoBackup.action',
+            		bookId: that.currentBookId,
+            		topicId: that.currentTopicId,
+            		taskId: that.currentTaskId
+            	});
+            });
+            
+            // 查看
+            that.$container.on('click','#btnTopicCheck',function(){
+            	that.openPage('public/workflow/workflow-dialog', {
+            		flowInfoAction: 'backup/listFlowInfoBackup.action',
+            		bookId: that.currentBookId,
+            		topicId: that.currentBookTopicId,
+            		taskId: that.currentTaskId,
+            		deployId: that.currentDeployId,
+            		isView: true
+            	});
+            });
+
+        }
+
+        /**
+         * 初始化页面数据
+         */
+        function initPageData() {
+
+
+        }
+
+        /**
+         * 初始化时被调用
+         */
+        this.onInit = function ($el, tpl, data, indexRef) {
+            this._super($el, tpl, data, indexRef);
+            that = this;
+            // that.initTemplate(tpl, {});
+
+            // 初始化数据前需要设置列表模板
+            this.listTpl = topicManageListTpl;
+
+            // 初始化页面事件
+            initPageEvent();
+
+            // 初始化页面数据
+            initPageData();
+
+            // TODO: 测试
+            // that.openPage('public/workflow/workflow-dialog', {});
+            // that.openPage('public/file/file-upload', {});
+        };
+
+        /**
+         * 页面返回事件
+         * @param data
+         */
+        this.onBack = function (data) {
+            this._super(data);
+
+        };
+
+        /**
+         * 窗口缩放事件
+         */
+        this.onResize = function () {
+            this._super();
+        };
+
+        /**
+         * 页面销毁
+         */
+        this.onDestroy = function () {
+            this._super();
+        };
+
+
+    }());
+
+    module.exports = Module;
+});

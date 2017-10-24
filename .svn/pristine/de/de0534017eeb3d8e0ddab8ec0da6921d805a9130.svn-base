@@ -1,0 +1,17 @@
+{
+	"message": "查询培训详情成功",
+	"data": {
+		"trainId": "1",
+		"trainName": "培训名称",
+		"trainNum": "0",
+		"trainUserIds": "1,2,",
+		"trainUserNames": "admin,zz,",
+		"trainUnit": "培训单位",
+		"trainDatetime": "2017-05-12 10:02:27",
+		"trainContent": "培训内容",
+		"trainForm": "未知",
+		"trainHour": "3",
+		"trainIntegral": "3"
+	},
+	"code": 0
+}

@@ -1,0 +1,240 @@
+<!--通知单-->
+<div class="modal-dialog dialog-container">
+  <div class="modal-content">
+    <div class="panel">
+      <div class="panel-header border-bottom">
+        <div class="panel-header border-bottom">
+          <h3><i class="fa fa-user-o"></i>稿酬通知单</h3>
+          <div class="control-btn">
+            <a class="panel-close btn-close"><i class="fa fa-close"></i></a>
+          </div>
+        </div>
+        <div class="panel-content">
+          <div class="form-horizontal" id="formEdit">
+            <script type="text/template" id="rewardTemplateTop">
+              <tr>
+                <td data-value="number"></td>
+                <td><input type="text" maxlength="32" name="authouName" class="form-control small"/></td>
+                <td><input type="text" maxlength="32" name="openingBank" class="form-control small"/></td>
+                <td><input type="text" maxlength="32" name="bankAccount" class="form-control small"/></td>
+                <td><input type="text" maxlength="10" name="prepayment" class="form-control small"/></td>
+                <td>
+                  <button class="btn btn-xs btn-success" data-type="top-plus"><i class="fa fa-plus box"></i></button>
+                  <button class="btn btn-xs btn-danger" data-type="top-minus"><i class="fa fa-close box"></i></button>
+                </td>
+              </tr>
+            </script>
+            <script type="text/template" id="rewardTemplateMiddle">
+              <tr>
+                <td><input type="text" name="payProject" class="form-control small" value=""></td>
+                <td><input type="text" name="hourlyStandard" class="form-control small" value=""></td>
+                <td><input type="text" name="wordsNum" class="form-control small" value=""></td>
+                <td><input type="text" name="printNum" class="form-control small" value=""></td>
+                <td><input type="text" name="amountPayable" class="form-control small" value="0.00"></td>
+                <td><input type="text" name="subtractReplaceTax" class="form-control small" value="0.00"></td>
+                <td><input type="text" name="subtractAmountAdvanced" class="form-control small" value="0.00"></td>
+                <td><input type="text" name="subtractBuyBook" class="form-control small" value="0.00"></td>
+                <td><input type="text" name="subtractOther" class="form-control small" value="0.00"></td>
+                <td><input type="text" name="realPay" class="form-control small" value="0.00"></td>
+                <td>
+                  <button class="btn btn-xs btn-success" data-type="middle-plus"><i class="fa fa-plus box"></i></button>
+                  <button class="btn btn-xs btn-danger" data-type="middle-minus"><i class="fa fa-close box"></i></button>
+                </td>
+              </tr>
+            </script>
+            <script type="text/template" id="rewardTemplateBottom">
+              <tr>
+                <td><input type="text" name="hRewardTaxName" class="form-control small"  value=""></td>
+                <td><input type="text" name="hRewardTaxIdCard" class="form-control small" value=""></td>
+                <td><input type="text" name="hRewardTaxProject" class="form-control small" value=""></td>
+                <td><input type="text" name="hRewardTaxAmountPayable" class="form-control small" value=""></td>
+                <td><input type="text" name="hRewardTaxSubtractCost" class="form-control small" value=""></td>
+                <td><input type="text" name="hRewardTaxMoney" class="form-control small" value=""></td>
+                <td><input type="text"  name="hRewardTaxRate" class="form-control small" value=""></td>
+                <td><input type="text"  name="hRewardTaxTeplaceMoney" class="form-control small" value=""></td>
+              </tr>
+            </script>
+            <div class="row">
+              <div class="col-xs-6">
+                <div class="form-group">
+                  <label class="col-xs-4 control-label">出版物名称</label>
+                  <div class="col-xs-8">
+                    <input type="text" class="form-control" value="" name="bookName"
+                           placeholder="出版物名称" readonly/>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xs-6">
+                <div class="form-group">
+                  <label class="col-xs-4 control-label">选题号/ISBN</label>
+                  <div class="col-xs-8">
+                    <input type="text" class="form-control" value=""  name="bookIsbn"
+                           placeholder="选题号/ISBN" readonly/>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <div class="form-group">
+                  <label class="col-xs-4 control-label">责任编辑</label>
+                  <div class="col-xs-8">
+                    <input type="text" class="form-control" value="" name="bookDetailDutyEditor"
+                           placeholder="责任编辑" readonly/>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xs-6">
+                <div class="form-group">
+                  <label class="col-xs-4 control-label">定价</label>
+                  <div class="col-xs-8">
+                    <input type="text" class="form-control" value="" name="hRewardPricing"
+                           placeholder="定价" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <div class="form-group">
+                  <label class="col-xs-4 control-label">本次印数</label>
+                  <div class="col-xs-8">
+                    <input type="text" class="form-control"  value="" name="hRewardThisPrint"
+                           placeholder="本次印数"/>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xs-6">
+                <div class="form-group">
+                  <label class="col-xs-4 control-label">累计印数</label>
+                  <div class="col-xs-8">
+                    <input type="text" class="form-control" value="" name="hRewardAddPrint"
+                           placeholder="累计印数" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <table class="table table-hover dataTable no-footer" id="tableEditableTop" role="grid" aria-describedby="table-editable_info">
+                <thead>
+                <tr>
+                  <th class="w-table">序号</th>
+                  <th style="width: 10%" >作者</th>
+                  <th style="width: 20%">开户行</th>
+                  <th style="width: 20%">银行账号</th>
+                  <th style="width: 15%">预付金额</th>
+                  <th class="w-100"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td data-value="number"> 1 </td>
+                  <td><input type="text" maxlength="32" name="authouName" class="form-control small"/></td>
+                  <td><input type="text" maxlength="32" name="openingBank" class="form-control small"/></td>
+                  <td><input type="text" maxlength="32" name="bankAccount" class="form-control small"/></td>
+                  <td><input type="text" maxlength="10" name="prepayment" class="form-control small" value="0.00"/></td>
+                  <td>
+                    <button class="btn btn-xs btn-success" data-type="top-plus"><i class="fa fa-plus box"></i></button>
+                    <button class="btn btn-xs btn-danger" data-type="top-minus"><i class="fa fa-close box"></i></button>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="row">
+              <table class="table table-hover dataTable no-footer" id="tableEditableMiddle" role="grid" aria-describedby="table-editable_info">
+                <thead>
+                <tr>
+                  <th >付筹项目</th>
+                  <th >计酬标准</th>
+                  <th >字数</th>
+                  <th >印数</th>
+                  <th >应付金额</th>
+                  <th >减代扣代缴税额</th>
+                  <th >减预付金额</th>
+                  <th >减购书款</th>
+                  <th >减其他</th>
+                  <th >实付金额</th>
+                  <th ></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td><input type="text" name="payProject" class="form-control small" value=""></td>
+                  <td><input type="text" name="hourlyStandard" class="form-control small" value=""></td>
+                  <td><input type="text" name="wordsNum" class="form-control small" value=""></td>
+                  <td><input type="text" name="printNum" class="form-control small" value=""></td>
+                  <td><input type="text" name="amountPayable" class="form-control small" value="0.00"></td>
+                  <td><input type="text" name="subtractReplaceTax" class="form-control small" value="0.00"></td>
+                  <td><input type="text" name="subtractAmountAdvanced" class="form-control small" value="0.00"></td>
+                  <td><input type="text" name="subtractBuyBook" class="form-control small" value="0.00"></td>
+                  <td><input type="text" name="subtractOther" class="form-control small" value="0.00"></td>
+                  <td><input type="text" name="realPay" class="form-control small" value="0.00"></td>
+                  <td>
+                    <button class="btn btn-xs btn-success" data-type="middle-plus"><i class="fa fa-plus box"></i></button>
+                    <button class="btn btn-xs btn-danger" data-type="middle-minus"><i class="fa fa-close box"></i></button>
+                  </td>
+                </tr>
+                <tr >
+                  <td>实付报酬合计</td>
+                  <td colspan="2" class="text-center">人民币大写</td>
+                  <td colspan="3"><input type="text" name="realCapitalCountPay" class="form-control small" value=""></td>
+                  <td colspan="2" class="text-center">¥</td>
+                  <td colspan="2"><input type="text" name="realCountPay" class="form-control small" value="0.00"></td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="row">
+              <table class="table table-hover dataTable no-footer" id="tableEditableBottom" role="grid"
+                     aria-describedby="table-editable_info">
+                <thead>
+                <tr>
+                  <th >纳税人姓名</th>
+                  <th >身份证号</th>
+                  <th >纳税项目</th>
+                  <th >应付金额</th>
+                  <th >减除费用</th>
+                  <th >计税金额</th>
+                  <th >税率</th>
+                  <th >代扣代缴税额</th>
+                  <th ></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td><input type="text" name="hRewardTaxName" class="form-control small"  value=""></td>
+                  <td><input type="text" name="hRewardTaxIdCard" class="form-control small" value=""></td>
+                  <td><input type="text" name="hRewardTaxProject" class="form-control small" value=""></td>
+                  <td><input type="text" name="hRewardTaxAmountPayable" class="form-control small" value=""></td>
+                  <td><input type="text" name="hRewardTaxSubtractCost" class="form-control small" value=""></td>
+                  <td><input type="text" name="hRewardTaxMoney" class="form-control small" value=""></td>
+                  <td><input type="text"  name="hRewardTaxRate" class="form-control small" value=""></td>
+                  <td><input type="text"  name="hRewardTaxTeplaceMoney" class="form-control small" value=""></td>
+                  <td>
+                    <button class="btn btn-xs btn-success" data-type="middle-plus"><i class="fa fa-plus box"></i></button>
+                    <button class="btn btn-xs btn-danger" data-type="middle-minus"><i class="fa fa-close box"></i></button>
+                  </td>
+                </tr>
+                <tr >
+                  <td>备注</td>
+                  <td colspan="3"><input type="text" class="form-control small" value=""></td>
+                  <td colspan="2" class="text-center">领款人签字</td>
+                  <td colspan="2" class="text-center"><input type="text" class="form-control small" value=""></td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="dialog-options">
+              <button class="btn btn-default" id="btnSave">保存</button>
+              <button class="btn btn-primary" id="btnSubmit">提交</button>
+              <button class="btn btn-default" id="btnPrint">打印</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

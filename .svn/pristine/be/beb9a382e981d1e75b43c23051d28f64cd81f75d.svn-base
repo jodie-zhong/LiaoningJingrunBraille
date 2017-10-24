@@ -1,0 +1,13 @@
+<% for(var i = 0; i < list.length; i++) { %>
+<tr>
+  <td><%- (i + 1) %></td>
+  <td><%- list[i].flowName %></td>
+  <td><%- list[i].handleUserName %></td>
+  <td><%- list[i].submitDatetime %></td>
+  <td><%- list[i].handleDatetime %></td>
+  <td><%- list[i].handleContentOne %></td>
+  <td>
+    <button class="btn btn-xs btn-white btn-rounded task-detail-btn" data-taskId="<%- list[i].taskId %>"  data-flowId="<%- list[i].flowId %>">查看</button>
+  </td>
+</tr>
+<% } %>

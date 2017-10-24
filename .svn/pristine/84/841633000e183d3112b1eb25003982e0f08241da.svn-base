@@ -1,0 +1,8 @@
+<% for(var i = 0; i < list.length; i++) { %>
+<tr data-id="<%- list[i].roleId %>">
+    <td><%- (i + 1) %></td>
+    <td><%- list[i].roleName %></td>
+    <td><%- list[i].roleDesc %></td>
+    <td><%- list[i].departmentName %></td>
+</tr>
+<% } %>
